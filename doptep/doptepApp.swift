@@ -10,23 +10,24 @@ import SwiftData
 
 @main
 struct doptepApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    
+    let container: ModelContainer
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
+    init() {
+        container = try! ModelContainer(
+            for: GameModel.self,
+            TeamModel.self,
+            PlayerModel.self,
+            LiveGameModel.self,
+            TeamHistoryModel.self,
+            PlayerHistoryModel.self
+        )
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeScreen(viewModel: HomeViewModel(repository: GameRepository(context: container.mainContext)))
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(container)
     }
 }

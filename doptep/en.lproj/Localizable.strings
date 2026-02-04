@@ -1,0 +1,233 @@
+/*
+  Localizable.strings (English)
+  doptep
+*/
+
+// MARK: - Tabs
+"tab_home" = "Home";
+"tab_settings" = "Settings";
+
+// MARK: - Home Screen
+"home_game_name" = "Name:";
+"home_game_format" = "Format:";
+"home_game_team_quantity" = "Teams:";
+"home_game_time" = "Time:";
+"home_game_rule" = "Rule:";
+"game_empty" = "You do not have any games yet";
+"add_game" = "Add game";
+"update_game" = "Edit game";
+"time_in_minutes" = "%d minutes";
+
+// MARK: - Add/Edit Game
+"game_name" = "Game name";
+"game_time" = "Match time (minutes)";
+"game_format" = "Game format";
+"game_rules" = "Game rules";
+"team_quantity" = "Number of teams";
+"team_number" = "T-%@";
+"team_name" = "Team name";
+"choose_team_color" = "Choose color";
+"choose_team" = "Choose team";
+"player_number" = "Player %@";
+"add_player" = "Add player";
+"save" = "Save";
+"save_success" = "Saved";
+"cancel" = "Cancel";
+"done" = "Done";
+"yes" = "Yes";
+"no" = "No";
+"edit_result" = "Edit Result";
+
+// MARK: - Game Rules (2 teams)
+"game_rule_2_change_side" = "Change sides after each half";
+"game_rule_2_stay_side" = "Do not change sides";
+
+// MARK: - Game Rules (3 teams)
+"game_rule_3_only_2_games" = "Exactly 2 games";
+"game_rule_3_winner_stay_2" = "Winner stays (max. 2 games)";
+"game_rule_3_winner_stay_3" = "Winner stays (max. 3 games)";
+"game_rule_3_winner_stay_4" = "Winner stays (max. 4 games)";
+"game_rule_3_winner_stay_unlimited" = "Winner always stays";
+
+// MARK: - Game Rules (4 teams)
+"game_rule_4_only_3_games" = "Exactly 3 games";
+"game_rule_4_winner_stay_3" = "Winner stays (max. 3 games)";
+"game_rule_4_winner_stay_4" = "Winner stays (max. 4 games)";
+"game_rule_4_winner_stay_5" = "Winner stays (max. 5 games)";
+"game_rule_4_winner_stay_6" = "Winner stays (max. 6 games)";
+"game_rule_4_winner_stay_unlimited" = "Winner always stays";
+
+// MARK: - Validation
+"game_name_empty_text" = "Game name is required";
+"game_time_empty_text" = "Match time is required";
+"team_name_empty_text" = "Team name is required";
+
+// MARK: - Team Results Table
+"team" = "Team";
+"teams_leaderboard" = "Teams Leaderboard";
+"games_short" = "G";
+"wins_short" = "W";
+"draws_short" = "D";
+"loses_short" = "L";
+"goals_short" = "+/-";
+"points_short" = "PTS";
+
+// MARK: - Player Results Table
+"player" = "Player";
+"players_leaderboard" = "Players Leaderboard";
+"goals_icon" = "G";
+"assists_icon" = "A";
+"saves_icon" = "SV";
+"dribbles_icon" = "D";
+"shots_icon" = "SH";
+"passes_icon" = "P";
+
+// MARK: - Team Options
+"team_option_goal" = "Goal";
+"team_option_assist" = "Assist";
+"team_option_dribble" = "Dribble";
+"team_option_pass" = "Pass";
+"team_option_shot" = "Shot";
+"team_option_save" = "Save";
+"team_option_players_title" = "Select player";
+"team_option_players_auto_goal" = "Own goal";
+
+// MARK: - Best Player Options
+"best_player_option_best_player" = "Best player";
+"best_player_option_goals" = "Top scorer";
+"best_player_option_assists" = "Best assists";
+"best_player_option_saves" = "Best saves";
+"best_player_option_dribbles" = "Best dribbles";
+"best_player_option_passes" = "Best passes";
+"best_player_option_shots" = "Best shots";
+
+// MARK: - Text to Speech
+"text_to_speech_goal" = "Goal by %@";
+"text_to_speech_assist" = "Assist by %@";
+"text_to_speech_dribble" = "Nice dribble by %@";
+"text_to_speech_pass" = "Great pass by %@";
+"text_to_speech_shot" = "Powerful shot by %@";
+"text_to_speech_save" = "Great save by %@";
+
+// MARK: - Confirmation Dialogs
+"stay_team_selection_title" = "Select the team that stays on the field";
+"delete_game_title" = "Are you sure you want to delete this game?";
+"clear_results_title" = "Are you sure you want to clear the results of this game?";
+"clear_all_results_title" = "Are you sure you want to clear all game results?";
+"finish_game_title" = "Are you sure you want to finish this match?";
+"go_back_title" = "Are you sure you want to leave this page?";
+
+// MARK: - Snackbar Messages
+"finish_game_snackbar_text" = "You must finish the match to clear the results!";
+"delete_game_snackbar_text" = "You must finish the match to delete the game!";
+"update_game_snackbar_text" = "You must finish the match to edit the game!";
+"open_game_results_snackbar_text" = "You must finish the match to view all results!";
+"open_activation_screen_snackbar_text" = "You must finish the match to open the activation screen!";
+"game_count" = "games played: %@";
+
+// MARK: - Sounds
+"sound_limited_text" = "Sounds and voice-overs are available only in the full version of the app";
+"sound_league_chemp" = "Champions\nLeague";
+"sound_goal_fans" = "Stadium\nGooooal";
+"sound_anarbekov" = "Temirlan\nAnarbekov";
+"sound_uo_uo_uo" = "UO UO UO";
+"sound_whistle" = "Whistle";
+"sound_stadium_applause" = "Stadium\napplause";
+"sound_girls_applause" = "Girls\napplause";
+"sound_bilgenin_istep_jatyr" = "Bilgenin\nistep jatyr";
+"sound_goal_save" = "What a\nsave";
+"sound_suiii" = "Suiii";
+"sound_suiii_full" = "Suiiiii\nFull";
+"sound_goal_goal_goal" = "Goal Goal\nGoal";
+"sound_modrichtyn_pasy" = "Modric's\npass";
+"sound_tondyryp_tastagan" = "Tondyryp\ntastagan";
+
+// MARK: - Game Functions
+"function_best_players" = "Best players";
+"function_edit" = "Edit game";
+"function_clear_result" = "Clear this game results";
+"function_info" = "Info";
+"function_all_results" = "All games results";
+"function_remove" = "Delete game";
+
+// MARK: - Game Info
+"live_game_info_replace_teams" = "Swap left and right teams";
+"live_game_info_pause_timer" = "Pause timer";
+"live_game_info_play_timer" = "Resume timer";
+"result_correction_text" = "Attention! This section is intended for correcting incorrect results. To add a new result, tap the left or right team name during the game.";
+
+// MARK: - Teams Block Info
+"teams_block_info_games" = "Games";
+"teams_block_info_wins" = "Wins";
+"teams_block_info_draws" = "Draws";
+"teams_block_info_loses" = "Losses";
+"teams_block_info_goals_conceded" = "Goals scored/conceded (+/-)";
+"teams_block_info_goals_difference" = "Goal difference";
+"teams_block_info_points" = "Points";
+
+// MARK: - Players Block Info
+"players_block_info_goals" = "Goal";
+"players_block_info_assists" = "Assist";
+"players_block_info_saves" = "Best save";
+"players_block_info_dribbles" = "Nice dribble";
+"players_block_info_shots" = "Powerful accurate shot";
+"players_block_info_passes" = "Nice pass";
+"player_result_limited_text" = "Player results are available only in the full version of the app";
+
+// MARK: - Settings
+"settings_item_language" = "Language";
+"settings_item_share" = "Share";
+"settings_item_star" = "Rate";
+"settings_item_telegram" = "Telegram group";
+"settings_item_activation" = "Manage subscription";
+"settings_version" = "Version";
+"choose_language" = "Choose language";
+"telegram_not_installed" = "Telegram is not installed!";
+
+// MARK: - Activation
+"activation_orange_text" = "You are using a limited version. Some features are unavailable. Upgrade to the full version.";
+"activation_green_text" = "You are using the trial version of the app. Remaining attempts to Clear this game results: %@";
+"activation_button" = "Activate";
+"activation_title" = "Activation";
+"activation_text_title" = "What's included?";
+"activation_text_1" = "Name voice-over and celebration sounds (goal, assist, etc.)";
+"activation_text_2" = "Voice-over for the phrase \"One minute remaining\"";
+"activation_text_3" = "Voice-over for the phrase \"Play until the ball is out\"";
+"activation_text_4" = "List of football sounds";
+"activation_text_5" = "Player results";
+"activation_text_6" = "Best players";
+"activation_text_button" = "Show prices";
+"activation_plan_title" = "Choose your plan";
+"activation_plan_1" = "Monthly";
+"activation_plan_2" = "Yearly";
+"activation_plan_3" = "Unlimited";
+"activation_plan_button" = "Buy";
+"activation_plan_desc_subscribe" = "Subscription";
+"activation_plan_desc_lifetime" = "One-time purchase";
+"activation_plan_select_error_text" = "Choose plan";
+"activation_plan_activated_text" = "You have the full version";
+"activation_plan_activated_button" = "Manage subscription";
+"restore_purchases" = "Restore Purchases";
+"purchase_success" = "Purchase successful!";
+"purchase_failed" = "Purchase failed. Please try again.";
+"restore_success" = "Purchases restored successfully!";
+
+// MARK: - Additional UI
+"delete" = "Delete";
+"clear" = "Clear";
+"finish" = "Finish";
+"start" = "Start";
+"leave" = "Leave";
+"delete_game_confirmation" = "Are you sure you want to delete this game?";
+"clear_results_confirmation" = "Are you sure you want to clear the results?";
+"finish_game_confirmation" = "Are you sure you want to finish this match?";
+"go_back_confirmation" = "Are you sure you want to go back?";
+"choose_staying_team" = "Choose the team that stays";
+"game_number" = "Games played";
+"start_game" = "GO ⚽️";
+"finish_game" = "FINISH 🏁";
+"sounds" = "Sounds";
+"functions" = "Functions";
+"auto_goal" = "Own Goal";
+"best_players" = "Best Players";
+"game_info" = "Game Info";

@@ -1,0 +1,444 @@
+//
+//  AddGameScreen.swift
+//  doptep
+//
+
+import SwiftUI
+
+struct AddGameScreen: View {
+    @StateObject private var viewModel: AddGameViewModel
+    @Environment(\.dismiss) private var dismiss
+
+    init(viewModel: AddGameViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+
+    @State private var showColorsSheet = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            topBar
+            ScrollView {
+                VStack(spacing: 0) {
+                    gameNameField
+                    timeField
+
+                    if viewModel.screenStateType == .add {
+                        gameFormatSection
+                        teamQuantitySection
+                        gameRulesSection
+                    }
+
+                    teamsTabView
+                }
+            }
+        }
+        .background(Color(.systemGroupedBackground))
+        .navigationBarHidden(true)
+        .sheet(isPresented: $showColorsSheet) {
+            teamColorsSheet
+        }
+        .snackbar(message: $viewModel.snackbarMessage)
+        .onChange(of: viewModel.effect) { _, effect in
+            handleEffect(effect)
+        }
+    }
+
+    private var topBar: some View {
+        HStack {
+            Button {
+                viewModel.send(.closeScreen)
+            } label: {
+                Image(systemName: "arrow.left")
+                    .font(.title3)
+                    .foregroundColor(.primary)
+            }
+
+            Text(viewModel.screenStateType == .add
+                 ? NSLocalizedString("add_game", comment: "")
+                 : NSLocalizedString("update_game", comment: ""))
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+
+            Button {
+                viewModel.send(.onFinishClicked)
+            } label: {
+                Image(systemName: "checkmark")
+                    .font(.title3)
+                    .foregroundColor(.primary)
+            }
+        }
+        .padding()
+        .background(Color(.systemBackground))
+    }
+
+    private var gameNameField: some View {
+        TextField(NSLocalizedString("game_name", comment: ""), text: Binding(
+            get: { viewModel.gameNameFieldState },
+            set: { viewModel.send(.onGameTextValueChanged(value: $0)) }
+        ))
+        .textFieldStyle(RoundedTextFieldStyle())
+        .padding()
+    }
+
+    private var timeField: some View {
+        TextField(NSLocalizedString("game_time", comment: ""), text: Binding(
+            get: { viewModel.timeInMinuteFieldState },
+            set: { viewModel.send(.onTimeTextValueChanged(value: $0)) }
+        ))
+        .keyboardType(.numberPad)
+        .textFieldStyle(RoundedTextFieldStyle())
+        .padding(.horizontal)
+    }
+
+    private var gameFormatSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(NSLocalizedString("game_format", comment: ""))
+                .font(.subheadline)
+                .padding(.horizontal)
+                .padding(.top)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(GameFormat.allCases, id: \.self) { format in
+                        VStack {
+                            Text(format.rawValue)
+                                .font(.subheadline)
+                                .foregroundColor(format == viewModel.gameFormatState ? .accentColor : .secondary)
+                            
+                            RadioButton(isSelected: format == viewModel.gameFormatState) {
+                                viewModel.send(.onGameFormatSelected(format: format))
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom)
+            }
+        }
+        .background(Color(.systemBackground))
+        .padding(.top)
+    }
+
+    private var teamQuantitySection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(NSLocalizedString("team_quantity", comment: ""))
+                .font(.subheadline)
+                .padding(.horizontal)
+                .padding(.top)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(TeamQuantity.allCases, id: \.self) { quantity in
+                        TeamQuantityItem(
+                            quantity: quantity,
+                            isSelected: quantity == viewModel.teamQuantityState,
+                            onSelect: {
+                                viewModel.send(.onTeamQuantitySelected(teamQuantity: quantity))
+                            }
+                        )
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom)
+            }
+        }
+        .background(Color(.systemBackground))
+        .padding(.top)
+    }
+
+    private var gameRulesSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(NSLocalizedString("game_rules", comment: ""))
+                .font(.subheadline)
+                .padding(.horizontal)
+                .padding(.top)
+
+            VStack(alignment: .leading, spacing: 16) {
+                ForEach(currentRules, id: \.localizationKey) { rule in
+                    HStack {
+                        RadioButton(isSelected: areRulesEqual(rule, viewModel.gameRuleState)) {
+                            viewModel.send(.onGameRuleSelected(rule: rule))
+                        }
+                        Text(NSLocalizedString(rule.localizationKey, comment: ""))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.subheadline)
+                            .foregroundColor(areRulesEqual(rule, viewModel.gameRuleState) ? .accentColor : .secondary)
+                            .onTapGesture {
+                                viewModel.send(.onGameRuleSelected(rule: rule))
+                            }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom)
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color(.systemBackground))
+        .padding(.top)
+    }
+
+    private var currentRules: [GameRule] {
+        switch viewModel.gameRuleState {
+        case is GameRuleTeam2:
+            return GameRuleTeam2.allCases
+        case is GameRuleTeam3:
+            return GameRuleTeam3.allCases
+        case is GameRuleTeam4:
+            return GameRuleTeam4.allCases
+        default:
+            return GameRuleTeam3.allCases
+        }
+    }
+
+    private func areRulesEqual(_ lhs: GameRule, _ rhs: GameRule) -> Bool {
+        lhs.localizationKey == rhs.localizationKey
+    }
+
+    private var teamsTabView: some View {
+        VStack(spacing: 0) {
+            tabBar
+            tabContent
+        }
+        .padding(.top)
+    }
+
+    private var tabBar: some View {
+        HStack(spacing: 0) {
+            ForEach(0..<viewModel.teamQuantityState.rawValue, id: \.self) { index in
+                Button {
+                    viewModel.send(.onTeamTabClicked(tabIndex: index))
+                } label: {
+                    VStack(spacing: 12) {
+                        Text(String(format: NSLocalizedString("team_number", comment: ""), "\(index + 1)"))
+                            .font(.subheadline)
+                            .foregroundColor(viewModel.selectedTeamTabIndex == index ? .accentColor : .secondary)
+                        Rectangle()
+                            .fill(viewModel.selectedTeamTabIndex == index ? Color.accentColor : Color.clear)
+                            .frame(height: 2)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .padding(.top)
+        .background(Color(.systemBackground))
+    }
+
+    private var tabContent: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 8) {
+                teamColorButton
+                teamNameField
+            }
+
+            ForEach(0..<playerFieldsCount, id: \.self) { fieldIndex in
+                playerField(at: fieldIndex)
+            }
+
+            addPlayerButton
+        }
+        .padding()
+    }
+
+    private var playerFieldsCount: Int {
+        guard viewModel.selectedTeamTabIndex < viewModel.playersTextFields.count else { return 0 }
+        return viewModel.playersTextFields[viewModel.selectedTeamTabIndex].count
+    }
+
+    private var teamColorButton: some View {
+        Button {
+            viewModel.send(.onTeamColorClicked)
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(currentTeamColor)
+                .frame(width: 56, height: 56)
+        }
+    }
+
+    private var currentTeamColor: Color {
+        guard viewModel.selectedTeamTabIndex < viewModel.teamColors.count else {
+            return TeamColor.red.color
+        }
+        return viewModel.teamColors[viewModel.selectedTeamTabIndex].color
+    }
+
+    private var teamNameField: some View {
+        let binding = Binding<String>(
+            get: {
+                guard viewModel.selectedTeamTabIndex < viewModel.teamNameFields.count else { return "" }
+                return viewModel.teamNameFields[viewModel.selectedTeamTabIndex]
+            },
+            set: { newValue in
+                viewModel.send(.onTeamNameValueChanged(tabIndex: viewModel.selectedTeamTabIndex, value: newValue))
+            }
+        )
+
+        return TextField(NSLocalizedString("team_name", comment: ""), text: binding)
+            .textFieldStyle(RoundedTextFieldStyle())
+    }
+
+    private func playerField(at fieldIndex: Int) -> some View {
+        let tabIndex = viewModel.selectedTeamTabIndex
+        let binding = Binding<String>(
+            get: {
+                guard tabIndex < viewModel.playersTextFields.count,
+                      fieldIndex < viewModel.playersTextFields[tabIndex].count else { return "" }
+                return viewModel.playersTextFields[tabIndex][fieldIndex]
+            },
+            set: { newValue in
+                viewModel.send(.onPlayerNameValueChanged(tabIndex: tabIndex, fieldIndex: fieldIndex, value: newValue))
+            }
+        )
+
+        return TextField(
+            String(format: NSLocalizedString("player_number", comment: ""), "\(fieldIndex + 1)"),
+            text: binding
+        )
+        .textFieldStyle(RoundedTextFieldStyle())
+    }
+
+    private var addPlayerButton: some View {
+        Button {
+            viewModel.send(.onAddPlayerClicked(tabIndex: viewModel.selectedTeamTabIndex))
+        } label: {
+            Text(NSLocalizedString("add_player", comment: ""))
+                .font(.subheadline)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+        }
+        .buttonStyle(.borderedProminent)
+        .padding(.top, 4)
+        .padding(.bottom, 16)
+    }
+
+    private var teamColorsSheet: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(NSLocalizedString("choose_team_color", comment: ""))
+                .font(.headline)
+                .padding(.horizontal)
+                .padding(.top)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(TeamColor.allCases, id: \.self) { color in
+                        Button {
+                            viewModel.send(.onTeamColorSelected(color: color))
+                            showColorsSheet = false
+                        } label: {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(color.color)
+                                .frame(width: 56, height: 56)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                                )
+                        }
+                    }
+                }
+                .padding(.horizontal)
+            }
+
+            Spacer()
+                .frame(height: 32)
+        }
+        .presentationDetents([.height(150)])
+    }
+
+    private func handleEffect(_ effect: AddGameEffect?) {
+        guard let effect = effect else { return }
+        viewModel.effect = nil
+
+        switch effect {
+        case .showColorsBottomSheet:
+            showColorsSheet = true
+        case .showSnackbar(let message):
+            viewModel.snackbarMessage = message
+        case .openGameScreen:
+            dismiss()
+        case .closeScreen:
+            dismiss()
+        case .closeScreenWithResult:
+            dismiss()
+        }
+    }
+}
+
+struct RoundedTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding()
+            .background(Color(.systemBackground))
+            .cornerRadius(16)
+    }
+}
+
+struct RadioButton: View {
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Circle()
+                .stroke(isSelected ? Color.accentColor : Color.secondary, lineWidth: 2)
+                .frame(width: 20, height: 20)
+                .overlay(
+                    Circle()
+                        .fill(isSelected ? Color.accentColor : Color.clear)
+                        .frame(width: 10, height: 10)
+                )
+        }
+    }
+}
+
+struct SnackbarModifier: ViewModifier {
+    @Binding var message: String?
+
+    func body(content: Content) -> some View {
+        ZStack(alignment: .bottom) {
+            content
+
+            if let message = message {
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.black.opacity(0.8))
+                    .cornerRadius(8)
+                    .padding()
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            withAnimation {
+                                self.message = nil
+                            }
+                        }
+                    }
+            }
+        }
+        .animation(.easeInOut, value: message)
+    }
+}
+
+extension View {
+    func snackbar(message: Binding<String?>) -> some View {
+        modifier(SnackbarModifier(message: message))
+    }
+}
+
+struct TeamQuantityItem: View {
+    let quantity: TeamQuantity
+    let isSelected: Bool
+    let onSelect: () -> Void
+
+    var body: some View {
+        VStack {
+            Text("\(quantity.rawValue)")
+                .font(.subheadline)
+                .foregroundColor(isSelected ? .accentColor : .secondary)
+
+            RadioButton(isSelected: isSelected, action: onSelect)
+        }
+    }
+}
