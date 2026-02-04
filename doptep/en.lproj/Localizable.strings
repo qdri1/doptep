@@ -84,7 +84,7 @@
 "passes_icon" = "P";
 
 // MARK: - Team Options
-"team_option_goal" = "Goal";
+"team_option_goal" = "Goal ⚽️";
 "team_option_assist" = "Assist";
 "team_option_dribble" = "Dribble";
 "team_option_pass" = "Pass";

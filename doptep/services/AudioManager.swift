@@ -6,15 +6,18 @@
 import Foundation
 import AVFoundation
 
-final class AudioManager: ObservableObject {
+final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
 
     private var audioPlayer: AVAudioPlayer?
     private let speechSynthesizer = AVSpeechSynthesizer()
     private var currentLanguage: String = "en-US"
+    private var completion: (() -> Void)?
 
-    init() {
+    override init() {
+        super.init()
         setupAudioSession()
         loadLanguagePreference()
+        speechSynthesizer.delegate = self
     }
 
     private func setupAudioSession() {
@@ -27,7 +30,7 @@ final class AudioManager: ObservableObject {
     }
 
     private func loadLanguagePreference() {
-        let savedLanguage = UserDefaults.standard.string(forKey: "app_language") ?? "en"
+        let savedLanguage = UserDefaults.standard.string(forKey: "app_language") ?? "ru"
         currentLanguage = savedLanguage == "ru" ? "ru-RU" : "en-US"
     }
 
@@ -54,6 +57,8 @@ final class AudioManager: ObservableObject {
     }
 
     func speak(text: String, completion: (() -> Void)? = nil) {
+        self.completion = completion
+        
         speechSynthesizer.stopSpeaking(at: .immediate)
 
         let utterance = AVSpeechUtterance(string: text)
@@ -63,6 +68,11 @@ final class AudioManager: ObservableObject {
         utterance.volume = 1.0
 
         speechSynthesizer.speak(utterance)
+    }
+    
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        completion?()
+        completion = nil
     }
 
     func stopSpeaking() {
