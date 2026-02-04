@@ -103,8 +103,8 @@ struct GameScreen: View {
                 .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showGameInfoSheet) {
-            GameInfoSheet(gameRule: viewModel.uiState.gameUiModel?.gameRule)
-                .presentationDetents([.medium])
+            GameInfoSheet()
+                .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showPlayerResultSheet) {
             if let playerResult = currentPlayerResult {
@@ -821,20 +821,79 @@ struct BestPlayersSheet: View {
 }
 
 struct GameInfoSheet: View {
-    let gameRule: GameRule?
-
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading, spacing: 16) {
-                if let rule = gameRule {
-                    Text(NSLocalizedString(rule.localizationKey, comment: ""))
-                        .font(.body)
-                        .padding()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    // Live Game Block Info
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "arrow.left.arrow.right")
+                                .foregroundColor(.accentColor)
+                            Text(NSLocalizedString("live_game_info_replace_teams", comment: ""))
+                                .font(.caption)
+                        }
+                        HStack(spacing: 12) {
+                            Image(systemName: "pause.circle")
+                                .foregroundColor(.primary)
+                            Text(NSLocalizedString("live_game_info_pause_timer", comment: ""))
+                                .font(.caption)
+                        }
+                        HStack(spacing: 12) {
+                            Image(systemName: "play.circle")
+                                .foregroundColor(.primary)
+                            Text(NSLocalizedString("live_game_info_play_timer", comment: ""))
+                                .font(.caption)
+                        }
+                    }
+
+                    Divider()
+
+                    // Teams Block Info
+                    VStack(alignment: .leading, spacing: 8) {
+                        InfoRow(symbol: NSLocalizedString("games_short", comment: ""), description: NSLocalizedString("teams_block_info_games", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("wins_short", comment: ""), description: NSLocalizedString("teams_block_info_wins", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("draws_short", comment: ""), description: NSLocalizedString("teams_block_info_draws", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("loses_short", comment: ""), description: NSLocalizedString("teams_block_info_loses", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("goals_short", comment: ""), description: NSLocalizedString("teams_block_info_goals_conceded", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("goal_difference_short", comment: ""), description: NSLocalizedString("teams_block_info_goals_difference", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("points_short", comment: ""), description: NSLocalizedString("teams_block_info_points", comment: ""))
+                    }
+
+                    Divider()
+
+                    // Players Block Info
+                    VStack(alignment: .leading, spacing: 8) {
+                        InfoRow(symbol: NSLocalizedString("goals_icon", comment: ""), description: NSLocalizedString("players_block_info_goals", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("assists_icon", comment: ""), description: NSLocalizedString("players_block_info_assists", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("saves_icon", comment: ""), description: NSLocalizedString("players_block_info_saves", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("dribbles_icon", comment: ""), description: NSLocalizedString("players_block_info_dribbles", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("shots_icon", comment: ""), description: NSLocalizedString("players_block_info_shots", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("passes_icon", comment: ""), description: NSLocalizedString("players_block_info_passes", comment: ""))
+                    }
+
+                    Spacer()
                 }
-                Spacer()
+                .padding()
             }
             .navigationTitle(NSLocalizedString("game_info", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
+
+struct InfoRow: View {
+    let symbol: String
+    let description: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Text(symbol)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .frame(width: 30, alignment: .leading)
+            Text(description)
+                .font(.caption)
         }
     }
 }
