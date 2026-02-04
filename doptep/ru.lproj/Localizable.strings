@@ -237,3 +237,10 @@
 "goals" = "голы";
 "edit_team_goals" = "Редактировать гол";
 "edit_player_stats" = "Редактировать результаты";
+
+"text_goal" = "гол";
+"text_assist" = "ассист";
+"text_dribble" = "дриблинг";
+"text_pass" = "пас";
+"text_shot" = "удар";
+"text_save" = "сейв";

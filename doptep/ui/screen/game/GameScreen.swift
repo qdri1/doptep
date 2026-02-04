@@ -755,26 +755,68 @@ struct BestPlayersSheet: View {
         NavigationView {
             List {
                 ForEach(bestPlayers, id: \.option) { bestPlayer in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(NSLocalizedString(bestPlayer.option.localizationKey, comment: ""))
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                    
+                    VStack(alignment: .leading) {
+                        Text(NSLocalizedString(bestPlayer.option.localizationKey, comment: ""))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        HStack {
+                            Circle()
+                                .fill(bestPlayer.playerUiModel.teamColor.color)
+                                .frame(width: 12, height: 12)
+                            
                             Text(bestPlayer.playerUiModel.name)
                                 .font(.headline)
+                            
+                            Spacer()
+                            
+                            switch bestPlayer.option {
+                            case .bestPlayer:
+                                let result = [
+                                    stat(bestPlayer.playerUiModel.goals, "text_goal"),
+                                    stat(bestPlayer.playerUiModel.assists, "text_assist"),
+                                    stat(bestPlayer.playerUiModel.saves, "text_save"),
+                                    stat(bestPlayer.playerUiModel.dribbles, "text_dribble"),
+                                    stat(bestPlayer.playerUiModel.passes, "text_pass"),
+                                    stat(bestPlayer.playerUiModel.shots, "text_shot")
+                                ]
+                                .compactMap { $0 }
+                                .joined(separator: ", ")
+                                
+                                Text(result)
+                                    .font(.body)
+                                    .padding(.leading, 32)
+                            case .goals:
+                                Text("\(bestPlayer.playerUiModel.goals) \(NSLocalizedString("text_goal", comment: ""))")
+                                    .font(.body)
+                            case .assists:
+                                Text("\(bestPlayer.playerUiModel.assists) \(NSLocalizedString("text_assist", comment: ""))")
+                                    .font(.body)
+                            case .saves:
+                                Text("\(bestPlayer.playerUiModel.saves) \(NSLocalizedString("text_save", comment: ""))")
+                                    .font(.body)
+                            case .dribbles:
+                                Text("\(bestPlayer.playerUiModel.dribbles) \(NSLocalizedString("text_dribble", comment: ""))")
+                                    .font(.body)
+                            case .passes:
+                                Text("\(bestPlayer.playerUiModel.passes) \(NSLocalizedString("text_pass", comment: ""))")
+                                    .font(.body)
+                            case .shots:
+                                Text("\(bestPlayer.playerUiModel.shots) \(NSLocalizedString("text_shot", comment: ""))")
+                                    .font(.body)
+                            }
                         }
-
-                        Spacer()
-
-                        Circle()
-                            .fill(bestPlayer.playerUiModel.teamColor.color)
-                            .frame(width: 12, height: 12)
                     }
                 }
             }
             .navigationTitle(NSLocalizedString("best_players", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+    
+    func stat(_ value: Int, _ key: String) -> String? {
+        value > 0 ? "\(value) \(NSLocalizedString(key, comment: ""))" : nil
     }
 }
 

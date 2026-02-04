@@ -238,3 +238,9 @@
 "edit_team_goals" = "Edit goal results";
 "edit_player_stats" = "Edit results";
 
+"text_goal" = "goal";
+"text_assist" = "assist";
+"text_dribble" = "dribble";
+"text_pass" = "pass";
+"text_shot" = "shot";
+"text_save" = "save";
