@@ -499,32 +499,64 @@ struct GameScreen: View {
                 .foregroundColor(.secondary)
 
             VStack(spacing: 0) {
+                // Header Row
+                HStack(spacing: 0) {
+                    Text("#")
+                        .frame(width: 24, alignment: .center)
+                    Text(NSLocalizedString("team", comment: ""))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(NSLocalizedString("games_short", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("wins_short", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("draws_short", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("loses_short", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("goals_short", comment: ""))
+                        .frame(width: 44, alignment: .center)
+                    Text(NSLocalizedString("points_short", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                }
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 8)
+
+                Divider()
+
+                // Team Rows
                 ForEach(Array(viewModel.uiState.teamUiModelList.enumerated()), id: \.element.id) { index, team in
-                    HStack {
+                    HStack(spacing: 0) {
                         Text("\(index + 1)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .frame(width: 20)
+                            .frame(width: 24, alignment: .center)
 
-                        Circle()
-                            .fill(team.color.color)
-                            .frame(width: 12, height: 12)
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(team.color.color)
+                                .frame(width: 10, height: 10)
+                            Text(team.name)
+                                .lineLimit(1)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                        Text(team.name)
-                            .font(.subheadline)
-
-                        Spacer()
-
+                        Text("\(team.games)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(team.wins)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(team.draws)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(team.loses)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(team.goals)-\(team.conceded)")
+                            .frame(width: 44, alignment: .center)
                         Text("\(team.points)")
-                            .font(.subheadline)
-                            .fontWeight(.bold)
-
-                        Text("(\(team.wins)-\(team.draws)-\(team.loses))")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                            .frame(width: 28, alignment: .center)
+                            .fontWeight(.semibold)
                     }
+                    .font(.caption)
                     .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 8)
 
                     if index < viewModel.uiState.teamUiModelList.count - 1 {
                         Divider()
@@ -543,30 +575,63 @@ struct GameScreen: View {
                 .foregroundColor(.secondary)
 
             VStack(spacing: 0) {
+                // Header Row
+                HStack(spacing: 0) {
+                    Text("#")
+                        .frame(width: 24, alignment: .center)
+                    Text(NSLocalizedString("player", comment: ""))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(NSLocalizedString("goals_icon", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("assists_icon", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("saves_icon", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("dribbles_icon", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("shots_icon", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("passes_icon", comment: ""))
+                        .frame(width: 28, alignment: .center)
+                }
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 8)
+
+                Divider()
+
+                // Player Rows
                 ForEach(Array(viewModel.uiState.playerUiModelList.prefix(10).enumerated()), id: \.element.id) { index, player in
-                    HStack {
+                    HStack(spacing: 0) {
                         Text("\(index + 1)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .frame(width: 20)
+                            .frame(width: 24, alignment: .center)
 
-                        Circle()
-                            .fill(player.teamColor.color)
-                            .frame(width: 12, height: 12)
-
-                        Text(player.name)
-                            .font(.subheadline)
-
-                        Spacer()
-
-                        HStack(spacing: 12) {
-                            statLabel(value: player.goals, label: "G")
-                            statLabel(value: player.assists, label: "A")
-                            statLabel(value: player.saves, label: "S")
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(player.teamColor.color)
+                                .frame(width: 10, height: 10)
+                            Text(player.name)
+                                .lineLimit(1)
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        Text("\(player.goals)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(player.assists)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(player.saves)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(player.dribbles)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(player.shots)")
+                            .frame(width: 28, alignment: .center)
+                        Text("\(player.passes)")
+                            .frame(width: 28, alignment: .center)
                     }
+                    .font(.caption)
                     .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
+                    .padding(.horizontal, 8)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         currentPlayerResult = PlayerResultUiModel(
@@ -584,18 +649,6 @@ struct GameScreen: View {
             .background(Color(.systemBackground))
             .cornerRadius(12)
         }
-    }
-
-    private func statLabel(value: Int, label: String) -> some View {
-        VStack(spacing: 0) {
-            Text("\(value)")
-                .font(.caption)
-                .fontWeight(.bold)
-            Text(label)
-                .font(.system(size: 8))
-                .foregroundColor(.secondary)
-        }
-        .frame(width: 24)
     }
 
     private func handleEffect(_ effect: GameEffect?) {
