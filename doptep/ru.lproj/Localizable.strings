@@ -76,7 +76,7 @@
 // MARK: - Player Results Table
 "player" = "Игрок";
 "players_leaderboard" = "Таблица игроков";
-"goals_icon" = "Г";
+"goals_icon" = "⚽️";
 "assists_icon" = "А";
 "saves_icon" = "С";
 "dribbles_icon" = "Д";
@@ -232,3 +232,8 @@
 "auto_goal" = "Автогол";
 "best_players" = "Лучшие игроки";
 "game_info" = "Информация";
+
+"value" = "результат";
+"goals" = "голы";
+"edit_team_goals" = "Редактировать гол";
+"edit_player_stats" = "Редактировать результаты";

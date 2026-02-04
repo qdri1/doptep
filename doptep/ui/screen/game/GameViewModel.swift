@@ -148,6 +148,8 @@ final class GameViewModel: ObservableObject {
                     let rhsOther = rhs.dribbles + rhs.shots + rhs.passes
                     if lhsOther != rhsOther { return lhsOther > rhsOther }
                     if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
+                    if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
+                    if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
                     return lhs.name < rhs.name
                 }
 
@@ -661,6 +663,13 @@ final class GameViewModel: ObservableObject {
         uiState.playerUiModelList = players.sorted { lhs, rhs in
             if lhs.goals != rhs.goals { return lhs.goals > rhs.goals }
             if lhs.assists != rhs.assists { return lhs.assists > rhs.assists }
+            if lhs.saves != rhs.saves { return lhs.saves > rhs.saves }
+            let lhsOther = lhs.dribbles + lhs.shots + lhs.passes
+            let rhsOther = rhs.dribbles + rhs.shots + rhs.passes
+            if lhsOther != rhsOther { return lhsOther > rhsOther }
+            if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
+            if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
+            if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
             return lhs.name < rhs.name
         }
     }

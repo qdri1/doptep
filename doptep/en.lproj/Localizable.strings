@@ -76,7 +76,7 @@
 // MARK: - Player Results Table
 "player" = "Player";
 "players_leaderboard" = "Players Leaderboard";
-"goals_icon" = "G";
+"goals_icon" = "⚽️";
 "assists_icon" = "A";
 "saves_icon" = "SV";
 "dribbles_icon" = "D";
@@ -232,3 +232,9 @@
 "auto_goal" = "Own Goal";
 "best_players" = "Best Players";
 "game_info" = "Game Info";
+
+"value" = "result";
+"goals" = "goals";
+"edit_team_goals" = "Edit goal results";
+"edit_player_stats" = "Edit results";
+
