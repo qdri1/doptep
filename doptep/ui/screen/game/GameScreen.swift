@@ -718,20 +718,20 @@ struct OptionPlayersSheet: View {
     var body: some View {
         NavigationView {
             List {
+                ForEach(optionPlayers.playerUiModelList) { player in
+                    Button {
+                        onPlayerSelected(player)
+                    } label: {
+                        Text(player.name)
+                    }
+                }
+                
                 if optionPlayers.option == .goal {
                     Button {
                         onAutoGoalSelected()
                     } label: {
                         Text(NSLocalizedString("auto_goal", comment: ""))
                             .foregroundColor(.orange)
-                    }
-                }
-
-                ForEach(optionPlayers.playerUiModelList) { player in
-                    Button {
-                        onPlayerSelected(player)
-                    } label: {
-                        Text(player.name)
                     }
                 }
             }
