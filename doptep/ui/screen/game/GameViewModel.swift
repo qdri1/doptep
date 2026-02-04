@@ -7,6 +7,7 @@ import Foundation
 import SwiftUI
 import Combine
 import AVFoundation
+import SwiftData
 
 @MainActor
 final class GameViewModel: ObservableObject {
@@ -1189,5 +1190,12 @@ final class GameViewModel: ObservableObject {
 
     func refreshData() {
         fetchGame()
+    }
+
+    func createGameResultsViewModel(gameId: UUID, modelContext: ModelContext) -> GameResultsViewModel {
+        GameResultsViewModel(
+            gameId: gameId,
+            modelContext: modelContext
+        )
     }
 }

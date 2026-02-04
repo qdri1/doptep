@@ -26,6 +26,8 @@ struct GameScreen: View {
     @State private var showBestPlayersSheet = false
     @State private var showAddGameScreen = false
     @State private var updateGameId: UUID?
+    @State private var showGameResultsScreen = false
+    @State private var gameResultsGameId: UUID?
     @State private var showLeftTeamOptionsDropdown = false
     @State private var showRightTeamOptionsDropdown = false
     @State private var showLeftTeamChangeDropdown = false
@@ -225,6 +227,11 @@ struct GameScreen: View {
         }) {
             if let gameId = updateGameId {
                 AddGameScreen(viewModel: viewModel.createAddGameViewModel(gameId: gameId))
+            }
+        }
+        .fullScreenCover(isPresented: $showGameResultsScreen) {
+            if let gameId = gameResultsGameId {
+                GameResultsScreen(viewModel: viewModel.createGameResultsViewModel(gameId: gameId, modelContext: modelContext))
             }
         }
         .confirmationDialog("", isPresented: $showDeleteConfirmation) {
@@ -603,8 +610,9 @@ struct GameScreen: View {
         case .openUpdateGame(let gameId):
             updateGameId = gameId
             showAddGameScreen = true
-        case .openGameResultsScreen:
-            break
+        case .openGameResultsScreen(let gameId):
+            gameResultsGameId = gameId
+            showGameResultsScreen = true
         case .showOptionPlayersBottomSheet(let optionPlayers):
             currentOptionPlayers = optionPlayers
             showOptionPlayersSheet = true
