@@ -693,6 +693,12 @@ final class GameViewModel: ObservableObject {
                     self.timerMillis = 0
                 }
                 self.timerValue = self.formatTime(self.timerMillis)
+
+                if self.timerMillis == 60000 {
+                    self.audioManager.playSound("minuta")
+                } else if self.timerMillis == 10000 {
+                    self.audioManager.playSound("do_auta")
+                }
             }
         }
     }

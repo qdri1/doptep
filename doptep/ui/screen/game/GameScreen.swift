@@ -448,7 +448,7 @@ struct GameScreen: View {
                         } label: {
                             Text(NSLocalizedString(sound.localizationKey, comment: ""))
                                 .font(.caption)
-                                .padding(.horizontal, 8)
+                                .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
                                 .background(Color(.systemBackground))
                                 .cornerRadius(8)
