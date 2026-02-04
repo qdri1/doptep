@@ -41,7 +41,7 @@ struct GameScreen: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            ScrollView {
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 16) {
                     if let liveGame = viewModel.uiState.liveGameUiModel {
                         scoreboardSection(liveGame: liveGame)
