@@ -441,7 +441,7 @@ struct GameScreen: View {
                 .foregroundColor(.secondary)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                HStack(spacing: 16) {
                     ForEach(GameSounds.allCases, id: \.self) { sound in
                         Button {
                             viewModel.send(.onSoundClicked(sound: sound))
