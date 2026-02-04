@@ -146,7 +146,7 @@
 // MARK: - Game Functions
 "function_best_players" = "Best players";
 "function_edit" = "Edit game";
-"function_clear_result" = "Clear this game results";
+"function_clear_result" = "Clear results";
 "function_info" = "Info";
 "function_all_results" = "All games results";
 "function_remove" = "Delete game";

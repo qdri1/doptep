@@ -317,11 +317,14 @@ struct GameScreen: View {
                 }
                 .onLongPressGesture {
                     if let liveGame = viewModel.uiState.liveGameUiModel {
-                        currentLiveGameResult = LiveGameResultUiModel(
-                            liveGameUiModel: liveGame,
-                            isLeftTeam: true
+                        viewModel.send(
+                            .onLiveGameResultClicked(
+                                liveGameResultUiModel: LiveGameResultUiModel(
+                                    liveGameUiModel: liveGame,
+                                    isLeftTeam: true
+                                )
+                            )
                         )
-                        showLiveGameResultSheet = true
                     }
                 }
 
@@ -347,11 +350,14 @@ struct GameScreen: View {
                 }
                 .onLongPressGesture {
                     if let liveGame = viewModel.uiState.liveGameUiModel {
-                        currentLiveGameResult = LiveGameResultUiModel(
-                            liveGameUiModel: liveGame,
-                            isLeftTeam: false
+                        viewModel.send(
+                            .onLiveGameResultClicked(
+                                liveGameResultUiModel: LiveGameResultUiModel(
+                                    liveGameUiModel: liveGame,
+                                    isLeftTeam: true
+                                )
+                            )
                         )
-                        showLiveGameResultSheet = true
                     }
                 }
             }
@@ -466,7 +472,6 @@ struct GameScreen: View {
 
             LazyVGrid(columns: [
                 GridItem(.flexible()),
-                GridItem(.flexible()),
                 GridItem(.flexible())
             ], spacing: 8) {
                 ForEach(GameFunction.allCases, id: \.self) { function in
@@ -475,6 +480,7 @@ struct GameScreen: View {
                     } label: {
                         VStack(spacing: 4) {
                             Image(systemName: function.systemImage)
+                                .frame(width: 24, height: 24)
                                 .font(.title3)
                             Text(NSLocalizedString(function.localizationKey, comment: ""))
                                 .font(.caption)
@@ -638,11 +644,14 @@ struct GameScreen: View {
                     .padding(.horizontal, 8)
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        currentPlayerResult = PlayerResultUiModel(
-                            playerUiModel: player,
-                            option: .goal
+                        viewModel.send(
+                            .onPlayerResultClicked(
+                                playerResultUiModel: PlayerResultUiModel(
+                                    playerUiModel: player,
+                                    option: .goal
+                                )
+                            )
                         )
-                        showPlayerResultSheet = true
                     }
 
                     if index < viewModel.uiState.playerUiModelList.count - 1 {

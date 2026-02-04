@@ -146,7 +146,7 @@
 // MARK: - Game Functions
 "function_best_players" = "Лучшие игроки";
 "function_edit" = "Редактировать игру";
-"function_clear_result" = "Сбросить результаты этой игры";
+"function_clear_result" = "Сбросить результаты";
 "function_info" = "Инфо";
 "function_all_results" = "Результаты всех игр";
 "function_remove" = "Удалить игру";
