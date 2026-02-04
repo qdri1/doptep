@@ -70,6 +70,7 @@
 "draws_short" = "D";
 "loses_short" = "L";
 "goals_short" = "+/-";
+"goal_difference_short" = "GD";
 "points_short" = "PTS";
 
 // MARK: - Player Results Table

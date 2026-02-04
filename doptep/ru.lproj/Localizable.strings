@@ -70,6 +70,7 @@
 "draws_short" = "Н";
 "loses_short" = "П";
 "goals_short" = "+/-";
+"goal_difference_short" = "РГ";
 "points_short" = "ОЧК";
 
 // MARK: - Player Results Table

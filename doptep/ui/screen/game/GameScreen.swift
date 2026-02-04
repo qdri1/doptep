@@ -49,9 +49,9 @@ struct GameScreen: View {
                     timerSection
                     startFinishButton
                     soundsSection
-                    functionsSection
                     teamsLeaderboard
                     playersLeaderboard
+                    functionsSection
                 }
                 .padding()
             }
@@ -506,17 +506,19 @@ struct GameScreen: View {
                     Text(NSLocalizedString("team", comment: ""))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Text(NSLocalizedString("games_short", comment: ""))
-                        .frame(width: 28, alignment: .center)
+                        .frame(width: 24, alignment: .center)
                     Text(NSLocalizedString("wins_short", comment: ""))
-                        .frame(width: 28, alignment: .center)
+                        .frame(width: 24, alignment: .center)
                     Text(NSLocalizedString("draws_short", comment: ""))
-                        .frame(width: 28, alignment: .center)
+                        .frame(width: 24, alignment: .center)
                     Text(NSLocalizedString("loses_short", comment: ""))
-                        .frame(width: 28, alignment: .center)
+                        .frame(width: 24, alignment: .center)
                     Text(NSLocalizedString("goals_short", comment: ""))
-                        .frame(width: 44, alignment: .center)
-                    Text(NSLocalizedString("points_short", comment: ""))
+                        .frame(width: 40, alignment: .center)
+                    Text(NSLocalizedString("goal_difference_short", comment: ""))
                         .frame(width: 28, alignment: .center)
+                    Text(NSLocalizedString("points_short", comment: ""))
+                        .frame(width: 24, alignment: .center)
                 }
                 .font(.caption2)
                 .foregroundColor(.secondary)
@@ -541,17 +543,19 @@ struct GameScreen: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                         Text("\(team.games)")
-                            .frame(width: 28, alignment: .center)
+                            .frame(width: 24, alignment: .center)
                         Text("\(team.wins)")
-                            .frame(width: 28, alignment: .center)
+                            .frame(width: 24, alignment: .center)
                         Text("\(team.draws)")
-                            .frame(width: 28, alignment: .center)
+                            .frame(width: 24, alignment: .center)
                         Text("\(team.loses)")
-                            .frame(width: 28, alignment: .center)
+                            .frame(width: 24, alignment: .center)
                         Text("\(team.goals)-\(team.conceded)")
-                            .frame(width: 44, alignment: .center)
-                        Text("\(team.points)")
+                            .frame(width: 40, alignment: .center)
+                        Text(team.goalsDifference > 0 ? "+\(team.goalsDifference)" : "\(team.goalsDifference)")
                             .frame(width: 28, alignment: .center)
+                        Text("\(team.points)")
+                            .frame(width: 24, alignment: .center)
                             .fontWeight(.semibold)
                     }
                     .font(.caption)
@@ -602,7 +606,7 @@ struct GameScreen: View {
                 Divider()
 
                 // Player Rows
-                ForEach(Array(viewModel.uiState.playerUiModelList.prefix(10).enumerated()), id: \.element.id) { index, player in
+                ForEach(Array(viewModel.uiState.playerUiModelList.enumerated()), id: \.element.id) { index, player in
                     HStack(spacing: 0) {
                         Text("\(index + 1)")
                             .frame(width: 24, alignment: .center)
@@ -641,7 +645,7 @@ struct GameScreen: View {
                         showPlayerResultSheet = true
                     }
 
-                    if index < min(9, viewModel.uiState.playerUiModelList.count - 1) {
+                    if index < viewModel.uiState.playerUiModelList.count - 1 {
                         Divider()
                     }
                 }
