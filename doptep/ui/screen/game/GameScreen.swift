@@ -440,25 +440,23 @@ struct GameScreen: View {
                 .font(.subheadline)
                 .foregroundColor(.secondary)
 
-            LazyVGrid(columns: [
-                GridItem(.flexible()),
-                GridItem(.flexible()),
-                GridItem(.flexible())
-            ], spacing: 8) {
-                ForEach(GameSounds.allCases, id: \.self) { sound in
-                    Button {
-                        viewModel.send(.onSoundClicked(sound: sound))
-                    } label: {
-                        Text(NSLocalizedString(sound.localizationKey, comment: ""))
-                            .font(.caption)
-                            .lineLimit(1)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 12)
-                            .frame(maxWidth: .infinity)
-                            .background(Color(.systemBackground))
-                            .cornerRadius(8)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(GameSounds.allCases, id: \.self) { sound in
+                        Button {
+                            viewModel.send(.onSoundClicked(sound: sound))
+                        } label: {
+                            Text(NSLocalizedString(sound.localizationKey, comment: ""))
+                                .font(.caption)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 12)
+                                .background(Color(.systemBackground))
+                                .cornerRadius(8)
+                                .multilineTextAlignment(.center)
+                                .fixedSize(horizontal: true, vertical: false)
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
