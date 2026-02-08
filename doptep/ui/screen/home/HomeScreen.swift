@@ -64,6 +64,11 @@ struct HomeScreen: View {
                 navigationPath.append(effect)
                 viewModel.uiState.effect = nil
             }
+            .onChange(of: navigationPath.count) { _, newCount in
+                if newCount == 0 {
+                    viewModel.send(.onInterceptionNavigationResult)
+                }
+            }
         }
     }
 }
