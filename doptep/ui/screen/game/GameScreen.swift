@@ -52,6 +52,7 @@ struct GameScreen: View {
                     teamsLeaderboard
                     playersLeaderboard
                     functionsSection
+                    infoSection
                 }
                 .padding()
             }
@@ -493,6 +494,59 @@ struct GameScreen: View {
                     .foregroundColor(function == .delete ? .red : .primary)
                 }
             }
+        }
+    }
+
+    private var infoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(NSLocalizedString("function_info", comment: ""))
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+
+            if let game = viewModel.uiState.gameUiModel {
+                VStack(alignment: .leading, spacing: 6) {
+                    row(
+                        title: NSLocalizedString("home_game_name", comment: ""),
+                        value: game.name
+                    )
+
+                    row(
+                        title: NSLocalizedString("home_game_format", comment: ""),
+                        value: game.gameFormat.rawValue
+                    )
+
+                    row(
+                        title: NSLocalizedString("home_game_team_quantity", comment: ""),
+                        value: "\(game.teamQuantity.rawValue)"
+                    )
+
+                    row(
+                        title: NSLocalizedString("home_game_time", comment: ""),
+                        value: "\(game.timeInMinutes) минут"
+                    )
+
+                    row(
+                        title: NSLocalizedString("home_game_rule", comment: ""),
+                        value: NSLocalizedString(game.gameRule.localizationKey, comment: "")
+                    )
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .background(Color(uiColor: .systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
+        }
+    }
+
+    private func row(title: String, value: String) -> some View {
+        HStack(spacing: 4) {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.primary)
+
+            Text(value)
+                .font(.caption2)
+                .foregroundColor(.primary)
         }
     }
 
