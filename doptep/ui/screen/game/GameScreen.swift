@@ -263,7 +263,7 @@ struct GameScreen: View {
         } message: {
             Text(NSLocalizedString("go_back_confirmation", comment: ""))
         }
-        .confirmationDialog(NSLocalizedString("choose_staying_team", comment: ""), isPresented: $showStayTeamSheet) {
+        .confirmationDialog("", isPresented: $showStayTeamSheet) {
             if let liveGame = viewModel.uiState.liveGameUiModel {
                 Button(liveGame.leftTeamName) {
                     viewModel.send(.onLeftTeamStayClicked)
@@ -272,6 +272,8 @@ struct GameScreen: View {
                     viewModel.send(.onRightTeamStayClicked)
                 }
             }
+        } message: {
+            Text(NSLocalizedString("choose_staying_team", comment: ""))
         }
     }
 
