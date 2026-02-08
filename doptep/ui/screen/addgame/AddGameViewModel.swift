@@ -288,7 +288,8 @@ final class AddGameViewModel: ObservableObject {
                 gameFormat: gameUiModel.gameFormat,
                 teamQuantity: gameUiModel.teamQuantity,
                 gameRule: gameUiModel.gameRule,
-                timeInMinutes: Int(timeInMinuteFieldState) ?? defaultTimeInMinutes
+                timeInMinutes: Int(timeInMinuteFieldState) ?? defaultTimeInMinutes,
+                modifiedTime: gameUiModel.modifiedTime
             )
             try gameRepository.updateGame(updatedGame)
 

@@ -54,7 +54,7 @@ final class HomeViewModel: ObservableObject {
             try? await Task.sleep(nanoseconds: 500_000_000)
 
             let games = (try? repository.getGames()) ?? []
-            uiState.games = games.sorted { $0.id.uuidString > $1.id.uuidString }
+            uiState.games = games.sorted { $0.modifiedTime > $1.modifiedTime }
 
             uiState.isLoading = false
             uiState.isRefreshing = false

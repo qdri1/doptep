@@ -272,6 +272,7 @@ final class GameViewModel: ObservableObject {
             do {
                 let updatedLiveGame = liveGame.updating(isLive: true)
                 try liveGameRepository.updateLiveGame(updatedLiveGame)
+                try gameRepository.updateModifiedTime(id: gameId)
                 uiState.liveGameUiModel = updatedLiveGame
             } catch {
                 snackbarMessage = "Error starting game"

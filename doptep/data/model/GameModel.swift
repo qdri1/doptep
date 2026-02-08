@@ -17,6 +17,7 @@ final class GameModel {
     var teamQuantity: Int
     var rule: String
     var timeInMinutes: Int
+    var modifiedTime: Date = Date()
 
     init(
         name: String,
@@ -31,6 +32,7 @@ final class GameModel {
         self.teamQuantity = teamQuantity
         self.rule = rule
         self.timeInMinutes = timeInMinutes
+        self.modifiedTime = Date()
     }
 }
 
@@ -50,7 +52,8 @@ extension GameModel {
             gameFormat: format,
             teamQuantity: team,
             gameRule: rule,
-            timeInMinutes: timeInMinutes
+            timeInMinutes: timeInMinutes,
+            modifiedTime: modifiedTime
         )
     }
 }

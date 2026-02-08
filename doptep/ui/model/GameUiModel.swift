@@ -14,4 +14,5 @@ struct GameUiModel: Identifiable {
     let teamQuantity: TeamQuantity
     let gameRule: GameRule
     let timeInMinutes: Int
+    let modifiedTime: Date
 }

@@ -45,6 +45,11 @@ final class GameRepository {
         model.timeInMinutes = uiModel.timeInMinutes
     }
 
+    func updateModifiedTime(id: UUID) throws {
+        guard let model = try getGameEntity(id: id) else { return }
+        model.modifiedTime = Date()
+    }
+
     func deleteGame(_ model: GameModel) {
         context.delete(model)
     }
