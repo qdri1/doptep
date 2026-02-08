@@ -35,8 +35,8 @@ final class LiveGameModel {
         rightTeamColor: String,
         rightTeamGoals: Int = 0,
         rightTeamWinCount: Int = 0,
-        gameCount: Int = 1,
-        isLive: Bool = true
+        gameCount: Int = 0,
+        isLive: Bool = false
     ) {
         self.id = UUID()
         self.gameId = gameId

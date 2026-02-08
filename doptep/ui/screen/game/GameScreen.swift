@@ -354,7 +354,7 @@ struct GameScreen: View {
                             .onLiveGameResultClicked(
                                 liveGameResultUiModel: LiveGameResultUiModel(
                                     liveGameUiModel: liveGame,
-                                    isLeftTeam: true
+                                    isLeftTeam: false
                                 )
                             )
                         )
