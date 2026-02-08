@@ -119,7 +119,7 @@ final class AddGameViewModel: ObservableObject {
                     self.teamQuantityState = gameUiModel.teamQuantity
                     self.gameRuleState = gameUiModel.gameRule
 
-                    let teams = try teamRepository.getTeams(gameId: gameUiModel.id)
+                    let teams = try teamRepository.getTeams(gameId: gameUiModel.id).sorted { $0.name < $1.name }
                     self.teamUiModelList = teams
                     self.teamColors = teams.map { $0.color }
                     self.teamNameFields = teams.map { $0.name }
@@ -127,7 +127,7 @@ final class AddGameViewModel: ObservableObject {
                     var allPlayers: [[PlayerUiModel]] = []
                     var allPlayerNames: [[String]] = []
                     for team in teams {
-                        let players = try playerRepository.getPlayers(teamId: team.id)
+                        let players = try playerRepository.getPlayers(teamId: team.id).sorted { $0.name < $1.name }
                         allPlayers.append(players)
                         allPlayerNames.append(players.map { $0.name })
                     }
