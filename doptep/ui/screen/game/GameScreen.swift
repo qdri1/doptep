@@ -1005,6 +1005,15 @@ struct PlayerResultSheet: View {
                 TextField(NSLocalizedString("value", comment: ""), text: $valueText)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(alignment: .trailing) {
+                        if !valueText.isEmpty {
+                            Button { valueText = "" } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.trailing, 8)
+                        }
+                    }
                     .padding(.horizontal)
 
                 Button {
@@ -1085,6 +1094,15 @@ struct LiveGameResultSheet: View {
                 TextField(NSLocalizedString("goals", comment: ""), text: $goalsText)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(alignment: .trailing) {
+                        if !goalsText.isEmpty {
+                            Button { goalsText = "" } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.trailing, 8)
+                        }
+                    }
                     .padding(.horizontal)
 
                 Button {

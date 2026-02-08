@@ -78,6 +78,15 @@ struct AddGameScreen: View {
             set: { viewModel.send(.onGameTextValueChanged(value: $0)) }
         ))
         .textFieldStyle(RoundedTextFieldStyle())
+        .overlay(alignment: .trailing) {
+            if !viewModel.gameNameFieldState.isEmpty {
+                Button { viewModel.send(.onGameTextValueChanged(value: "")) } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
+                }
+                .padding(.trailing, 16)
+            }
+        }
         .padding()
     }
 
@@ -88,6 +97,15 @@ struct AddGameScreen: View {
         ))
         .keyboardType(.numberPad)
         .textFieldStyle(RoundedTextFieldStyle())
+        .overlay(alignment: .trailing) {
+            if !viewModel.timeInMinuteFieldState.isEmpty {
+                Button { viewModel.send(.onTimeTextValueChanged(value: "")) } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
+                }
+                .padding(.trailing, 16)
+            }
+        }
         .padding(.horizontal)
     }
 
@@ -277,6 +295,15 @@ struct AddGameScreen: View {
 
         return TextField(NSLocalizedString("team_name", comment: ""), text: binding)
             .textFieldStyle(RoundedTextFieldStyle())
+            .overlay(alignment: .trailing) {
+                if !binding.wrappedValue.isEmpty {
+                    Button { binding.wrappedValue = "" } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.trailing, 16)
+                }
+            }
     }
 
     private func playerField(at fieldIndex: Int) -> some View {
@@ -297,6 +324,15 @@ struct AddGameScreen: View {
             text: binding
         )
         .textFieldStyle(RoundedTextFieldStyle())
+        .overlay(alignment: .trailing) {
+            if !binding.wrappedValue.isEmpty {
+                Button { binding.wrappedValue = "" } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
+                }
+                .padding(.trailing, 16)
+            }
+        }
     }
 
     private var addPlayerButton: some View {
