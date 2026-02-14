@@ -120,11 +120,12 @@ private extension HomeScreen {
                 .listRowBackground(Color.clear)
             }
         }
+        .scrollIndicators(.hidden)
         .listStyle(.plain)
+        .contentMargins(.bottom, 96)
         .refreshable {
             viewModel.send(.onRefreshed)
         }
-        .padding(.bottom, 96)
     }
 }
 
