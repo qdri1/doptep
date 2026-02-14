@@ -564,79 +564,85 @@ struct GameScreen: View {
                 .font(.bodyMedium)
                 .foregroundColor(AppColor.onSurfaceVariant)
 
-            VStack(spacing: 0) {
-                // Header Row
-                HStack(spacing: 0) {
-                    Text("#")
-                        .frame(width: 24, alignment: .center)
+            HStack(alignment: .top, spacing: 8) {
+                // Place
+                statColumn(
+                    header: "#",
+                    values: viewModel.uiState.teamUiModelList.enumerated().map { ("\($0.offset + 1)", nil) }
+                )
+
+                // Team name (flexible)
+                VStack(alignment: .leading, spacing: 8) {
                     Text(NSLocalizedString("team", comment: ""))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(NSLocalizedString("games_short", comment: ""))
-                        .frame(width: 24, alignment: .center)
-                    Text(NSLocalizedString("wins_short", comment: ""))
-                        .frame(width: 24, alignment: .center)
-                    Text(NSLocalizedString("draws_short", comment: ""))
-                        .frame(width: 24, alignment: .center)
-                    Text(NSLocalizedString("loses_short", comment: ""))
-                        .frame(width: 24, alignment: .center)
-                    Text(NSLocalizedString("goals_short", comment: ""))
-                        .frame(width: 40, alignment: .center)
-                    Text(NSLocalizedString("goal_difference_short", comment: ""))
-                        .frame(width: 28, alignment: .center)
-                    Text(NSLocalizedString("points_short", comment: ""))
-                        .frame(width: 24, alignment: .center)
-                }
-                .font(.labelSmall)
-                .foregroundColor(AppColor.onSurfaceVariant)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 8)
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.outline)
 
-                Divider()
-
-                // Team Rows
-                ForEach(Array(viewModel.uiState.teamUiModelList.enumerated()), id: \.element.id) { index, team in
-                    HStack(spacing: 0) {
-                        Text("\(index + 1)")
-                            .frame(width: 24, alignment: .center)
-
+                    ForEach(viewModel.uiState.teamUiModelList, id: \.id) { team in
                         HStack(spacing: 6) {
-                            Circle()
+                            RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
-                                .frame(width: 10, height: 10)
+                                .frame(width: 12, height: 12)
                             Text(team.name)
+                                .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
                                 .lineLimit(1)
+                                .minimumScaleFactor(0.7)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                        Text("\(team.games)")
-                            .frame(width: 24, alignment: .center)
-                        Text("\(team.wins)")
-                            .frame(width: 24, alignment: .center)
-                        Text("\(team.draws)")
-                            .frame(width: 24, alignment: .center)
-                        Text("\(team.loses)")
-                            .frame(width: 24, alignment: .center)
-                        Text("\(team.goals)-\(team.conceded)")
-                            .frame(width: 40, alignment: .center)
-                        Text(team.goalsDifference > 0 ? "+\(team.goalsDifference)" : "\(team.goalsDifference)")
-                            .frame(width: 28, alignment: .center)
-                        Text("\(team.points)")
-                            .frame(width: 24, alignment: .center)
-                            .font(.labelLarge)
-                    }
-                    .font(.labelMedium)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 8)
-
-                    if index < viewModel.uiState.teamUiModelList.count - 1 {
-                        Divider()
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                // Stats columns
+                statColumn(
+                    header: NSLocalizedString("games_short", comment: ""),
+                    values: viewModel.uiState.teamUiModelList.map { ("\($0.games)", nil) }
+                )
+                statColumn(
+                    header: NSLocalizedString("wins_short", comment: ""),
+                    values: viewModel.uiState.teamUiModelList.map { ("\($0.wins)", nil) }
+                )
+                statColumn(
+                    header: NSLocalizedString("draws_short", comment: ""),
+                    values: viewModel.uiState.teamUiModelList.map { ("\($0.draws)", nil) }
+                )
+                statColumn(
+                    header: NSLocalizedString("loses_short", comment: ""),
+                    values: viewModel.uiState.teamUiModelList.map { ("\($0.loses)", nil) }
+                )
+                statColumn(
+                    header: NSLocalizedString("goals_short", comment: ""),
+                    values: viewModel.uiState.teamUiModelList.map { ("\($0.goals)-\($0.conceded)", nil) }
+                )
+                statColumn(
+                    header: NSLocalizedString("goal_difference_short", comment: ""),
+                    values: viewModel.uiState.teamUiModelList.map {
+                        ($0.goalsDifference > 0 ? "+\($0.goalsDifference)" : "\($0.goalsDifference)", nil)
+                    }
+                )
+                statColumn(
+                    header: NSLocalizedString("points_short", comment: ""),
+                    values: viewModel.uiState.teamUiModelList.map { ("\($0.points)", Font.labelLarge) }
+                )
             }
+            .padding(12)
             .background(AppColor.surface)
             .cornerRadius(12)
         }
         .padding(.horizontal, 16)
+    }
+
+    private func statColumn(header: String, values: [(String, Font?)]) -> some View {
+        VStack(spacing: 8) {
+            Text(header)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.outline)
+
+            ForEach(Array(values.enumerated()), id: \.offset) { _, item in
+                Text(item.0)
+                    .font(item.1 ?? .labelSmall)
+                    .foregroundColor(AppColor.onSurface)
+            }
+        }
     }
 
     private var playersLeaderboard: some View {
