@@ -582,11 +582,21 @@ struct GameScreen: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
                                 .frame(width: 12, height: 12)
-                            Text(team.name)
-                                .font(.labelSmall)
-                                .foregroundColor(AppColor.onSurface)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.7)
+                            
+                            ZStack(alignment: .center) {
+                                Text(team.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(.clear)
+                                    .lineLimit(1)
+                                
+                                Text(team.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                            }
                         }
                     }
                 }
