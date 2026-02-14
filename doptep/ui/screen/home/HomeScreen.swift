@@ -80,10 +80,14 @@ private extension HomeScreen {
             ForEach(viewModel.uiState.games) { item in
                 VStack(alignment: .leading, spacing: 6) {
 
-                    row(
-                        title: NSLocalizedString("home_game_name", comment: ""),
-                        value: item.name
-                    )
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(item.name)
+                            .font(.displayLarge)
+                            .foregroundColor(AppColor.onSurface)
+
+                        Divider()
+                            .padding(.vertical, 4)
+                    }
 
                     row(
                         title: NSLocalizedString("home_game_format", comment: ""),
@@ -151,6 +155,8 @@ private extension HomeScreen {
                 viewModel.send(.onAddGameButtonClicked)
             } label: {
                 Text(NSLocalizedString("add_game", comment: ""))
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.onPrimary)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 16)
             }
