@@ -16,7 +16,7 @@ struct HomeScreen: View {
             ZStack {
 
                 // BACKGROUND
-                Color(uiColor: .systemBackground)
+                AppColor.background
                     .ignoresSafeArea()
 
                 // CONTENT
@@ -107,7 +107,7 @@ private extension HomeScreen {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(16)
-                .background(Color(uiColor: .secondarySystemBackground))
+                .background(AppColor.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .onTapGesture {
                     viewModel.send(.onGameCardClicked(item.id))
@@ -129,14 +129,14 @@ private extension HomeScreen {
     var emptyState: some View {
         VStack(spacing: 16) {
             Text(NSLocalizedString("game_empty", comment: ""))
-                .foregroundColor(.secondary)
-                .font(.footnote)
+                .foregroundColor(AppColor.onSurfaceVariant)
+                .font(.labelSmall)
 
             Button {
                 viewModel.send(.onRefreshIconClicked)
             } label: {
                 Image(systemName: "arrow.clockwise")
-                    .font(.title2)
+                    .font(.headlineLarge)
             }
         }
     }
@@ -166,12 +166,12 @@ private extension HomeScreen {
     func row(title: String, value: String) -> some View {
         HStack(spacing: 4) {
             Text(title)
-                .font(.caption)
-                .foregroundColor(.primary)
+                .font(.labelMedium)
+                .foregroundColor(AppColor.onSurface)
 
             Text(value)
-                .font(.caption2)
-                .foregroundColor(.primary)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.onSurface)
         }
     }
 }

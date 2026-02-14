@@ -22,13 +22,12 @@ struct GameResultsScreen: View {
                     viewModel.action(.onBackClicked)
                 } label: {
                     Image(systemName: "chevron.left")
-                        .font(.title3)
-                        .foregroundColor(.primary)
+                        .font(.titleLarge)
+                        .foregroundColor(AppColor.onSurface)
                 }
 
                 Text(NSLocalizedString("function_all_results", comment: ""))
-                    .font(.body)
-                    .fontWeight(.semibold)
+                    .font(.bodyMedium)
 
                 Spacer()
 
@@ -36,12 +35,12 @@ struct GameResultsScreen: View {
                     viewModel.action(.onClearResultsClicked)
                 } label: {
                     Image(systemName: "arrow.counterclockwise")
-                        .font(.title3)
-                        .foregroundColor(.primary)
+                        .font(.titleLarge)
+                        .foregroundColor(AppColor.onSurface)
                 }
             }
             .padding(16)
-            .background(Color(UIColor.systemBackground))
+            .background(AppColor.surface)
 
             // Content
             ScrollView {
@@ -65,7 +64,7 @@ struct GameResultsScreen: View {
                 .padding(.bottom, 16)
             }
         }
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(AppColor.background)
         .navigationBarHidden(true)
         .onChange(of: viewModel.effect) { _, effect in
             guard let effect = effect else { return }
@@ -126,7 +125,7 @@ struct TeamsResultsBlock: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(NSLocalizedString("teams_leaderboard", comment: ""))
-                .font(.headline)
+                .font(.titleMedium)
                 .padding(.horizontal, 16)
 
             VStack(spacing: 0) {
@@ -149,8 +148,8 @@ struct TeamsResultsBlock: View {
                     Text(NSLocalizedString("points_short", comment: ""))
                         .frame(width: 35, alignment: .center)
                 }
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(.labelMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 8)
 
@@ -183,9 +182,9 @@ struct TeamsResultsBlock: View {
                             .frame(width: 50, alignment: .center)
                         Text("\(team.points)")
                             .frame(width: 35, alignment: .center)
-                            .fontWeight(.semibold)
+                            .font(.bodyLarge)
                     }
-                    .font(.subheadline)
+                    .font(.bodyMedium)
                     .padding(.vertical, 10)
                     .padding(.horizontal, 8)
 
@@ -194,7 +193,7 @@ struct TeamsResultsBlock: View {
                     }
                 }
             }
-            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .background(AppColor.surfaceVariant)
             .cornerRadius(12)
             .padding(.horizontal, 16)
         }
@@ -211,7 +210,7 @@ struct PlayersResultsBlock: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(NSLocalizedString("players_leaderboard", comment: ""))
-                .font(.headline)
+                .font(.titleMedium)
                 .padding(.horizontal, 16)
 
             VStack(spacing: 0) {
@@ -234,8 +233,8 @@ struct PlayersResultsBlock: View {
                     Text(NSLocalizedString("passes_icon", comment: ""))
                         .frame(width: 35, alignment: .center)
                 }
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(.labelMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 8)
 
@@ -322,7 +321,7 @@ struct PlayersResultsBlock: View {
                         }
                         .frame(width: 35)
                     }
-                    .font(.subheadline)
+                    .font(.bodyMedium)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 8)
 
@@ -331,7 +330,7 @@ struct PlayersResultsBlock: View {
                     }
                 }
             }
-            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .background(AppColor.surfaceVariant)
             .cornerRadius(12)
             .padding(.horizontal, 16)
         }
@@ -352,8 +351,8 @@ struct PlayerStatButton: View {
             }
         } label: {
             Text("\(value)")
-                .font(.subheadline)
-                .foregroundColor(uiLimited ? .secondary : .primary)
+                .font(.bodyMedium)
+                .foregroundColor(uiLimited ? AppColor.onSurfaceVariant : AppColor.onSurface)
         }
         .disabled(uiLimited)
     }
@@ -399,8 +398,7 @@ struct GameResultPlayerResultSheet: View {
                         .frame(width: 24, height: 24)
 
                     Text(playerResultUiModel.playerUiModel.name)
-                        .font(.title3)
-                        .fontWeight(.semibold)
+                        .font(.titleMedium)
 
                     Spacer()
                 }
@@ -408,8 +406,8 @@ struct GameResultPlayerResultSheet: View {
 
                 // Stat Type
                 Text(NSLocalizedString(playerResultUiModel.option.localizationKey, comment: ""))
-                    .font(.headline)
-                    .foregroundColor(.secondary)
+                    .font(.titleMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
 
                 // Value Stepper
                 HStack(spacing: 32) {
@@ -419,20 +417,20 @@ struct GameResultPlayerResultSheet: View {
                         }
                     } label: {
                         Image(systemName: "minus.circle.fill")
-                            .font(.system(size: 44))
-                            .foregroundColor(.red)
+                            .font(.custom("Montserrat-SemiBold", size: 44))
+                            .foregroundColor(AppColor.error)
                     }
 
                     Text("\(value)")
-                        .font(.system(size: 48, weight: .bold, design: .rounded))
+                        .font(.custom("Montserrat-Bold", size: 48))
                         .frame(minWidth: 80)
 
                     Button {
                         value += 1
                     } label: {
                         Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 44))
-                            .foregroundColor(.green)
+                            .font(.custom("Montserrat-SemiBold", size: 44))
+                            .foregroundColor(AppColor.primary)
                     }
                 }
 
@@ -443,11 +441,11 @@ struct GameResultPlayerResultSheet: View {
                     onSaveClicked(playerResultUiModel, value)
                 } label: {
                     Text(NSLocalizedString("save", comment: ""))
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onPrimary)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(AppColor.tertiary)
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)

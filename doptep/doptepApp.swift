@@ -27,6 +27,7 @@ struct doptepApp: App {
     var body: some Scene {
         WindowGroup {
             HomeScreen(viewModel: HomeViewModel(repository: GameRepository(context: container.mainContext)))
+                .accentColor(AppColor.primary)
         }
         .modelContainer(container)
     }

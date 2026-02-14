@@ -26,13 +26,13 @@ struct SettingsScreen: View {
 
                 // Version Info
                 Text("\(NSLocalizedString("settings_version", comment: "")): \(Bundle.main.appVersion) - \(Bundle.main.buildNumber)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.labelMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
                     .padding(.top, 12)
             }
             .padding(16)
         }
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(AppColor.background)
         .onChange(of: viewModel.effect) { _, effect in
             guard let effect = effect else { return }
             handleEffect(effect)
@@ -84,20 +84,20 @@ struct SettingsItemRow: View {
         Button(action: action) {
             HStack(spacing: 8) {
                 Image(systemName: item.iconName)
-                    .font(.body)
+                    .font(.bodySmall)
 
                 Text(item.displayName)
-                    .font(.subheadline)
+                    .font(.bodyMedium)
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.labelMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
             }
-            .foregroundColor(.primary)
+            .foregroundColor(AppColor.onSurface)
             .padding(16)
-            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .background(AppColor.surfaceVariant)
             .cornerRadius(16)
         }
     }
@@ -121,11 +121,11 @@ struct LanguageSelectionSheet: View {
                         Spacer()
                         if appLanguage == "en" {
                             Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
+                                .foregroundColor(AppColor.tertiary)
                         }
                     }
                 }
-                .foregroundColor(.primary)
+                .foregroundColor(AppColor.onSurface)
 
                 Button {
                     appLanguage = "ru"
@@ -136,11 +136,11 @@ struct LanguageSelectionSheet: View {
                         Spacer()
                         if appLanguage == "ru" {
                             Image(systemName: "checkmark")
-                                .foregroundColor(.blue)
+                                .foregroundColor(AppColor.tertiary)
                         }
                     }
                 }
-                .foregroundColor(.primary)
+                .foregroundColor(AppColor.onSurface)
             }
             .navigationTitle(NSLocalizedString("settings_item_language", comment: ""))
             .navigationBarTitleDisplayMode(.inline)

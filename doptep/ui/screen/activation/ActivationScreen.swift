@@ -19,14 +19,14 @@ struct ActivationScreen: View {
                     viewModel.action(.onBackClicked)
                 } label: {
                     Image(systemName: "chevron.left")
-                        .font(.title3)
-                        .foregroundColor(.primary)
+                        .font(.titleLarge)
+                        .foregroundColor(AppColor.onSurface)
                 }
 
                 Spacer()
             }
             .padding(16)
-            .background(Color(UIColor.systemBackground))
+            .background(AppColor.surface)
 
             // Content
             if viewModel.uiState.billingType == .limited {
@@ -48,7 +48,7 @@ struct ActivationScreen: View {
                 )
             }
         }
-        .background(Color(UIColor.systemBackground))
+        .background(AppColor.surface)
         .navigationBarHidden(true)
         .onChange(of: viewModel.effect) { _, effect in
             guard let effect = effect else { return }
@@ -96,8 +96,7 @@ struct ActivationTextContent: View {
         ScrollView {
             VStack(spacing: 16) {
                 Text(NSLocalizedString("activation_text_title", comment: ""))
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.displayLarge)
                     .padding(.bottom, 8)
 
                 ActivationTextItem(text: NSLocalizedString("activation_text_1", comment: ""))
@@ -111,11 +110,11 @@ struct ActivationTextContent: View {
                     onAction(.showPriceButtonClicked)
                 } label: {
                     Text(NSLocalizedString("activation_text_button", comment: ""))
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onPrimary)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 16)
-                        .background(Color.blue)
+                        .background(AppColor.tertiary)
                         .cornerRadius(12)
                 }
                 .padding(.top, 24)
@@ -135,8 +134,7 @@ struct ActivationPlanContent: View {
         ScrollView {
             VStack(spacing: 16) {
                 Text(NSLocalizedString("activation_plan_title", comment: ""))
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.displayLarge)
                     .padding(.bottom, 8)
 
                 ActivationPlanItem(
@@ -164,11 +162,11 @@ struct ActivationPlanContent: View {
                     onAction(.buyButtonClicked)
                 } label: {
                     Text(NSLocalizedString("activation_plan_button", comment: ""))
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onPrimary)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 16)
-                        .background(Color.blue)
+                        .background(AppColor.tertiary)
                         .cornerRadius(12)
                 }
                 .padding(.top, 24)
@@ -177,8 +175,8 @@ struct ActivationPlanContent: View {
                     onAction(.restorePurchases)
                 } label: {
                     Text(NSLocalizedString("restore_purchases", comment: ""))
-                        .font(.subheadline)
-                        .foregroundColor(.blue)
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.tertiary)
                 }
                 .padding(.top, 8)
             }
@@ -197,8 +195,7 @@ struct ActivatedContent: View {
         ScrollView {
             VStack(spacing: 16) {
                 Text(NSLocalizedString("activation_plan_activated_text", comment: ""))
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.displayLarge)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
 
@@ -207,11 +204,11 @@ struct ActivatedContent: View {
                         onAction(.manageSubscriptionsButtonClicked)
                     } label: {
                         Text(NSLocalizedString("activation_plan_activated_button", comment: ""))
-                            .font(.headline)
-                            .foregroundColor(.white)
+                            .font(.titleMedium)
+                            .foregroundColor(AppColor.onPrimary)
                             .padding(.horizontal, 24)
                             .padding(.vertical, 16)
-                            .background(Color.blue)
+                            .background(AppColor.tertiary)
                             .cornerRadius(12)
                     }
                     .padding(.top, 24)
@@ -233,7 +230,7 @@ struct ActivationTextItem: View {
                 .foregroundColor(.orange)
 
             Text(text)
-                .font(.body)
+                .font(.bodySmall)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 16)
@@ -256,27 +253,25 @@ struct ActivationPlanItem: View {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(plan.displayName)
-                        .font(.body)
-                        .fontWeight(.medium)
+                        .font(.bodySmall)
 
                     Text(plan.description)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(.labelMedium)
+                        .foregroundColor(AppColor.onSurfaceVariant)
                 }
 
                 Spacer()
 
                 Text(price)
-                    .font(.body)
-                    .fontWeight(.medium)
+                    .font(.bodySmall)
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(isSelected ? .blue : .secondary)
-                    .font(.title2)
+                    .foregroundColor(isSelected ? AppColor.tertiary : AppColor.onSurfaceVariant)
+                    .font(.headlineLarge)
             }
-            .foregroundColor(.primary)
+            .foregroundColor(AppColor.onSurface)
             .padding(16)
-            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .background(AppColor.surfaceVariant)
             .cornerRadius(16)
         }
         .padding(.horizontal, 16)

@@ -57,7 +57,7 @@ struct GameScreen: View {
                 .padding()
             }
         }
-        .background(Color(.systemGroupedBackground))
+        .background(AppColor.background)
         .navigationBarHidden(true)
         .snackbar(message: $viewModel.snackbarMessage)
         .onChange(of: viewModel.effect) { _, effect in
@@ -283,27 +283,27 @@ struct GameScreen: View {
                 viewModel.send(.onBackClicked)
             } label: {
                 Image(systemName: "arrow.left")
-                    .font(.title3)
-                    .foregroundColor(.primary)
+                    .font(.titleLarge)
+                    .foregroundColor(AppColor.onSurface)
             }
 
             Text(viewModel.uiState.gameUiModel?.name ?? "")
-                .font(.headline)
+                .font(.titleMedium)
                 .frame(maxWidth: .infinity)
 
             Spacer()
                 .frame(width: 24)
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(AppColor.surface)
     }
 
     private func scoreboardSection(liveGame: LiveGameUiModel) -> some View {
         VStack(spacing: 8) {
             HStack {
                 Text(NSLocalizedString("game_number", comment: "") + ": \(liveGame.gameCount)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.labelMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
             }
 
             HStack(spacing: 0) {
@@ -335,8 +335,8 @@ struct GameScreen: View {
                     viewModel.send(.onTeamChangeIconClicked)
                 } label: {
                     Image(systemName: "arrow.left.arrow.right")
-                        .font(.title3)
-                        .foregroundColor(.secondary)
+                        .font(.titleLarge)
+                        .foregroundColor(AppColor.onSurfaceVariant)
                         .padding(.horizontal, 8)
                 }
 
@@ -366,21 +366,20 @@ struct GameScreen: View {
             }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(AppColor.surface)
         .cornerRadius(16)
     }
 
     private func teamScoreView(name: String, color: Color, goals: Int, winCount: Int, isWinning: Bool, isLeft: Bool) -> some View {
         VStack(spacing: 4) {
             Text(name)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.bodyMedium)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
 
             Text("\(goals)")
-                .font(.system(size: 48, weight: .bold))
-                .foregroundColor(isWinning ? color : .primary)
+                .font(.custom("Montserrat-Bold", size: 48))
+                .foregroundColor(isWinning ? color : AppColor.onSurface)
 
             HStack(spacing: 2) {
                 ForEach(0..<winCount, id: \.self) { _ in
@@ -404,19 +403,19 @@ struct GameScreen: View {
             HStack {
                 if viewModel.uiState.isTimerPlay {
                     Image(systemName: "pause.fill")
-                        .foregroundColor(.primary)
+                        .foregroundColor(AppColor.onSurface)
                 } else {
                     Image(systemName: "play.fill")
-                        .foregroundColor(.primary)
+                        .foregroundColor(AppColor.onSurface)
                 }
 
                 Text(viewModel.timerValue)
-                    .font(.system(size: 32, weight: .bold, design: .monospaced))
-                    .foregroundColor(.primary)
+                    .font(.custom("Montserrat-Bold", size: 32))
+                    .foregroundColor(AppColor.onSurface)
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .background(Color(.systemBackground))
+            .background(AppColor.surface)
             .cornerRadius(16)
         }
     }
@@ -428,11 +427,11 @@ struct GameScreen: View {
             Text(viewModel.uiState.liveGameUiModel?.isLive == true
                  ? NSLocalizedString("finish_game", comment: "")
                  : NSLocalizedString("start_game", comment: ""))
-                .font(.headline)
-                .foregroundColor(.white)
+                .font(.titleMedium)
+                .foregroundColor(AppColor.onPrimary)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(viewModel.uiState.liveGameUiModel?.isLive == true ? Color.red : Color.green)
+                .background(viewModel.uiState.liveGameUiModel?.isLive == true ? AppColor.error : AppColor.primary)
                 .cornerRadius(16)
         }
     }
@@ -440,8 +439,8 @@ struct GameScreen: View {
     private var soundsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(NSLocalizedString("sounds", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
@@ -450,10 +449,10 @@ struct GameScreen: View {
                             viewModel.send(.onSoundClicked(sound: sound))
                         } label: {
                             Text(NSLocalizedString(sound.localizationKey, comment: ""))
-                                .font(.caption)
+                                .font(.labelMedium)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
-                                .background(Color(.systemBackground))
+                                .background(AppColor.surface)
                                 .cornerRadius(8)
                                 .multilineTextAlignment(.center)
                                 .fixedSize(horizontal: true, vertical: false)
@@ -468,8 +467,8 @@ struct GameScreen: View {
     private var functionsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(NSLocalizedString("functions", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
 
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -482,18 +481,18 @@ struct GameScreen: View {
                         VStack(spacing: 4) {
                             Image(systemName: function.systemImage)
                                 .frame(width: 24, height: 24)
-                                .font(.title3)
+                                .font(.titleLarge)
                             Text(NSLocalizedString(function.localizationKey, comment: ""))
-                                .font(.caption)
+                                .font(.labelMedium)
                                 .lineLimit(1)
                         }
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
-                        .background(Color(.systemBackground))
+                        .background(AppColor.surface)
                         .cornerRadius(8)
                     }
                     .buttonStyle(.plain)
-                    .foregroundColor(function == .delete ? .red : .primary)
+                    .foregroundColor(function == .delete ? AppColor.error : AppColor.onSurface)
                 }
             }
         }
@@ -502,8 +501,8 @@ struct GameScreen: View {
     private var infoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(NSLocalizedString("function_info", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
 
             if let game = viewModel.uiState.gameUiModel {
                 VStack(alignment: .leading, spacing: 6) {
@@ -534,7 +533,7 @@ struct GameScreen: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(16)
-                .background(Color(uiColor: .systemBackground))
+                .background(AppColor.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
             }
         }
@@ -543,20 +542,20 @@ struct GameScreen: View {
     private func row(title: String, value: String) -> some View {
         HStack(spacing: 4) {
             Text(title)
-                .font(.caption)
-                .foregroundColor(.primary)
+                .font(.labelMedium)
+                .foregroundColor(AppColor.onSurface)
 
             Text(value)
-                .font(.caption2)
-                .foregroundColor(.primary)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.onSurface)
         }
     }
 
     private var teamsLeaderboard: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(NSLocalizedString("teams_leaderboard", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
 
             VStack(spacing: 0) {
                 // Header Row
@@ -580,8 +579,8 @@ struct GameScreen: View {
                     Text(NSLocalizedString("points_short", comment: ""))
                         .frame(width: 24, alignment: .center)
                 }
-                .font(.caption2)
-                .foregroundColor(.secondary)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.onSurfaceVariant)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 8)
 
@@ -616,9 +615,9 @@ struct GameScreen: View {
                             .frame(width: 28, alignment: .center)
                         Text("\(team.points)")
                             .frame(width: 24, alignment: .center)
-                            .fontWeight(.semibold)
+                            .font(.labelLarge)
                     }
-                    .font(.caption)
+                    .font(.labelMedium)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 8)
 
@@ -627,7 +626,7 @@ struct GameScreen: View {
                     }
                 }
             }
-            .background(Color(.systemBackground))
+            .background(AppColor.surface)
             .cornerRadius(12)
         }
     }
@@ -635,8 +634,8 @@ struct GameScreen: View {
     private var playersLeaderboard: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(NSLocalizedString("players_leaderboard", comment: ""))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
 
             VStack(spacing: 0) {
                 // Header Row
@@ -658,8 +657,8 @@ struct GameScreen: View {
                     Text(NSLocalizedString("passes_icon", comment: ""))
                         .frame(width: 28, alignment: .center)
                 }
-                .font(.caption2)
-                .foregroundColor(.secondary)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.onSurfaceVariant)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 8)
 
@@ -693,7 +692,7 @@ struct GameScreen: View {
                         Text("\(player.passes)")
                             .frame(width: 28, alignment: .center)
                     }
-                    .font(.caption)
+                    .font(.labelMedium)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 8)
                     .contentShape(Rectangle())
@@ -713,7 +712,7 @@ struct GameScreen: View {
                     }
                 }
             }
-            .background(Color(.systemBackground))
+            .background(AppColor.surface)
             .cornerRadius(12)
         }
     }
@@ -814,19 +813,19 @@ struct BestPlayersSheet: View {
                     
                     VStack(alignment: .leading) {
                         Text(NSLocalizedString(bestPlayer.option.localizationKey, comment: ""))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
+                            .font(.labelMedium)
+                            .foregroundColor(AppColor.onSurfaceVariant)
+
                         HStack {
                             Circle()
                                 .fill(bestPlayer.playerUiModel.teamColor.color)
                                 .frame(width: 12, height: 12)
-                            
+
                             Text(bestPlayer.playerUiModel.name)
-                                .font(.headline)
-                            
+                                .font(.titleMedium)
+
                             Spacer()
-                            
+
                             switch bestPlayer.option {
                             case .bestPlayer:
                                 let result = [
@@ -839,28 +838,28 @@ struct BestPlayersSheet: View {
                                 ]
                                 .compactMap { $0 }
                                 .joined(separator: ", ")
-                                
+
                                 Text(result)
-                                    .font(.body)
+                                    .font(.bodySmall)
                                     .padding(.leading, 32)
                             case .goals:
                                 Text("\(bestPlayer.playerUiModel.goals) \(NSLocalizedString("text_goal", comment: ""))")
-                                    .font(.body)
+                                    .font(.bodySmall)
                             case .assists:
                                 Text("\(bestPlayer.playerUiModel.assists) \(NSLocalizedString("text_assist", comment: ""))")
-                                    .font(.body)
+                                    .font(.bodySmall)
                             case .saves:
                                 Text("\(bestPlayer.playerUiModel.saves) \(NSLocalizedString("text_save", comment: ""))")
-                                    .font(.body)
+                                    .font(.bodySmall)
                             case .dribbles:
                                 Text("\(bestPlayer.playerUiModel.dribbles) \(NSLocalizedString("text_dribble", comment: ""))")
-                                    .font(.body)
+                                    .font(.bodySmall)
                             case .passes:
                                 Text("\(bestPlayer.playerUiModel.passes) \(NSLocalizedString("text_pass", comment: ""))")
-                                    .font(.body)
+                                    .font(.bodySmall)
                             case .shots:
                                 Text("\(bestPlayer.playerUiModel.shots) \(NSLocalizedString("text_shot", comment: ""))")
-                                    .font(.body)
+                                    .font(.bodySmall)
                             }
                         }
                     }
@@ -885,21 +884,21 @@ struct GameInfoSheet: View {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 12) {
                             Image(systemName: "arrow.left.arrow.right")
-                                .foregroundColor(.accentColor)
+                                .foregroundColor(AppColor.primary)
                             Text(NSLocalizedString("live_game_info_replace_teams", comment: ""))
-                                .font(.caption)
+                                .font(.labelMedium)
                         }
                         HStack(spacing: 12) {
                             Image(systemName: "pause.circle")
-                                .foregroundColor(.primary)
+                                .foregroundColor(AppColor.onSurface)
                             Text(NSLocalizedString("live_game_info_pause_timer", comment: ""))
-                                .font(.caption)
+                                .font(.labelMedium)
                         }
                         HStack(spacing: 12) {
                             Image(systemName: "play.circle")
-                                .foregroundColor(.primary)
+                                .foregroundColor(AppColor.onSurface)
                             Text(NSLocalizedString("live_game_info_play_timer", comment: ""))
-                                .font(.caption)
+                                .font(.labelMedium)
                         }
                     }
 
@@ -945,11 +944,11 @@ struct InfoRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Text(symbol)
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(.labelMedium)
+                .foregroundColor(AppColor.onSurfaceVariant)
                 .frame(width: 30, alignment: .leading)
             Text(description)
-                .font(.caption)
+                .font(.labelMedium)
         }
     }
 }
@@ -989,7 +988,7 @@ struct PlayerResultSheet: View {
                         .fill(playerResult.playerUiModel.teamColor.color)
                         .frame(width: 16, height: 16)
                     Text(playerResult.playerUiModel.name)
-                        .font(.headline)
+                        .font(.titleMedium)
                 }
                 .padding(.top)
 
@@ -1011,7 +1010,7 @@ struct PlayerResultSheet: View {
                         if !valueText.isEmpty {
                             Button { valueText = "" } label: {
                                 Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(AppColor.onSurfaceVariant)
                             }
                             .padding(.trailing, 8)
                         }
@@ -1024,11 +1023,11 @@ struct PlayerResultSheet: View {
                     }
                 } label: {
                     Text(NSLocalizedString("save", comment: ""))
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onPrimary)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.accentColor)
+                        .background(AppColor.primary)
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)
@@ -1085,13 +1084,13 @@ struct LiveGameResultSheet: View {
                         .fill(teamColor)
                         .frame(width: 16, height: 16)
                     Text(teamName)
-                        .font(.headline)
+                        .font(.titleMedium)
                 }
                 .padding(.top)
 
                 Text(NSLocalizedString("goals", comment: ""))
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(.bodyMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
 
                 TextField(NSLocalizedString("goals", comment: ""), text: $goalsText)
                     .keyboardType(.numberPad)
@@ -1100,7 +1099,7 @@ struct LiveGameResultSheet: View {
                         if !goalsText.isEmpty {
                             Button { goalsText = "" } label: {
                                 Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(AppColor.onSurfaceVariant)
                             }
                             .padding(.trailing, 8)
                         }
@@ -1113,11 +1112,11 @@ struct LiveGameResultSheet: View {
                     }
                 } label: {
                     Text(NSLocalizedString("save", comment: ""))
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onPrimary)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.accentColor)
+                        .background(AppColor.primary)
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)

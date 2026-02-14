@@ -33,7 +33,7 @@ struct AddGameScreen: View {
                 }
             }
         }
-        .background(Color(.systemGroupedBackground))
+        .background(AppColor.background)
         .navigationBarHidden(true)
         .sheet(isPresented: $showColorsSheet) {
             teamColorsSheet
@@ -50,26 +50,26 @@ struct AddGameScreen: View {
                 viewModel.send(.closeScreen)
             } label: {
                 Image(systemName: "arrow.left")
-                    .font(.title3)
-                    .foregroundColor(.primary)
+                    .font(.titleLarge)
+                    .foregroundColor(AppColor.onSurface)
             }
 
             Text(viewModel.screenStateType == .add
                  ? NSLocalizedString("add_game", comment: "")
                  : NSLocalizedString("update_game", comment: ""))
-                .font(.headline)
+                .font(.titleMedium)
                 .frame(maxWidth: .infinity)
 
             Button {
                 viewModel.send(.onFinishClicked)
             } label: {
                 Image(systemName: "checkmark")
-                    .font(.title3)
-                    .foregroundColor(.primary)
+                    .font(.titleLarge)
+                    .foregroundColor(AppColor.onSurface)
             }
         }
         .padding()
-        .background(Color(.systemBackground))
+        .background(AppColor.surface)
     }
 
     private var gameNameField: some View {
@@ -82,7 +82,7 @@ struct AddGameScreen: View {
             if !viewModel.gameNameFieldState.isEmpty {
                 Button { viewModel.send(.onGameTextValueChanged(value: "")) } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(AppColor.onSurfaceVariant)
                 }
                 .padding(.trailing, 16)
             }
@@ -101,7 +101,7 @@ struct AddGameScreen: View {
             if !viewModel.timeInMinuteFieldState.isEmpty {
                 Button { viewModel.send(.onTimeTextValueChanged(value: "")) } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(AppColor.onSurfaceVariant)
                 }
                 .padding(.trailing, 16)
             }
@@ -112,7 +112,7 @@ struct AddGameScreen: View {
     private var gameFormatSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("game_format", comment: ""))
-                .font(.subheadline)
+                .font(.bodyMedium)
                 .padding(.horizontal)
                 .padding(.top)
 
@@ -121,8 +121,8 @@ struct AddGameScreen: View {
                     ForEach(GameFormat.allCases, id: \.self) { format in
                         VStack {
                             Text(format.rawValue)
-                                .font(.subheadline)
-                                .foregroundColor(format == viewModel.gameFormatState ? .accentColor : .secondary)
+                                .font(.bodyMedium)
+                                .foregroundColor(format == viewModel.gameFormatState ? AppColor.primary : AppColor.onSurfaceVariant)
                             
                             RadioButton(isSelected: format == viewModel.gameFormatState) {
                                 viewModel.send(.onGameFormatSelected(format: format))
@@ -134,14 +134,14 @@ struct AddGameScreen: View {
                 .padding(.bottom)
             }
         }
-        .background(Color(.systemBackground))
+        .background(AppColor.surface)
         .padding(.top)
     }
 
     private var teamQuantitySection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("team_quantity", comment: ""))
-                .font(.subheadline)
+                .font(.bodyMedium)
                 .padding(.horizontal)
                 .padding(.top)
 
@@ -161,14 +161,14 @@ struct AddGameScreen: View {
                 .padding(.bottom)
             }
         }
-        .background(Color(.systemBackground))
+        .background(AppColor.surface)
         .padding(.top)
     }
 
     private var gameRulesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("game_rules", comment: ""))
-                .font(.subheadline)
+                .font(.bodyMedium)
                 .padding(.horizontal)
                 .padding(.top)
 
@@ -180,8 +180,8 @@ struct AddGameScreen: View {
                         }
                         Text(NSLocalizedString(rule.localizationKey, comment: ""))
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.subheadline)
-                            .foregroundColor(areRulesEqual(rule, viewModel.gameRuleState) ? .accentColor : .secondary)
+                            .font(.bodyMedium)
+                            .foregroundColor(areRulesEqual(rule, viewModel.gameRuleState) ? AppColor.primary : AppColor.onSurfaceVariant)
                             .onTapGesture {
                                 viewModel.send(.onGameRuleSelected(rule: rule))
                             }
@@ -193,7 +193,7 @@ struct AddGameScreen: View {
             .padding(.bottom)
         }
         .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
+        .background(AppColor.surface)
         .padding(.top)
     }
 
@@ -230,10 +230,10 @@ struct AddGameScreen: View {
                 } label: {
                     VStack(spacing: 12) {
                         Text(String(format: NSLocalizedString("team_number", comment: ""), "\(index + 1)"))
-                            .font(.subheadline)
-                            .foregroundColor(viewModel.selectedTeamTabIndex == index ? .accentColor : .secondary)
+                            .font(.bodyMedium)
+                            .foregroundColor(viewModel.selectedTeamTabIndex == index ? AppColor.primary : AppColor.onSurfaceVariant)
                         Rectangle()
-                            .fill(viewModel.selectedTeamTabIndex == index ? Color.accentColor : Color.clear)
+                            .fill(viewModel.selectedTeamTabIndex == index ? AppColor.primary : Color.clear)
                             .frame(height: 2)
                     }
                 }
@@ -241,7 +241,7 @@ struct AddGameScreen: View {
             }
         }
         .padding(.top)
-        .background(Color(.systemBackground))
+        .background(AppColor.surface)
     }
 
     private var tabContent: some View {
@@ -299,7 +299,7 @@ struct AddGameScreen: View {
                 if !binding.wrappedValue.isEmpty {
                     Button { binding.wrappedValue = "" } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(AppColor.onSurfaceVariant)
                     }
                     .padding(.trailing, 16)
                 }
@@ -328,7 +328,7 @@ struct AddGameScreen: View {
             if !binding.wrappedValue.isEmpty {
                 Button { binding.wrappedValue = "" } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(AppColor.onSurfaceVariant)
                 }
                 .padding(.trailing, 16)
             }
@@ -340,7 +340,7 @@ struct AddGameScreen: View {
             viewModel.send(.onAddPlayerClicked(tabIndex: viewModel.selectedTeamTabIndex))
         } label: {
             Text(NSLocalizedString("add_player", comment: ""))
-                .font(.subheadline)
+                .font(.bodyMedium)
                 .padding(.horizontal, 24)
                 .padding(.vertical, 12)
         }
@@ -352,7 +352,7 @@ struct AddGameScreen: View {
     private var teamColorsSheet: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("choose_team_color", comment: ""))
-                .font(.headline)
+                .font(.titleMedium)
                 .padding(.horizontal)
                 .padding(.top)
 
@@ -405,7 +405,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
             .padding()
-            .background(Color(.systemBackground))
+            .background(AppColor.surface)
             .cornerRadius(16)
     }
 }
@@ -417,11 +417,11 @@ struct RadioButton: View {
     var body: some View {
         Button(action: action) {
             Circle()
-                .stroke(isSelected ? Color.accentColor : Color.secondary, lineWidth: 2)
+                .stroke(isSelected ? AppColor.primary : AppColor.onSurfaceVariant, lineWidth: 2)
                 .frame(width: 20, height: 20)
                 .overlay(
                     Circle()
-                        .fill(isSelected ? Color.accentColor : Color.clear)
+                        .fill(isSelected ? AppColor.primary : Color.clear)
                         .frame(width: 10, height: 10)
                 )
         }
@@ -437,10 +437,10 @@ struct SnackbarModifier: ViewModifier {
 
             if let message = message {
                 Text(message)
-                    .font(.subheadline)
-                    .foregroundColor(.white)
+                    .font(.bodyMedium)
+                    .foregroundColor(AppColor.onPrimary)
                     .padding()
-                    .background(Color.black.opacity(0.8))
+                    .background(AppColor.inverseSurface)
                     .cornerRadius(8)
                     .padding()
                     .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -471,8 +471,8 @@ struct TeamQuantityItem: View {
     var body: some View {
         VStack {
             Text("\(quantity.rawValue)")
-                .font(.subheadline)
-                .foregroundColor(isSelected ? .accentColor : .secondary)
+                .font(.bodyMedium)
+                .foregroundColor(isSelected ? AppColor.primary : AppColor.onSurfaceVariant)
 
             RadioButton(isSelected: isSelected, action: onSelect)
         }
