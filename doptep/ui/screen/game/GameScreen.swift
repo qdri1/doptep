@@ -54,7 +54,7 @@ struct GameScreen: View {
                     functionsSection
                     infoSection
                 }
-                .padding()
+                .padding(.vertical, 16)
             }
         }
         .background(AppColor.background)
@@ -368,6 +368,7 @@ struct GameScreen: View {
         .padding()
         .background(AppColor.surface)
         .cornerRadius(16)
+        .padding(.horizontal, 16)
     }
 
     private func teamScoreView(name: String, color: Color, goals: Int, winCount: Int, isWinning: Bool, isLeft: Bool) -> some View {
@@ -417,6 +418,7 @@ struct GameScreen: View {
             .frame(maxWidth: .infinity)
             .background(AppColor.surface)
             .cornerRadius(16)
+            .padding(.horizontal, 16)
         }
     }
 
@@ -433,6 +435,7 @@ struct GameScreen: View {
                 .frame(maxWidth: .infinity)
                 .background(viewModel.uiState.liveGameUiModel?.isLive == true ? AppColor.error : AppColor.primary)
                 .cornerRadius(16)
+                .padding(.horizontal, 16)
         }
     }
 
@@ -441,6 +444,7 @@ struct GameScreen: View {
             Text(NSLocalizedString("sounds", comment: ""))
                 .font(.bodyMedium)
                 .foregroundColor(AppColor.onSurfaceVariant)
+                .padding(.horizontal, 16)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
@@ -460,6 +464,7 @@ struct GameScreen: View {
                         .buttonStyle(.plain)
                     }
                 }
+                .padding(.horizontal, 16)
             }
         }
     }
@@ -496,6 +501,7 @@ struct GameScreen: View {
                 }
             }
         }
+        .padding(.horizontal, 16)
     }
 
     private var infoSection: some View {
@@ -537,6 +543,7 @@ struct GameScreen: View {
                 .clipShape(RoundedRectangle(cornerRadius: 16))
             }
         }
+        .padding(.horizontal, 16)
     }
 
     private func row(title: String, value: String) -> some View {
@@ -629,6 +636,7 @@ struct GameScreen: View {
             .background(AppColor.surface)
             .cornerRadius(12)
         }
+        .padding(.horizontal, 16)
     }
 
     private var playersLeaderboard: some View {
@@ -715,6 +723,7 @@ struct GameScreen: View {
             .background(AppColor.surface)
             .cornerRadius(12)
         }
+        .padding(.horizontal, 16)
     }
 
     private func handleEffect(_ effect: GameEffect?) {
