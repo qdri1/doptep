@@ -43,6 +43,7 @@ struct GameScreen: View {
             topBar
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 16) {
+                    infoSection
                     if let liveGame = viewModel.uiState.liveGameUiModel {
                         scoreboardSection(liveGame: liveGame)
                     }
@@ -52,7 +53,6 @@ struct GameScreen: View {
                     teamsLeaderboard
                     playersLeaderboard
                     functionsSection
-                    infoSection
                 }
                 .padding(.vertical, 16)
             }
@@ -441,10 +441,6 @@ struct GameScreen: View {
 
     private var soundsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(NSLocalizedString("sounds", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
-                .padding(.horizontal, 16)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
@@ -471,9 +467,6 @@ struct GameScreen: View {
 
     private var functionsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(NSLocalizedString("functions", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
 
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -506,17 +499,9 @@ struct GameScreen: View {
 
     private var infoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(NSLocalizedString("function_info", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
 
             if let game = viewModel.uiState.gameUiModel {
                 VStack(alignment: .leading, spacing: 6) {
-                    row(
-                        title: NSLocalizedString("home_game_name", comment: ""),
-                        value: game.name
-                    )
-
                     row(
                         title: NSLocalizedString("home_game_format", comment: ""),
                         value: game.gameFormat.rawValue
@@ -560,9 +545,6 @@ struct GameScreen: View {
 
     private var teamsLeaderboard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(NSLocalizedString("teams_leaderboard", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
 
             HStack(alignment: .top, spacing: 8) {
                 // Place
@@ -655,87 +637,105 @@ struct GameScreen: View {
         }
     }
 
-    private var playersLeaderboard: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(NSLocalizedString("players_leaderboard", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
-
-            VStack(spacing: 0) {
-                // Header Row
-                HStack(spacing: 0) {
-                    Text("#")
-                        .frame(width: 24, alignment: .center)
-                    Text(NSLocalizedString("player", comment: ""))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(NSLocalizedString("goals_icon", comment: ""))
-                        .frame(width: 28, alignment: .center)
-                    Text(NSLocalizedString("assists_icon", comment: ""))
-                        .frame(width: 28, alignment: .center)
-                    Text(NSLocalizedString("saves_icon", comment: ""))
-                        .frame(width: 28, alignment: .center)
-                    Text(NSLocalizedString("dribbles_icon", comment: ""))
-                        .frame(width: 28, alignment: .center)
-                    Text(NSLocalizedString("shots_icon", comment: ""))
-                        .frame(width: 28, alignment: .center)
-                    Text(NSLocalizedString("passes_icon", comment: ""))
-                        .frame(width: 28, alignment: .center)
-                }
+    private func playerStatColumn(
+        header: String,
+        players: [PlayerUiModel],
+        valuePath: KeyPath<PlayerUiModel, Int>,
+        option: TeamOption
+    ) -> some View {
+        VStack(spacing: 8) {
+            Text(header)
                 .font(.labelSmall)
-                .foregroundColor(AppColor.onSurfaceVariant)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 8)
+                .foregroundColor(AppColor.outline)
 
-                Divider()
-
-                // Player Rows
-                ForEach(Array(viewModel.uiState.playerUiModelList.enumerated()), id: \.element.id) { index, player in
-                    HStack(spacing: 0) {
-                        Text("\(index + 1)")
-                            .frame(width: 24, alignment: .center)
-
-                        HStack(spacing: 6) {
-                            Circle()
-                                .fill(player.teamColor.color)
-                                .frame(width: 10, height: 10)
-                            Text(player.name)
-                                .lineLimit(1)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                        Text("\(player.goals)")
-                            .frame(width: 28, alignment: .center)
-                        Text("\(player.assists)")
-                            .frame(width: 28, alignment: .center)
-                        Text("\(player.saves)")
-                            .frame(width: 28, alignment: .center)
-                        Text("\(player.dribbles)")
-                            .frame(width: 28, alignment: .center)
-                        Text("\(player.shots)")
-                            .frame(width: 28, alignment: .center)
-                        Text("\(player.passes)")
-                            .frame(width: 28, alignment: .center)
-                    }
-                    .font(.labelMedium)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 8)
-                    .contentShape(Rectangle())
+            ForEach(players, id: \.id) { player in
+                Text("\(player[keyPath: valuePath])")
+                    .font(.labelSmall)
+                    .foregroundColor(AppColor.onSurface)
                     .onTapGesture {
                         viewModel.send(
                             .onPlayerResultClicked(
                                 playerResultUiModel: PlayerResultUiModel(
                                     playerUiModel: player,
-                                    option: .goal
+                                    option: option
                                 )
                             )
                         )
                     }
+            }
+        }
+    }
 
-                    if index < viewModel.uiState.playerUiModelList.count - 1 {
-                        Divider()
+    private var playersLeaderboard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            
+            HStack(alignment: .top, spacing: 12) {
+                // Place
+                statColumn(
+                    header: "#",
+                    values: viewModel.uiState.playerUiModelList.enumerated().map { ("\($0.offset + 1)", nil) }
+                )
+
+                // Player name (flexible)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(NSLocalizedString("player", comment: ""))
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.outline)
+
+                    ForEach(viewModel.uiState.playerUiModelList, id: \.id) { player in
+                        HStack(spacing: 6) {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(player.teamColor.color)
+                                .frame(width: 12, height: 12)
+                            Text(player.name)
+                                .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                // Stat columns (tappable)
+                playerStatColumn(
+                    header: NSLocalizedString("goals_icon", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.goals,
+                    option: .goal
+                )
+                playerStatColumn(
+                    header: NSLocalizedString("assists_icon", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.assists,
+                    option: .assist
+                )
+                playerStatColumn(
+                    header: NSLocalizedString("saves_icon", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.saves,
+                    option: .save
+                )
+                playerStatColumn(
+                    header: NSLocalizedString("dribbles_icon", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.dribbles,
+                    option: .dribble
+                )
+                playerStatColumn(
+                    header: NSLocalizedString("shots_icon", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.shots,
+                    option: .shot
+                )
+                playerStatColumn(
+                    header: NSLocalizedString("passes_icon", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.passes,
+                    option: .pass
+                )
             }
+            .padding(12)
             .background(AppColor.surface)
             .cornerRadius(12)
         }
