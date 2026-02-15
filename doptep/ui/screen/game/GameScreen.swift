@@ -302,7 +302,7 @@ struct GameScreen: View {
         VStack(spacing: 8) {
             HStack {
                 Text(NSLocalizedString("game_number", comment: "") + ": \(liveGame.gameCount)")
-                    .font(.labelMedium)
+                    .font(.labelSmall)
                     .foregroundColor(AppColor.onSurfaceVariant)
             }
 
@@ -373,14 +373,17 @@ struct GameScreen: View {
 
     private func teamScoreView(name: String, color: Color, goals: Int, winCount: Int, isWinning: Bool, isLeft: Bool) -> some View {
         VStack(spacing: 4) {
+            
             Text(name)
                 .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurface)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
+                .minimumScaleFactor(0.7)
 
             Text("\(goals)")
                 .font(.custom("Montserrat-Bold", size: 48))
-                .foregroundColor(isWinning ? color : AppColor.onSurface)
+                .foregroundColor(AppColor.onSurface)
 
             HStack(spacing: 2) {
                 ForEach(0..<winCount, id: \.self) { _ in
@@ -449,7 +452,7 @@ struct GameScreen: View {
                             viewModel.send(.onSoundClicked(sound: sound))
                         } label: {
                             Text(NSLocalizedString(sound.localizationKey, comment: ""))
-                                .font(.labelMedium)
+                                .font(.labelSmall)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
                                 .background(AppColor.surface)
@@ -648,9 +651,15 @@ struct GameScreen: View {
                 .font(.labelSmall)
                 .foregroundColor(AppColor.outline)
 
+            let font = if option == .goal {
+                Font.labelLarge
+            } else {
+                Font.labelSmall
+            }
+            
             ForEach(players, id: \.id) { player in
                 Text("\(player[keyPath: valuePath])")
-                    .font(.labelSmall)
+                    .font(font)
                     .foregroundColor(AppColor.onSurface)
                     .onTapGesture {
                         viewModel.send(
@@ -687,11 +696,21 @@ struct GameScreen: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(player.teamColor.color)
                                 .frame(width: 12, height: 12)
-                            Text(player.name)
-                                .font(.labelSmall)
-                                .foregroundColor(AppColor.onSurface)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.7)
+                            
+                            ZStack(alignment: .center) {
+                                Text(player.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(.clear)
+                                    .lineLimit(1)
+                                
+                                Text(player.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                            }
                         }
                     }
                 }
@@ -803,6 +822,7 @@ struct OptionPlayersSheet: View {
                         onPlayerSelected(player)
                     } label: {
                         Text(player.name)
+                            .font(.bodySmall)
                     }
                 }
                 
@@ -811,6 +831,7 @@ struct OptionPlayersSheet: View {
                         onAutoGoalSelected()
                     } label: {
                         Text(NSLocalizedString("auto_goal", comment: ""))
+                            .font(.bodySmall)
                             .foregroundColor(.orange)
                     }
                 }
@@ -838,8 +859,8 @@ struct BestPlayersSheet: View {
                     
                     VStack(alignment: .leading) {
                         Text(NSLocalizedString(bestPlayer.option.localizationKey, comment: ""))
-                            .font(.labelMedium)
-                            .foregroundColor(AppColor.onSurfaceVariant)
+                            .font(.labelSmall)
+                            .foregroundColor(AppColor.outline)
 
                         HStack {
                             Circle()
@@ -847,7 +868,7 @@ struct BestPlayersSheet: View {
                                 .frame(width: 12, height: 12)
 
                             Text(bestPlayer.playerUiModel.name)
-                                .font(.titleMedium)
+                                .font(.bodySmall)
 
                             Spacer()
 
@@ -909,21 +930,25 @@ struct GameInfoSheet: View {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 12) {
                             Image(systemName: "arrow.left.arrow.right")
-                                .foregroundColor(AppColor.primary)
+                                .font(.titleLarge)
+                                .foregroundColor(AppColor.onSurfaceVariant)
+                            
                             Text(NSLocalizedString("live_game_info_replace_teams", comment: ""))
-                                .font(.labelMedium)
+                                .font(.labelSmall)
                         }
                         HStack(spacing: 12) {
-                            Image(systemName: "pause.circle")
+                            Image(systemName: "pause.fill")
                                 .foregroundColor(AppColor.onSurface)
+                            
                             Text(NSLocalizedString("live_game_info_pause_timer", comment: ""))
-                                .font(.labelMedium)
+                                .font(.labelSmall)
                         }
                         HStack(spacing: 12) {
-                            Image(systemName: "play.circle")
+                            Image(systemName: "play.fill")
                                 .foregroundColor(AppColor.onSurface)
+                            
                             Text(NSLocalizedString("live_game_info_play_timer", comment: ""))
-                                .font(.labelMedium)
+                                .font(.labelSmall)
                         }
                     }
 
@@ -969,11 +994,12 @@ struct InfoRow: View {
     var body: some View {
         HStack(spacing: 12) {
             Text(symbol)
-                .font(.labelMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
-                .frame(width: 30, alignment: .leading)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.outline)
+                
             Text(description)
-                .font(.labelMedium)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.onSurface)
         }
     }
 }
@@ -1020,6 +1046,7 @@ struct PlayerResultSheet: View {
                 Picker(NSLocalizedString("stat_type", comment: ""), selection: $selectedOption) {
                     ForEach(TeamOption.allCases, id: \.self) { option in
                         Text(NSLocalizedString(option.localizationKey, comment: "")).tag(option)
+                            .font(.bodySmall)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -1175,6 +1202,7 @@ struct TeamOptionsDropdown: View {
                         onOptionSelected(option)
                     } label: {
                         Text(NSLocalizedString(option.localizationKey, comment: ""))
+                            .font(.bodySmall)
                     }
                 }
             }
@@ -1213,6 +1241,7 @@ struct TeamChangeDropdown: View {
                                 .fill(team.color.color)
                                 .frame(width: 12, height: 12)
                             Text(team.name)
+                                .font(.bodySmall)
                         }
                     }
                 }
