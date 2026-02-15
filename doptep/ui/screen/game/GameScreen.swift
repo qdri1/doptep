@@ -241,6 +241,7 @@ struct GameScreen: View {
             }
         } message: {
             Text(NSLocalizedString("delete_game_confirmation", comment: ""))
+                .font(.bodySmall)
         }
         .confirmationDialog("", isPresented: $showClearResultsConfirmation) {
             Button(NSLocalizedString("clear", comment: ""), role: .destructive) {
@@ -255,6 +256,7 @@ struct GameScreen: View {
             }
         } message: {
             Text(NSLocalizedString("finish_game_confirmation", comment: ""))
+                .font(.bodySmall)
         }
         .confirmationDialog("", isPresented: $showGoBackConfirmation) {
             Button(NSLocalizedString("leave", comment: ""), role: .destructive) {
@@ -262,6 +264,7 @@ struct GameScreen: View {
             }
         } message: {
             Text(NSLocalizedString("go_back_confirmation", comment: ""))
+                .font(.bodySmall)
         }
         .confirmationDialog("", isPresented: $showStayTeamSheet) {
             if let liveGame = viewModel.uiState.liveGameUiModel {
@@ -274,6 +277,7 @@ struct GameScreen: View {
             }
         } message: {
             Text(NSLocalizedString("choose_staying_team", comment: ""))
+                .font(.bodySmall)
         }
     }
 
@@ -981,7 +985,7 @@ struct GameInfoSheet: View {
                 }
                 .padding()
             }
-            .navigationTitle(NSLocalizedString("game_info", comment: ""))
+            .navigationTitle(NSLocalizedString("function_info", comment: ""))
             .navigationBarTitleDisplayMode(.inline)
         }
     }
