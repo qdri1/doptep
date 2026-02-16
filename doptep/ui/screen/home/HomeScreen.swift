@@ -156,7 +156,7 @@ private extension HomeScreen {
                 viewModel.send(.onAddGameButtonClicked)
             } label: {
                 Text(NSLocalizedString("add_game", comment: ""))
-                    .font(.bodySmall)
+                    .font(.bodyMedium)
                     .foregroundColor(AppColor.onPrimary)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 16)

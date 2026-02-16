@@ -74,10 +74,10 @@ struct AddGameScreen: View {
     }
 
     private var gameNameField: some View {
-        TextField(NSLocalizedString("game_name", comment: ""), text: Binding(
+        TextField("", text: Binding(
             get: { viewModel.gameNameFieldState },
             set: { viewModel.send(.onGameTextValueChanged(value: $0)) }
-        ))
+        ), prompt: Text(NSLocalizedString("game_name", comment: "")).foregroundColor(AppColor.outline))
         .textFieldStyle(RoundedTextFieldStyle())
         .overlay(alignment: .trailing) {
             if !viewModel.gameNameFieldState.isEmpty {
@@ -92,10 +92,10 @@ struct AddGameScreen: View {
     }
 
     private var timeField: some View {
-        TextField(NSLocalizedString("game_time", comment: ""), text: Binding(
+        TextField("", text: Binding(
             get: { viewModel.timeInMinuteFieldState },
             set: { viewModel.send(.onTimeTextValueChanged(value: $0)) }
-        ))
+        ), prompt: Text(NSLocalizedString("game_time", comment: "")).foregroundColor(AppColor.outline))
         .keyboardType(.numberPad)
         .textFieldStyle(RoundedTextFieldStyle())
         .overlay(alignment: .trailing) {
@@ -297,7 +297,7 @@ struct AddGameScreen: View {
             }
         )
 
-        return TextField(NSLocalizedString("team_name", comment: ""), text: binding)
+        return TextField("", text: binding, prompt: Text(NSLocalizedString("team_name", comment: "")).foregroundColor(AppColor.outline))
             .textFieldStyle(RoundedTextFieldStyle())
             .overlay(alignment: .trailing) {
                 if !binding.wrappedValue.isEmpty {
@@ -324,8 +324,9 @@ struct AddGameScreen: View {
         )
 
         return TextField(
-            String(format: NSLocalizedString("player_number", comment: ""), "\(fieldIndex + 1)"),
-            text: binding
+            "",
+            text: binding,
+            prompt: Text(String(format: NSLocalizedString("player_number", comment: ""), "\(fieldIndex + 1)")).foregroundColor(AppColor.outline)
         )
         .textFieldStyle(RoundedTextFieldStyle())
         .overlay(alignment: .trailing) {
@@ -345,6 +346,7 @@ struct AddGameScreen: View {
         } label: {
             Text(NSLocalizedString("add_player", comment: ""))
                 .font(.bodyMedium)
+                .foregroundColor(AppColor.onPrimary)
                 .padding(.horizontal, 24)
                 .padding(.vertical, 12)
         }
@@ -408,6 +410,8 @@ struct AddGameScreen: View {
 struct RoundedTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
+            .font(.bodySmall)
+            .foregroundColor(AppColor.onSurface)
             .padding()
             .background(AppColor.surface)
             .cornerRadius(16)
