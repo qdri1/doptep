@@ -28,6 +28,7 @@ struct doptepApp: App {
         WindowGroup {
             HomeScreen(viewModel: HomeViewModel(repository: GameRepository(context: container.mainContext)))
                 .accentColor(AppColor.primary)
+                .preferredColorScheme(.light)
         }
         .modelContainer(container)
     }

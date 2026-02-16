@@ -829,9 +829,10 @@ struct OptionPlayersSheet: View {
                     } label: {
                         Text(player.name)
                             .font(.bodySmall)
+                            .foregroundColor(AppColor.onSurface)
                     }
                 }
-                
+
                 if optionPlayers.option == .goal {
                     Button {
                         onAutoGoalSelected()
@@ -842,12 +843,22 @@ struct OptionPlayersSheet: View {
                     }
                 }
             }
-            .navigationTitle(NSLocalizedString(optionPlayers.option.localizationKey, comment: ""))
+            .scrollContentBackground(.hidden)
+            .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString(optionPlayers.option.localizationKey, comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("cancel", comment: "")) {
+                    Button {
                         onDismiss()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
                     }
                 }
             }
@@ -862,7 +873,7 @@ struct BestPlayersSheet: View {
         NavigationView {
             List {
                 ForEach(bestPlayers, id: \.option) { bestPlayer in
-                    
+
                     VStack(alignment: .leading) {
                         Text(NSLocalizedString(bestPlayer.option.localizationKey, comment: ""))
                             .font(.labelSmall)
@@ -875,6 +886,7 @@ struct BestPlayersSheet: View {
 
                             Text(bestPlayer.playerUiModel.name)
                                 .font(.bodySmall)
+                                .foregroundColor(AppColor.onSurface)
 
                             Spacer()
 
@@ -893,32 +905,47 @@ struct BestPlayersSheet: View {
 
                                 Text(result)
                                     .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
                                     .padding(.leading, 32)
                             case .goals:
                                 Text("\(bestPlayer.playerUiModel.goals) \(NSLocalizedString("text_goal", comment: ""))")
                                     .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
                             case .assists:
                                 Text("\(bestPlayer.playerUiModel.assists) \(NSLocalizedString("text_assist", comment: ""))")
                                     .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
                             case .saves:
                                 Text("\(bestPlayer.playerUiModel.saves) \(NSLocalizedString("text_save", comment: ""))")
                                     .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
                             case .dribbles:
                                 Text("\(bestPlayer.playerUiModel.dribbles) \(NSLocalizedString("text_dribble", comment: ""))")
                                     .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
                             case .passes:
                                 Text("\(bestPlayer.playerUiModel.passes) \(NSLocalizedString("text_pass", comment: ""))")
                                     .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
                             case .shots:
                                 Text("\(bestPlayer.playerUiModel.shots) \(NSLocalizedString("text_shot", comment: ""))")
                                     .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
                             }
                         }
                     }
                 }
             }
-            .navigationTitle(NSLocalizedString("best_players", comment: ""))
+            .scrollContentBackground(.hidden)
+            .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("best_players", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
+            }
         }
     }
     
@@ -990,8 +1017,15 @@ struct GameInfoSheet: View {
                 }
                 .padding()
             }
-            .padding(.top, 32)
             .background(AppColor.background)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("function_info", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
+            }
         }
     }
 }
@@ -1049,6 +1083,7 @@ struct PlayerResultSheet: View {
                         .frame(width: 16, height: 16)
                     Text(playerResult.playerUiModel.name)
                         .font(.titleMedium)
+                        .foregroundColor(AppColor.onSurface)
                 }
                 .padding(.top)
 
@@ -1064,7 +1099,9 @@ struct PlayerResultSheet: View {
                     valueText = "\(Self.getValue(for: newOption, player: playerResult.playerUiModel))"
                 }
 
-                TextField(NSLocalizedString("value", comment: ""), text: $valueText)
+                TextField("", text: $valueText, prompt: Text(NSLocalizedString("value", comment: "")).foregroundColor(AppColor.outline))
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.onSurface)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .overlay(alignment: .trailing) {
@@ -1095,12 +1132,21 @@ struct PlayerResultSheet: View {
 
                 Spacer()
             }
-            .navigationTitle(NSLocalizedString("edit_player_stats", comment: ""))
+            .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("edit_player_stats", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("cancel", comment: "")) {
+                    Button {
                         onDismiss()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
                     }
                 }
             }
@@ -1146,14 +1192,17 @@ struct LiveGameResultSheet: View {
                         .frame(width: 16, height: 16)
                     Text(teamName)
                         .font(.titleMedium)
+                        .foregroundColor(AppColor.onSurface)
                 }
                 .padding(.top)
 
                 Text(NSLocalizedString("goals", comment: ""))
                     .font(.bodyMedium)
-                    .foregroundColor(AppColor.onSurfaceVariant)
+                    .foregroundColor(AppColor.onSurface)
 
-                TextField(NSLocalizedString("goals", comment: ""), text: $goalsText)
+                TextField("", text: $goalsText, prompt: Text(NSLocalizedString("goals", comment: "")).foregroundColor(AppColor.outline))
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.onSurface)
                     .keyboardType(.numberPad)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .overlay(alignment: .trailing) {
@@ -1184,12 +1233,21 @@ struct LiveGameResultSheet: View {
 
                 Spacer()
             }
-            .navigationTitle(NSLocalizedString("edit_team_goals", comment: ""))
+            .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("edit_team_goals", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("cancel", comment: "")) {
+                    Button {
                         onDismiss()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
                     }
                 }
             }
@@ -1212,15 +1270,26 @@ struct TeamOptionsDropdown: View {
                     } label: {
                         Text(NSLocalizedString(option.localizationKey, comment: ""))
                             .font(.bodySmall)
+                            .foregroundColor(AppColor.onSurface)
                     }
                 }
             }
-            .navigationTitle(teamName)
+            .scrollContentBackground(.hidden)
+            .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(teamName)
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("cancel", comment: "")) {
+                    Button {
                         onDismiss()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
                     }
                 }
             }
@@ -1251,16 +1320,27 @@ struct TeamChangeDropdown: View {
                                 .frame(width: 12, height: 12)
                             Text(team.name)
                                 .font(.bodySmall)
+                                .foregroundColor(AppColor.onSurface)
                         }
                     }
                 }
             }
-            .navigationTitle(NSLocalizedString("choose_team", comment: ""))
+            .scrollContentBackground(.hidden)
+            .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("choose_team", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("cancel", comment: "")) {
+                    Button {
                         onDismiss()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
                     }
                 }
             }
