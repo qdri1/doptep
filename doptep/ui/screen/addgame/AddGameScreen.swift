@@ -58,6 +58,7 @@ struct AddGameScreen: View {
                  ? NSLocalizedString("add_game", comment: "")
                  : NSLocalizedString("update_game", comment: ""))
                 .font(.titleMedium)
+                .foregroundColor(AppColor.onSurface)
                 .frame(maxWidth: .infinity)
 
             Button {
@@ -113,6 +114,7 @@ struct AddGameScreen: View {
         VStack(alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("game_format", comment: ""))
                 .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurface)
                 .padding(.horizontal)
                 .padding(.top)
 
@@ -122,7 +124,7 @@ struct AddGameScreen: View {
                         VStack {
                             Text(format.rawValue)
                                 .font(.bodyMedium)
-                                .foregroundColor(format == viewModel.gameFormatState ? AppColor.primary : AppColor.onSurfaceVariant)
+                                .foregroundColor(format == viewModel.gameFormatState ? AppColor.primary : AppColor.outline)
                             
                             RadioButton(isSelected: format == viewModel.gameFormatState) {
                                 viewModel.send(.onGameFormatSelected(format: format))
@@ -142,6 +144,7 @@ struct AddGameScreen: View {
         VStack(alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("team_quantity", comment: ""))
                 .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurface)
                 .padding(.horizontal)
                 .padding(.top)
 
@@ -169,6 +172,7 @@ struct AddGameScreen: View {
         VStack(alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("game_rules", comment: ""))
                 .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurface)
                 .padding(.horizontal)
                 .padding(.top)
 
@@ -181,7 +185,7 @@ struct AddGameScreen: View {
                         Text(NSLocalizedString(rule.localizationKey, comment: ""))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.bodyMedium)
-                            .foregroundColor(areRulesEqual(rule, viewModel.gameRuleState) ? AppColor.primary : AppColor.onSurfaceVariant)
+                            .foregroundColor(areRulesEqual(rule, viewModel.gameRuleState) ? AppColor.primary : AppColor.outline)
                             .onTapGesture {
                                 viewModel.send(.onGameRuleSelected(rule: rule))
                             }
@@ -231,7 +235,7 @@ struct AddGameScreen: View {
                     VStack(spacing: 12) {
                         Text(String(format: NSLocalizedString("team_number", comment: ""), "\(index + 1)"))
                             .font(.bodyMedium)
-                            .foregroundColor(viewModel.selectedTeamTabIndex == index ? AppColor.primary : AppColor.onSurfaceVariant)
+                            .foregroundColor(viewModel.selectedTeamTabIndex == index ? AppColor.primary : AppColor.onSurface)
                         Rectangle()
                             .fill(viewModel.selectedTeamTabIndex == index ? AppColor.primary : Color.clear)
                             .frame(height: 2)
@@ -417,7 +421,7 @@ struct RadioButton: View {
     var body: some View {
         Button(action: action) {
             Circle()
-                .stroke(isSelected ? AppColor.primary : AppColor.onSurfaceVariant, lineWidth: 2)
+                .stroke(isSelected ? AppColor.primary : AppColor.outline, lineWidth: 2)
                 .frame(width: 20, height: 20)
                 .overlay(
                     Circle()
@@ -472,7 +476,7 @@ struct TeamQuantityItem: View {
         VStack {
             Text("\(quantity.rawValue)")
                 .font(.bodyMedium)
-                .foregroundColor(isSelected ? AppColor.primary : AppColor.onSurfaceVariant)
+                .foregroundColor(isSelected ? AppColor.primary : AppColor.outline)
 
             RadioButton(isSelected: isSelected, action: onSelect)
         }

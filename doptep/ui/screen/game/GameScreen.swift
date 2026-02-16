@@ -293,6 +293,7 @@ struct GameScreen: View {
 
             Text(viewModel.uiState.gameUiModel?.name ?? "")
                 .font(.titleMedium)
+                .foregroundColor(AppColor.onSurface)
                 .frame(maxWidth: .infinity)
 
             Spacer()
@@ -457,6 +458,7 @@ struct GameScreen: View {
                         } label: {
                             Text(NSLocalizedString(sound.localizationKey, comment: ""))
                                 .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
                                 .background(AppColor.surface)
@@ -939,6 +941,7 @@ struct GameInfoSheet: View {
                             
                             Text(NSLocalizedString("live_game_info_replace_teams", comment: ""))
                                 .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
                         }
                         HStack(spacing: 12) {
                             Image(systemName: "pause.fill")
@@ -946,6 +949,7 @@ struct GameInfoSheet: View {
                             
                             Text(NSLocalizedString("live_game_info_pause_timer", comment: ""))
                                 .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
                         }
                         HStack(spacing: 12) {
                             Image(systemName: "play.fill")
@@ -953,6 +957,7 @@ struct GameInfoSheet: View {
                             
                             Text(NSLocalizedString("live_game_info_play_timer", comment: ""))
                                 .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
                         }
                     }
 
@@ -985,8 +990,8 @@ struct GameInfoSheet: View {
                 }
                 .padding()
             }
-            .navigationTitle(NSLocalizedString("function_info", comment: ""))
-            .navigationBarTitleDisplayMode(.inline)
+            .padding(.top, 32)
+            .background(AppColor.background)
         }
     }
 }
