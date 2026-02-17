@@ -61,7 +61,7 @@ struct GameResultsScreen: View {
                         )
                     }
                 }
-                .padding(.bottom, 16)
+                .padding(.vertical, 16)
             }
         }
         .background(AppColor.background)
@@ -124,79 +124,82 @@ struct TeamsResultsBlock: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(NSLocalizedString("teams_leaderboard", comment: ""))
-                .font(.titleMedium)
-                .padding(.horizontal, 16)
 
-            VStack(spacing: 0) {
-                // Header Row
-                HStack(spacing: 0) {
-                    Text("#")
-                        .frame(width: 30, alignment: .center)
+            HStack(alignment: .top, spacing: 8) {
+                // Place
+                resultsStatColumn(
+                    header: "#",
+                    values: teamUiModelList.enumerated().map { ("\($0.offset + 1)", nil) }
+                )
+
+                // Team name (flexible)
+                VStack(alignment: .leading, spacing: 8) {
                     Text(NSLocalizedString("team", comment: ""))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(NSLocalizedString("games_short", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("wins_short", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("draws_short", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("loses_short", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("goals_short", comment: ""))
-                        .frame(width: 50, alignment: .center)
-                    Text(NSLocalizedString("points_short", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                }
-                .font(.labelMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 8)
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.outline)
 
-                Divider()
-
-                // Team Rows
-                ForEach(Array(teamUiModelList.enumerated()), id: \.element.id) { index, team in
-                    HStack(spacing: 0) {
-                        Text("\(index + 1)")
-                            .frame(width: 30, alignment: .center)
-
-                        HStack(spacing: 8) {
-                            Circle()
-                                .fill(Color(hex: team.color.rawValue))
+                    ForEach(teamUiModelList, id: \.id) { team in
+                        HStack(spacing: 6) {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(team.color.color)
                                 .frame(width: 12, height: 12)
-                            Text(team.name)
-                                .lineLimit(1)
+
+                            ZStack(alignment: .center) {
+                                Text(team.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(.clear)
+                                    .lineLimit(1)
+
+                                Text(team.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                            }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                        Text("\(team.games)")
-                            .frame(width: 35, alignment: .center)
-                        Text("\(team.wins)")
-                            .frame(width: 35, alignment: .center)
-                        Text("\(team.draws)")
-                            .frame(width: 35, alignment: .center)
-                        Text("\(team.loses)")
-                            .frame(width: 35, alignment: .center)
-                        Text("\(team.goals)-\(team.conceded)")
-                            .frame(width: 50, alignment: .center)
-                        Text("\(team.points)")
-                            .frame(width: 35, alignment: .center)
-                            .font(.bodyLarge)
-                    }
-                    .font(.bodyMedium)
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 8)
-
-                    if index < teamUiModelList.count - 1 {
-                        Divider()
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                // Stats columns
+                resultsStatColumn(
+                    header: NSLocalizedString("games_short", comment: ""),
+                    values: teamUiModelList.map { ("\($0.games)", nil) }
+                )
+                resultsStatColumn(
+                    header: NSLocalizedString("wins_short", comment: ""),
+                    values: teamUiModelList.map { ("\($0.wins)", nil) }
+                )
+                resultsStatColumn(
+                    header: NSLocalizedString("draws_short", comment: ""),
+                    values: teamUiModelList.map { ("\($0.draws)", nil) }
+                )
+                resultsStatColumn(
+                    header: NSLocalizedString("loses_short", comment: ""),
+                    values: teamUiModelList.map { ("\($0.loses)", nil) }
+                )
+                resultsStatColumn(
+                    header: NSLocalizedString("goals_short", comment: ""),
+                    values: teamUiModelList.map { ("\($0.goals)-\($0.conceded)", nil) }
+                )
+                resultsStatColumn(
+                    header: NSLocalizedString("goal_difference_short", comment: ""),
+                    values: teamUiModelList.map {
+                        ($0.goalsDifference > 0 ? "+\($0.goalsDifference)" : "\($0.goalsDifference)", nil)
+                    }
+                )
+                resultsStatColumn(
+                    header: NSLocalizedString("points_short", comment: ""),
+                    values: teamUiModelList.map { ("\($0.points)", Font.labelLarge) }
+                )
             }
-            .background(AppColor.surfaceVariant)
+            .padding(12)
+            .background(AppColor.surface)
             .cornerRadius(12)
-            .padding(.horizontal, 16)
         }
+        .padding(.horizontal, 16)
     }
 }
 
@@ -209,152 +212,151 @@ struct PlayersResultsBlock: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(NSLocalizedString("players_leaderboard", comment: ""))
-                .font(.titleMedium)
-                .padding(.horizontal, 16)
 
-            VStack(spacing: 0) {
-                // Header Row
-                HStack(spacing: 0) {
-                    Text("#")
-                        .frame(width: 30, alignment: .center)
+            HStack(alignment: .top, spacing: 12) {
+                // Place
+                resultsStatColumn(
+                    header: "#",
+                    values: playerUiModelList.enumerated().map { ("\($0.offset + 1)", nil) }
+                )
+
+                // Player name (flexible)
+                VStack(alignment: .leading, spacing: 8) {
                     Text(NSLocalizedString("player", comment: ""))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(NSLocalizedString("goals_icon", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("assists_icon", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("saves_icon", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("dribbles_icon", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("shots_icon", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                    Text(NSLocalizedString("passes_icon", comment: ""))
-                        .frame(width: 35, alignment: .center)
-                }
-                .font(.labelMedium)
-                .foregroundColor(AppColor.onSurfaceVariant)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 8)
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.outline)
 
-                Divider()
-
-                // Player Rows
-                ForEach(Array(playerUiModelList.enumerated()), id: \.element.id) { index, player in
-                    HStack(spacing: 0) {
-                        Text("\(index + 1)")
-                            .frame(width: 30, alignment: .center)
-
-                        HStack(spacing: 8) {
-                            Circle()
-                                .fill(Color(hex: player.teamColor.rawValue))
+                    ForEach(playerUiModelList, id: \.id) { player in
+                        HStack(spacing: 6) {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(player.teamColor.color)
                                 .frame(width: 12, height: 12)
-                            Text(player.name)
-                                .lineLimit(1)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                        PlayerStatButton(
-                            value: player.goals,
-                            uiLimited: uiLimited
-                        ) {
-                            onPlayerResultClicked(PlayerResultUiModel(
-                                playerUiModel: player,
-                                option: .goal
-                            ))
-                        }
-                        .frame(width: 35)
+                            ZStack(alignment: .center) {
+                                Text(player.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(.clear)
+                                    .lineLimit(1)
 
-                        PlayerStatButton(
-                            value: player.assists,
-                            uiLimited: uiLimited
-                        ) {
-                            onPlayerResultClicked(PlayerResultUiModel(
-                                playerUiModel: player,
-                                option: .assist
-                            ))
+                                Text(player.name)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                            }
                         }
-                        .frame(width: 35)
-
-                        PlayerStatButton(
-                            value: player.saves,
-                            uiLimited: uiLimited
-                        ) {
-                            onPlayerResultClicked(PlayerResultUiModel(
-                                playerUiModel: player,
-                                option: .save
-                            ))
-                        }
-                        .frame(width: 35)
-
-                        PlayerStatButton(
-                            value: player.dribbles,
-                            uiLimited: uiLimited
-                        ) {
-                            onPlayerResultClicked(PlayerResultUiModel(
-                                playerUiModel: player,
-                                option: .dribble
-                            ))
-                        }
-                        .frame(width: 35)
-
-                        PlayerStatButton(
-                            value: player.shots,
-                            uiLimited: uiLimited
-                        ) {
-                            onPlayerResultClicked(PlayerResultUiModel(
-                                playerUiModel: player,
-                                option: .shot
-                            ))
-                        }
-                        .frame(width: 35)
-
-                        PlayerStatButton(
-                            value: player.passes,
-                            uiLimited: uiLimited
-                        ) {
-                            onPlayerResultClicked(PlayerResultUiModel(
-                                playerUiModel: player,
-                                option: .pass
-                            ))
-                        }
-                        .frame(width: 35)
-                    }
-                    .font(.bodyMedium)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 8)
-
-                    if index < playerUiModelList.count - 1 {
-                        Divider()
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                // Stat columns (tappable)
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("goals_icon", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.goals,
+                    option: .goal,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("assists_icon", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.assists,
+                    option: .assist,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("saves_icon", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.saves,
+                    option: .save,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("dribbles_icon", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.dribbles,
+                    option: .dribble,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("shots_icon", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.shots,
+                    option: .shot,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("passes_icon", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.passes,
+                    option: .pass,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
             }
-            .background(AppColor.surfaceVariant)
+            .padding(12)
+            .background(AppColor.surface)
             .cornerRadius(12)
-            .padding(.horizontal, 16)
+        }
+        .padding(.horizontal, 16)
+    }
+}
+
+// MARK: - Helper Functions
+
+private func resultsStatColumn(header: String, values: [(String, Font?)]) -> some View {
+    VStack(spacing: 8) {
+        Text(header)
+            .font(.labelSmall)
+            .foregroundColor(AppColor.outline)
+
+        ForEach(Array(values.enumerated()), id: \.offset) { _, item in
+            Text(item.0)
+                .font(item.1 ?? .labelSmall)
+                .foregroundColor(AppColor.onSurface)
         }
     }
 }
 
-// MARK: - Player Stat Button
+private func resultsPlayerStatColumn(
+    header: String,
+    players: [PlayerUiModel],
+    valuePath: KeyPath<PlayerUiModel, Int>,
+    option: TeamOption,
+    uiLimited: Bool,
+    onPlayerResultClicked: @escaping (PlayerResultUiModel) -> Void
+) -> some View {
+    VStack(spacing: 8) {
+        Text(header)
+            .font(.labelSmall)
+            .foregroundColor(AppColor.outline)
 
-struct PlayerStatButton: View {
-    let value: Int
-    let uiLimited: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button {
-            if !uiLimited {
-                action()
-            }
-        } label: {
-            Text("\(value)")
-                .font(.bodyMedium)
-                .foregroundColor(uiLimited ? AppColor.onSurfaceVariant : AppColor.onSurface)
+        let font = if option == .goal {
+            Font.labelLarge
+        } else {
+            Font.labelSmall
         }
-        .disabled(uiLimited)
+
+        ForEach(players, id: \.id) { player in
+            Text("\(player[keyPath: valuePath])")
+                .font(font)
+                .foregroundColor(uiLimited ? AppColor.onSurfaceVariant : AppColor.onSurface)
+                .onTapGesture {
+                    if !uiLimited {
+                        onPlayerResultClicked(PlayerResultUiModel(
+                            playerUiModel: player,
+                            option: option
+                        ))
+                    }
+                }
+        }
     }
 }
 
