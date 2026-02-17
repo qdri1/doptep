@@ -1162,7 +1162,7 @@ struct LiveGameResultSheet: View {
     let onSave: (Int) -> Void
     let onDismiss: () -> Void
 
-    @State private var goalsText: String
+    @State private var value: Int
 
     init(liveGameResult: LiveGameResultUiModel, onSave: @escaping (Int) -> Void, onDismiss: @escaping () -> Void) {
         self.liveGameResult = liveGameResult
@@ -1171,7 +1171,7 @@ struct LiveGameResultSheet: View {
         let goals = liveGameResult.isLeftTeam
             ? liveGameResult.liveGameUiModel.leftTeamGoals
             : liveGameResult.liveGameUiModel.rightTeamGoals
-        self._goalsText = State(initialValue: "\(goals)")
+        _value = State(initialValue: goals)
     }
 
     private var teamName: String {
@@ -1188,54 +1188,68 @@ struct LiveGameResultSheet: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 16) {
-                HStack {
+            VStack(spacing: 24) {
+                // Team Info
+                HStack(spacing: 12) {
                     Circle()
                         .fill(teamColor)
-                        .frame(width: 16, height: 16)
+                        .frame(width: 24, height: 24)
+
                     Text(teamName)
                         .font(.titleMedium)
-                        .foregroundColor(AppColor.onSurface)
+
+                    Spacer()
                 }
-                .padding(.top)
+                .padding(.horizontal)
 
+                // Stat Type
                 Text(NSLocalizedString("goals", comment: ""))
-                    .font(.bodyMedium)
-                    .foregroundColor(AppColor.onSurface)
+                    .font(.titleMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
 
-                TextField("", text: $goalsText, prompt: Text(NSLocalizedString("goals", comment: "")).foregroundColor(AppColor.outline))
-                    .font(.bodySmall)
-                    .foregroundColor(AppColor.onSurface)
-                    .keyboardType(.numberPad)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .overlay(alignment: .trailing) {
-                        if !goalsText.isEmpty {
-                            Button { goalsText = "" } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(AppColor.onSurfaceVariant)
-                            }
-                            .padding(.trailing, 8)
+                // Value Stepper
+                HStack(spacing: 32) {
+                    Button {
+                        if value > 0 {
+                            value -= 1
                         }
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.custom("Montserrat-SemiBold", size: 44))
+                            .foregroundColor(AppColor.error)
                     }
-                    .padding(.horizontal)
 
-                Button {
-                    if let value = Int(goalsText) {
-                        onSave(value)
+                    Text("\(value)")
+                        .font(.custom("Montserrat-Bold", size: 48))
+                        .frame(minWidth: 80)
+
+                    Button {
+                        value += 1
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.custom("Montserrat-SemiBold", size: 44))
+                            .foregroundColor(AppColor.primary)
                     }
+                }
+
+                Spacer()
+
+                // Save Button
+                Button {
+                    onSave(value)
                 } label: {
                     Text(NSLocalizedString("save", comment: ""))
                         .font(.titleMedium)
                         .foregroundColor(AppColor.onPrimary)
-                        .padding()
                         .frame(maxWidth: .infinity)
+                        .padding()
                         .background(AppColor.primary)
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)
-
-                Spacer()
             }
+            .padding(.top, 24)
+            .padding(.bottom, 16)
             .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
