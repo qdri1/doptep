@@ -16,6 +16,5 @@ struct GameUiState {
     var showRightTeamChangeDropdown: Bool = false
     var isTimerPlay: Bool = false
     var billingType: BillingType = .lifetime
-    var clearResultsRemainingCount: Int = 2
     var uiLimited: Bool = false
 }

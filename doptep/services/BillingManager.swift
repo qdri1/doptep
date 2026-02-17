@@ -12,7 +12,6 @@ final class BillingManager: ObservableObject {
     static let shared = BillingManager()
 
     @Published private(set) var billingType: BillingType = .limited
-    @Published private(set) var clearResultsRemainingCount: Int = 2
     @Published private(set) var monthlyPrice: String?
     @Published private(set) var yearlyPrice: String?
     @Published private(set) var unlimitedPrice: String?
@@ -40,17 +39,6 @@ final class BillingManager: ObservableObject {
 
     func getCurrentBillingType() -> BillingType {
         return billingType
-    }
-
-    func getClearResultsRemainingCount() -> Int {
-        return clearResultsRemainingCount
-    }
-
-    func decreaseClearResultsRemainingCount() {
-        if clearResultsRemainingCount > 0 {
-            clearResultsRemainingCount -= 1
-            userDefaults.set(clearResultsRemainingCount, forKey: "clearResultsRemainingCount")
-        }
     }
 
     func purchase(_ plan: ActivationPlan) async throws -> Bool {
@@ -89,7 +77,6 @@ final class BillingManager: ObservableObject {
     private func loadSavedState() {
         let savedBillingType = userDefaults.string(forKey: "billingType") ?? BillingType.limited.rawValue
         billingType = BillingType(rawValue: savedBillingType) ?? .limited
-        clearResultsRemainingCount = userDefaults.object(forKey: "clearResultsRemainingCount") as? Int ?? 2
     }
 
     private func loadProducts() async {

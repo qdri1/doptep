@@ -95,8 +95,7 @@ final class GameResultsViewModel: ObservableObject {
             }
 
             let billingType = BillingManager.shared.getCurrentBillingType()
-            let clearResultsRemainingCount = BillingManager.shared.getClearResultsRemainingCount()
-            let uiLimited = billingType == .limited && clearResultsRemainingCount <= 0
+            let uiLimited = billingType == .limited
 
             uiState = GameResultsUiState(
                 teamUiModelList: teamUiModelList,

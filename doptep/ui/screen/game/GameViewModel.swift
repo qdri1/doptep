@@ -567,6 +567,7 @@ final class GameViewModel: ObservableObject {
                 points: winnerTeam.points + 3
             )
             try teamRepository.updateTeam(updated)
+            try teamHistoryRepository.updateTeamHistory(updated)
         }
         if let loserTeam = uiState.teamUiModelList.first(where: { $0.id == liveGame.rightTeamId }) {
             let updated = TeamUiModel(
@@ -583,6 +584,7 @@ final class GameViewModel: ObservableObject {
                 points: loserTeam.points
             )
             try teamRepository.updateTeam(updated)
+            try teamHistoryRepository.updateTeamHistory(updated)
         }
     }
 
@@ -602,6 +604,7 @@ final class GameViewModel: ObservableObject {
                 points: winnerTeam.points + 3
             )
             try teamRepository.updateTeam(updated)
+            try teamHistoryRepository.updateTeamHistory(updated)
         }
         if let loserTeam = uiState.teamUiModelList.first(where: { $0.id == liveGame.leftTeamId }) {
             let updated = TeamUiModel(
@@ -618,6 +621,7 @@ final class GameViewModel: ObservableObject {
                 points: loserTeam.points
             )
             try teamRepository.updateTeam(updated)
+            try teamHistoryRepository.updateTeamHistory(updated)
         }
     }
 
@@ -639,6 +643,7 @@ final class GameViewModel: ObservableObject {
                     points: team.points + 1
                 )
                 try teamRepository.updateTeam(updated)
+                try teamHistoryRepository.updateTeamHistory(updated)
             }
         }
     }
@@ -977,6 +982,7 @@ final class GameViewModel: ObservableObject {
                 }
 
                 try playerRepository.updatePlayer(updatedPlayer)
+                try playerHistoryRepository.updatePlayerHistory(updatedPlayer)
                 try await updatePlayersBlock()
             } catch {
                 snackbarMessage = "Error updating player"
@@ -1186,6 +1192,7 @@ final class GameViewModel: ObservableObject {
                     )
                 }
                 try playerRepository.updatePlayer(player)
+                try playerHistoryRepository.updatePlayerHistory(player)
                 try await updatePlayersBlock()
                 snackbarMessage = NSLocalizedString("save_success", comment: "")
             } catch {
