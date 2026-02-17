@@ -347,10 +347,10 @@ struct AddGameScreen: View {
             Text(NSLocalizedString("add_player", comment: ""))
                 .font(.bodyMedium)
                 .foregroundColor(AppColor.onPrimary)
-                .padding(.horizontal, 24)
-                .padding(.vertical, 12)
+                .padding()
+                .background(AppColor.primary)
+                .cornerRadius(12)
         }
-        .buttonStyle(.borderedProminent)
         .padding(.top, 4)
         .padding(.bottom, 16)
     }

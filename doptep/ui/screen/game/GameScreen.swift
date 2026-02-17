@@ -1052,91 +1052,94 @@ struct PlayerResultSheet: View {
     let onSave: (TeamOption, Int) -> Void
     let onDismiss: () -> Void
 
-    @State private var selectedOption: TeamOption
-    @State private var valueText: String
+    @State private var value: Int
 
     init(playerResult: PlayerResultUiModel, onSave: @escaping (TeamOption, Int) -> Void, onDismiss: @escaping () -> Void) {
         self.playerResult = playerResult
         self.onSave = onSave
         self.onDismiss = onDismiss
-        self._selectedOption = State(initialValue: playerResult.option)
-        self._valueText = State(initialValue: "\(Self.getValue(for: playerResult.option, player: playerResult.playerUiModel))")
-    }
 
-    private static func getValue(for option: TeamOption, player: PlayerUiModel) -> Int {
-        switch option {
-        case .goal: return player.goals
-        case .assist: return player.assists
-        case .save: return player.saves
-        case .dribble: return player.dribbles
-        case .shot: return player.shots
-        case .pass: return player.passes
+        let initialValue: Int
+        switch playerResult.option {
+        case .goal: initialValue = playerResult.playerUiModel.goals
+        case .assist: initialValue = playerResult.playerUiModel.assists
+        case .save: initialValue = playerResult.playerUiModel.saves
+        case .dribble: initialValue = playerResult.playerUiModel.dribbles
+        case .shot: initialValue = playerResult.playerUiModel.shots
+        case .pass: initialValue = playerResult.playerUiModel.passes
         }
+        _value = State(initialValue: initialValue)
     }
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 16) {
-                HStack {
+            VStack(spacing: 24) {
+                // Player Info
+                HStack(spacing: 12) {
                     Circle()
                         .fill(playerResult.playerUiModel.teamColor.color)
-                        .frame(width: 16, height: 16)
+                        .frame(width: 24, height: 24)
+
                     Text(playerResult.playerUiModel.name)
                         .font(.titleMedium)
-                        .foregroundColor(AppColor.onSurface)
-                }
-                .padding(.top)
 
-                Picker(NSLocalizedString("stat_type", comment: ""), selection: $selectedOption) {
-                    ForEach(TeamOption.allCases, id: \.self) { option in
-                        Text(NSLocalizedString(option.localizationKey, comment: "")).tag(option)
-                            .font(.bodySmall)
-                    }
+                    Spacer()
                 }
-                .pickerStyle(.segmented)
                 .padding(.horizontal)
-                .onChange(of: selectedOption) { _, newOption in
-                    valueText = "\(Self.getValue(for: newOption, player: playerResult.playerUiModel))"
+
+                // Stat Type
+                Text(NSLocalizedString(playerResult.option.localizationKey, comment: ""))
+                    .font(.titleMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
+
+                // Value Stepper
+                HStack(spacing: 32) {
+                    Button {
+                        if value > 0 {
+                            value -= 1
+                        }
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.custom("Montserrat-SemiBold", size: 44))
+                            .foregroundColor(AppColor.error)
+                    }
+
+                    Text("\(value)")
+                        .font(.custom("Montserrat-Bold", size: 48))
+                        .frame(minWidth: 80)
+
+                    Button {
+                        value += 1
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.custom("Montserrat-SemiBold", size: 44))
+                            .foregroundColor(AppColor.primary)
+                    }
                 }
 
-                TextField("", text: $valueText, prompt: Text(NSLocalizedString("value", comment: "")).foregroundColor(AppColor.outline))
-                    .font(.bodySmall)
-                    .foregroundColor(AppColor.onSurface)
-                    .keyboardType(.numberPad)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .overlay(alignment: .trailing) {
-                        if !valueText.isEmpty {
-                            Button { valueText = "" } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(AppColor.onSurfaceVariant)
-                            }
-                            .padding(.trailing, 8)
-                        }
-                    }
-                    .padding(.horizontal)
+                Spacer()
 
+                // Save Button
                 Button {
-                    if let value = Int(valueText) {
-                        onSave(selectedOption, value)
-                    }
+                    onSave(playerResult.option, value)
                 } label: {
                     Text(NSLocalizedString("save", comment: ""))
                         .font(.titleMedium)
                         .foregroundColor(AppColor.onPrimary)
-                        .padding()
                         .frame(maxWidth: .infinity)
+                        .padding()
                         .background(AppColor.primary)
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)
-
-                Spacer()
             }
+            .padding(.top, 24)
+            .padding(.bottom, 16)
             .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text(NSLocalizedString("edit_player_stats", comment: ""))
+                    Text(NSLocalizedString("edit_result", comment: ""))
                         .font(.bodyMedium)
                         .foregroundColor(AppColor.onSurface)
                 }

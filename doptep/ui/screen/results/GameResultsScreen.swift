@@ -447,19 +447,28 @@ struct GameResultPlayerResultSheet: View {
                         .foregroundColor(AppColor.onPrimary)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(AppColor.tertiary)
+                        .background(AppColor.primary)
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)
             }
             .padding(.top, 24)
             .padding(.bottom, 16)
-            .navigationTitle(NSLocalizedString("edit_result", comment: ""))
+            .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(NSLocalizedString("cancel", comment: "")) {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("edit_result", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
                         onDismissed()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
                     }
                 }
             }
