@@ -335,45 +335,58 @@ final class AddGameViewModel: ObservableObject {
 
                 for (playerIndex, playerName) in newPlayerNames.enumerated() {
                     let trimmedName = playerName.trimmingCharacters(in: .whitespaces)
-                    if trimmedName.isEmpty { continue }
 
                     if let existingPlayer = existingPlayers[safe: playerIndex] {
                         // Update existing player
-                        let updatedPlayer = PlayerUiModel(
-                            id: existingPlayer.id,
-                            teamId: existingPlayer.teamId,
-                            teamColor: existingPlayer.teamColor,
-                            teamName: existingPlayer.teamName,
-                            teamPoints: existingPlayer.teamPoints,
-                            teamGoalsDifference: existingPlayer.teamGoalsDifference,
-                            name: trimmedName,
-                            goals: existingPlayer.goals,
-                            assists: existingPlayer.assists,
-                            dribbles: existingPlayer.dribbles,
-                            passes: existingPlayer.passes,
-                            shots: existingPlayer.shots,
-                            saves: existingPlayer.saves
-                        )
-                        try playerRepository.updatePlayer(updatedPlayer)
-
-                        // Update player history
-                        if let historyPlayer = try playerHistoryRepository.getPlayerHistory(playerId: existingPlayer.id) {
-                            let updatedHistoryPlayer = PlayerUiModel(
-                                id: historyPlayer.id,
-                                teamId: historyPlayer.teamId,
-                                teamColor: historyPlayer.teamColor,
-                                teamName: historyPlayer.teamName,
-                                teamPoints: historyPlayer.teamPoints,
-                                teamGoalsDifference: historyPlayer.teamGoalsDifference,
-                                name: trimmedName,
-                                goals: historyPlayer.goals,
-                                assists: historyPlayer.assists,
-                                dribbles: historyPlayer.dribbles,
-                                passes: historyPlayer.passes,
-                                shots: historyPlayer.shots,
-                                saves: historyPlayer.saves
-                            )
-                            try playerHistoryRepository.updatePlayerHistory(updatedHistoryPlayer)
+                        
+                        if trimmedName.isEmpty {
+                            try playerRepository.deletePlayer(id: existingPlayer.id)
+                        } else {
+                            if trimmedName != existingPlayer.name {
+                                try playerRepository.deletePlayer(id: existingPlayer.id)
+                                
+                                let newPlayer = PlayerModel(
+                                    teamId: teamUiModel.id,
+                                    name: trimmedName,
+                                    goals: existingPlayer.goals,
+                                    assists: existingPlayer.assists,
+                                    dribbles: existingPlayer.dribbles,
+                                    passes: existingPlayer.passes,
+                                    shots: existingPlayer.shots,
+                                    saves: existingPlayer.saves
+                                )
+                                let _ = playerRepository.savePlayer(newPlayer)
+                                
+                                if let historyPlayer = try playerHistoryRepository.getPlayerHistory(teamId: newPlayer.teamId, playerName: newPlayer.name) {
+                                    try playerHistoryRepository.deletePlayerHistory(playerId: historyPlayer.id)
+                                    
+                                    let newPlayerHistory = PlayerModel(
+                                        id: newPlayer.id,
+                                        teamId: newPlayer.teamId,
+                                        name: newPlayer.name,
+                                        goals: historyPlayer.goals,
+                                        assists: historyPlayer.assists,
+                                        dribbles: historyPlayer.dribbles,
+                                        passes: historyPlayer.passes,
+                                        shots: historyPlayer.shots,
+                                        saves: historyPlayer.saves
+                                    )
+                                    playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
+                                } else {
+                                    let newPlayerHistory = PlayerModel(
+                                        id: newPlayer.id,
+                                        teamId: newPlayer.teamId,
+                                        name: newPlayer.name,
+                                        goals: 0,
+                                        assists: 0,
+                                        dribbles: 0,
+                                        passes: 0,
+                                        shots: 0,
+                                        saves: 0
+                                    )
+                                    playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
+                                }
+                            }
                         }
                     } else {
                         // Add new player
@@ -382,8 +395,36 @@ final class AddGameViewModel: ObservableObject {
                             name: trimmedName
                         )
                         let _ = playerRepository.savePlayer(newPlayer)
-                        let playerHistory = newPlayer.toPlayerHistoryModel()
-                        playerHistoryRepository.savePlayerHistory(playerHistory)
+                        
+                        if let historyPlayer = try playerHistoryRepository.getPlayerHistory(teamId: newPlayer.teamId, playerName: newPlayer.name) {
+                            try playerHistoryRepository.deletePlayerHistory(playerId: historyPlayer.id)
+                            
+                            let newPlayerHistory = PlayerModel(
+                                id: newPlayer.id,
+                                teamId: newPlayer.teamId,
+                                name: newPlayer.name,
+                                goals: historyPlayer.goals,
+                                assists: historyPlayer.assists,
+                                dribbles: historyPlayer.dribbles,
+                                passes: historyPlayer.passes,
+                                shots: historyPlayer.shots,
+                                saves: historyPlayer.saves
+                            )
+                            playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
+                        } else {
+                            let newPlayerHistory = PlayerModel(
+                                id: newPlayer.id,
+                                teamId: newPlayer.teamId,
+                                name: newPlayer.name,
+                                goals: 0,
+                                assists: 0,
+                                dribbles: 0,
+                                passes: 0,
+                                shots: 0,
+                                saves: 0
+                            )
+                            playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
+                        }
                     }
                 }
             }

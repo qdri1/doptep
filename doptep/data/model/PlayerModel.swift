@@ -19,6 +19,7 @@ final class PlayerModel {
     var saves: Int
 
     init(
+        id: UUID = UUID(),
         teamId: UUID,
         name: String,
         goals: Int = 0,
@@ -28,7 +29,7 @@ final class PlayerModel {
         shots: Int = 0,
         saves: Int = 0
     ) {
-        self.id = UUID()
+        self.id = id
         self.teamId = teamId
         self.name = name
         self.goals = goals

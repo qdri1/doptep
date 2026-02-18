@@ -42,6 +42,9 @@ final class GameResultsViewModel: ObservableObject {
         case .onClearResultsConfirmationClicked:
             onClearResultsConfirmationClicked()
 
+        case .onPlayerResultClicked(let playerResultUiModel):
+            effect = .showPlayerResultBottomSheet(playerResultUiModel: playerResultUiModel)
+            
         case .onSavePlayerResultClicked(let playerResultUiModel, let playerResultValue):
             onSavePlayerResultClicked(playerResultUiModel: playerResultUiModel, playerResultValue: playerResultValue)
         }

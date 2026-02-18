@@ -76,7 +76,7 @@ final class TeamHistoryRepository {
         model.points = uiModel.points
     }
 
-    private func getTeamHistoryEntity(teamId: UUID) throws -> TeamHistoryModel? {
+    func getTeamHistoryEntity(teamId: UUID) throws -> TeamHistoryModel? {
         let descriptor = FetchDescriptor<TeamHistoryModel>(
             predicate: #Predicate { $0.originalId == teamId }
         )

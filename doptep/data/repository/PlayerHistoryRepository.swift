@@ -104,6 +104,25 @@ final class PlayerHistoryRepository {
         model.shots = uiModel.shots
         model.saves = uiModel.saves
     }
+    
+    func updatePlayerHistory(playerId: UUID, option: TeamOption, value: Int) throws {
+        guard let model = try getPlayerHistoryEntity(playerId: playerId) else { return }
+        
+        switch option {
+        case .goal:
+            model.goals = model.goals + value
+        case .assist:
+            model.assists = model.assists + value
+        case .save:
+            model.saves = model.saves + value
+        case .dribble:
+            model.dribbles = model.dribbles + value
+        case .shot:
+            model.shots = model.shots + value
+        case .pass:
+            model.passes = model.passes + value
+        }
+    }
 
     func deletePlayerHistory(_ model: PlayerHistoryModel) {
         context.delete(model)

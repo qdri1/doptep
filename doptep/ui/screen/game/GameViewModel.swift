@@ -567,7 +567,14 @@ final class GameViewModel: ObservableObject {
                 points: winnerTeam.points + 3
             )
             try teamRepository.updateTeam(updated)
-            try teamHistoryRepository.updateTeamHistory(updated)
+            
+            if let model = try teamHistoryRepository.getTeamHistoryEntity(teamId: updated.id) {
+                model.games = model.games + 1
+                model.wins = model.wins + 1
+                model.goals = model.goals + liveGame.leftTeamGoals
+                model.conceded = model.conceded + liveGame.rightTeamGoals
+                model.points = model.points + 3
+            }
         }
         if let loserTeam = uiState.teamUiModelList.first(where: { $0.id == liveGame.rightTeamId }) {
             let updated = TeamUiModel(
@@ -584,7 +591,13 @@ final class GameViewModel: ObservableObject {
                 points: loserTeam.points
             )
             try teamRepository.updateTeam(updated)
-            try teamHistoryRepository.updateTeamHistory(updated)
+            
+            if let model = try teamHistoryRepository.getTeamHistoryEntity(teamId: updated.id) {
+                model.games = model.games + 1
+                model.loses = model.loses + 1
+                model.goals = model.goals + liveGame.rightTeamGoals
+                model.conceded = model.conceded + liveGame.leftTeamGoals
+            }
         }
     }
 
@@ -604,7 +617,14 @@ final class GameViewModel: ObservableObject {
                 points: winnerTeam.points + 3
             )
             try teamRepository.updateTeam(updated)
-            try teamHistoryRepository.updateTeamHistory(updated)
+            
+            if let model = try teamHistoryRepository.getTeamHistoryEntity(teamId: updated.id) {
+                model.games = model.games + 1
+                model.wins = model.wins + 1
+                model.goals = model.goals + liveGame.rightTeamGoals
+                model.conceded = model.conceded + liveGame.leftTeamGoals
+                model.points = model.points + 3
+            }
         }
         if let loserTeam = uiState.teamUiModelList.first(where: { $0.id == liveGame.leftTeamId }) {
             let updated = TeamUiModel(
@@ -621,7 +641,13 @@ final class GameViewModel: ObservableObject {
                 points: loserTeam.points
             )
             try teamRepository.updateTeam(updated)
-            try teamHistoryRepository.updateTeamHistory(updated)
+            
+            if let model = try teamHistoryRepository.getTeamHistoryEntity(teamId: updated.id) {
+                model.games = model.games + 1
+                model.loses = model.loses + 1
+                model.goals = model.goals + liveGame.leftTeamGoals
+                model.conceded = model.conceded + liveGame.rightTeamGoals
+            }
         }
     }
 
@@ -643,7 +669,14 @@ final class GameViewModel: ObservableObject {
                     points: team.points + 1
                 )
                 try teamRepository.updateTeam(updated)
-                try teamHistoryRepository.updateTeamHistory(updated)
+                
+                if let model = try teamHistoryRepository.getTeamHistoryEntity(teamId: updated.id) {
+                    model.games = model.games + 1
+                    model.draws = model.draws + 1
+                    model.goals = model.goals + (isLeft ? liveGame.leftTeamGoals : liveGame.rightTeamGoals)
+                    model.conceded = model.conceded + (isLeft ? liveGame.rightTeamGoals : liveGame.leftTeamGoals)
+                    model.points = model.points + 1
+                }
             }
         }
     }
@@ -982,7 +1015,7 @@ final class GameViewModel: ObservableObject {
                 }
 
                 try playerRepository.updatePlayer(updatedPlayer)
-                try playerHistoryRepository.updatePlayerHistory(updatedPlayer)
+                try playerHistoryRepository.updatePlayerHistory(playerId: updatedPlayer.id, option: option, value: 1)
                 try await updatePlayersBlock()
             } catch {
                 snackbarMessage = "Error updating player"
@@ -1141,8 +1174,12 @@ final class GameViewModel: ObservableObject {
         Task {
             do {
                 var player = playerResultUiModel.playerUiModel
+                
+                var diffs = 0
+                
                 switch playerResultUiModel.option {
                 case .goal:
+                    diffs = value - player.goals
                     player = PlayerUiModel(
                         id: player.id, teamId: player.teamId, teamColor: player.teamColor,
                         teamName: player.teamName, teamPoints: player.teamPoints,
@@ -1151,6 +1188,7 @@ final class GameViewModel: ObservableObject {
                         passes: player.passes, shots: player.shots, saves: player.saves
                     )
                 case .assist:
+                    diffs = value - player.assists
                     player = PlayerUiModel(
                         id: player.id, teamId: player.teamId, teamColor: player.teamColor,
                         teamName: player.teamName, teamPoints: player.teamPoints,
@@ -1159,6 +1197,7 @@ final class GameViewModel: ObservableObject {
                         passes: player.passes, shots: player.shots, saves: player.saves
                     )
                 case .save:
+                    diffs = value - player.saves
                     player = PlayerUiModel(
                         id: player.id, teamId: player.teamId, teamColor: player.teamColor,
                         teamName: player.teamName, teamPoints: player.teamPoints,
@@ -1167,6 +1206,7 @@ final class GameViewModel: ObservableObject {
                         passes: player.passes, shots: player.shots, saves: value
                     )
                 case .dribble:
+                    diffs = value - player.dribbles
                     player = PlayerUiModel(
                         id: player.id, teamId: player.teamId, teamColor: player.teamColor,
                         teamName: player.teamName, teamPoints: player.teamPoints,
@@ -1175,6 +1215,7 @@ final class GameViewModel: ObservableObject {
                         passes: player.passes, shots: player.shots, saves: player.saves
                     )
                 case .shot:
+                    diffs = value - player.shots
                     player = PlayerUiModel(
                         id: player.id, teamId: player.teamId, teamColor: player.teamColor,
                         teamName: player.teamName, teamPoints: player.teamPoints,
@@ -1183,6 +1224,7 @@ final class GameViewModel: ObservableObject {
                         passes: player.passes, shots: value, saves: player.saves
                     )
                 case .pass:
+                    diffs = value - player.passes
                     player = PlayerUiModel(
                         id: player.id, teamId: player.teamId, teamColor: player.teamColor,
                         teamName: player.teamName, teamPoints: player.teamPoints,
@@ -1192,7 +1234,7 @@ final class GameViewModel: ObservableObject {
                     )
                 }
                 try playerRepository.updatePlayer(player)
-                try playerHistoryRepository.updatePlayerHistory(player)
+                try playerHistoryRepository.updatePlayerHistory(playerId: player.id, option: playerResultUiModel.option, value: diffs)
                 try await updatePlayersBlock()
                 snackbarMessage = NSLocalizedString("save_success", comment: "")
             } catch {

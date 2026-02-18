@@ -11,6 +11,7 @@ struct GameResultsScreen: View {
     @ObservedObject var viewModel: GameResultsViewModel
 
     @State private var showClearResultsConfirmation = false
+    @State private var showPlayerResultSheet = false
     @State private var playerResultUiModel: PlayerResultUiModel?
     @State private var snackbarMessage: String?
 
@@ -56,7 +57,7 @@ struct GameResultsScreen: View {
                             playerUiModelList: viewModel.uiState.playerUiModelList,
                             uiLimited: viewModel.uiState.uiLimited,
                             onPlayerResultClicked: { playerResult in
-                                playerResultUiModel = playerResult
+                                viewModel.action(GameResultsAction.onPlayerResultClicked(playerResultUiModel: playerResult))
                             }
                         )
                     }
@@ -71,21 +72,23 @@ struct GameResultsScreen: View {
             handleEffect(effect)
             viewModel.clearEffect()
         }
-        .sheet(item: $playerResultUiModel) { playerResult in
-            GameResultPlayerResultSheet(
-                playerResultUiModel: playerResult,
-                onSaveClicked: { resultUiModel, value in
-                    viewModel.action(.onSavePlayerResultClicked(
-                        playerResultUiModel: resultUiModel,
-                        playerResultValue: value
-                    ))
-                    playerResultUiModel = nil
-                },
-                onDismissed: {
-                    playerResultUiModel = nil
-                }
-            )
-            .presentationDetents([.medium])
+        .sheet(isPresented: $showPlayerResultSheet) {
+            if let playerResult = playerResultUiModel {
+                GameResultPlayerResultSheet(
+                    playerResultUiModel: playerResult,
+                    onSaveClicked: { resultUiModel, value in
+                        viewModel.action(.onSavePlayerResultClicked(
+                            playerResultUiModel: resultUiModel,
+                            playerResultValue: value
+                        ))
+                        showPlayerResultSheet = false
+                    },
+                    onDismissed: {
+                        showPlayerResultSheet = false
+                    }
+                )
+                .presentationDetents([.medium])
+            }
         }
         .confirmationDialog(
             NSLocalizedString("clear_all_results_title", comment: ""),
@@ -110,6 +113,7 @@ struct GameResultsScreen: View {
 
         case .showPlayerResultBottomSheet(let playerResult):
             playerResultUiModel = playerResult
+            showPlayerResultSheet = true
 
         case .showSnackbar(let message):
             snackbarMessage = message
@@ -347,14 +351,12 @@ private func resultsPlayerStatColumn(
         ForEach(players, id: \.id) { player in
             Text("\(player[keyPath: valuePath])")
                 .font(font)
-                .foregroundColor(uiLimited ? AppColor.onSurfaceVariant : AppColor.onSurface)
+                .foregroundColor(AppColor.onSurface)
                 .onTapGesture {
-                    if !uiLimited {
-                        onPlayerResultClicked(PlayerResultUiModel(
-                            playerUiModel: player,
-                            option: option
-                        ))
-                    }
+                    onPlayerResultClicked(PlayerResultUiModel(
+                        playerUiModel: player,
+                        option: option
+                    ))
                 }
         }
     }
