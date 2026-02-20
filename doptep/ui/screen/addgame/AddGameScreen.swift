@@ -18,7 +18,7 @@ struct AddGameScreen: View {
     var body: some View {
         VStack(spacing: 0) {
             topBar
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     gameNameField
                     timeField

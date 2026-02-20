@@ -133,13 +133,14 @@
 "sound_anarbekov" = "Темирлан\nАнарбеков";
 "sound_uo_uo_uo" = "UO UO UO";
 "sound_whistle" = "Свисток";
-"sound_stadium_applause" = "Стадион\nшапалақ";
-"sound_girls_applause" = "Қыздар\nшапалақ";
+"sound_stadium_applause" = "Аплодирует\nСтадион";
+"sound_girls_applause" = "Аплодируют\nдевушки";
 "sound_bilgenin_istep_jatyr" = "Білгенін\nістеп жатыр";
 "sound_goal_save" = "Не деген\nсейв";
 "sound_suiii" = "Suiii";
 "sound_suiii_full" = "Suiiiii\nFull";
 "sound_goal_goal_goal" = "Голь Голь\nГоль";
+"sound_oooi_kandai_gol" = "Уйиии қандай\nшебер гол";
 "sound_modrichtyn_pasy" = "Модричтың\nпасы";
 "sound_tondyryp_tastagan" = "Тоңдырып\nтастаған";
 

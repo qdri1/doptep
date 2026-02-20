@@ -135,13 +135,14 @@
 "sound_whistle" = "Whistle";
 "sound_stadium_applause" = "Stadium\napplause";
 "sound_girls_applause" = "Girls\napplause";
-"sound_bilgenin_istep_jatyr" = "Bilgenin\nistep jatyr";
-"sound_goal_save" = "What a\nsave";
+"sound_bilgenin_istep_jatyr" = "Білгенін\nістеп жатыр";
+"sound_goal_save" = "Не деген\nсейв";
 "sound_suiii" = "Suiii";
 "sound_suiii_full" = "Suiiiii\nFull";
 "sound_goal_goal_goal" = "Goal Goal\nGoal";
-"sound_modrichtyn_pasy" = "Modric's\npass";
-"sound_tondyryp_tastagan" = "Tondyryp\ntastagan";
+"sound_oooi_kandai_gol" = "Уйиии қандай\nшебер гол";
+"sound_modrichtyn_pasy" = "Модричтың\nпасы";
+"sound_tondyryp_tastagan" = "Тоңдырып\nтастаған";
 
 // MARK: - Game Functions
 "function_best_players" = "Best players";
