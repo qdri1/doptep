@@ -50,7 +50,9 @@ struct GameScreen: View {
                     timerSection
                     startFinishButton
                     soundsSection
-                    teamsLeaderboard
+                    if viewModel.uiState.teamUiModelList.count > 2 {
+                        teamsLeaderboard
+                    }
                     playersLeaderboard
                     functionsSection
                 }
@@ -541,7 +543,7 @@ struct GameScreen: View {
     }
 
     private func row(title: String, value: String) -> some View {
-        HStack(spacing: 4) {
+        HStack(alignment: .top, spacing: 4) {
             Text(title)
                 .font(.labelMedium)
                 .foregroundColor(AppColor.onSurface)
