@@ -45,6 +45,7 @@ struct HomeScreen: View {
                         playerRepository: PlayerRepository(context: modelContext),
                         playerHistoryRepository: PlayerHistoryRepository(context: modelContext)
                     ))
+                    .toolbar(.hidden, for: .tabBar)
 
                 case .openGameScreen(let id):
                     GameScreen(viewModel: GameViewModel(
@@ -57,6 +58,7 @@ struct HomeScreen: View {
                         playerHistoryRepository: PlayerHistoryRepository(context: modelContext),
                         audioManager: AudioManager()
                     ))
+                    .toolbar(.hidden, for: .tabBar)
                 }
             }
             .onChange(of: viewModel.uiState.effect) { oldValue, newValue in

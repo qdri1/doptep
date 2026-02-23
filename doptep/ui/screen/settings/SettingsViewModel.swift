@@ -29,8 +29,6 @@ final class SettingsViewModel: ObservableObject {
             setEffect(.share)
         case .evaluate:
             setEffect(.openAppStore)
-        case .telegram:
-            setEffect(.openTelegram)
         case .activation:
             setEffect(.openActivationScreen)
         }

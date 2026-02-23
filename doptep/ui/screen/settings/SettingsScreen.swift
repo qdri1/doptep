@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-private let appStoreUrl = "https://apps.apple.com/app/id0000000000" // TODO: Replace with actual App Store ID
+private let appStoreUrl = "https://apps.apple.com/app/id6758735315"
 private let telegramUrl = "https://t.me/+_Ur1Ixp_1bNhNTc6"
 
 struct SettingsScreen: View {
@@ -25,9 +25,9 @@ struct SettingsScreen: View {
                 }
 
                 // Version Info
-                Text("\(NSLocalizedString("settings_version", comment: "")): \(Bundle.main.appVersion) - \(Bundle.main.buildNumber)")
-                    .font(.labelMedium)
-                    .foregroundColor(AppColor.onSurfaceVariant)
+                Text("\(NSLocalizedString("settings_version", comment: "")): \(Bundle.main.appVersion)")
+                    .font(.labelSmall)
+                    .foregroundColor(AppColor.outline)
                     .padding(.top, 12)
             }
             .padding(16)
@@ -47,6 +47,7 @@ struct SettingsScreen: View {
         }
         .navigationDestination(isPresented: $navigateToActivation) {
             ActivationScreen()
+                .toolbar(.hidden, for: .tabBar)
         }
     }
 
@@ -97,7 +98,7 @@ struct SettingsItemRow: View {
             }
             .foregroundColor(AppColor.onSurface)
             .padding(16)
-            .background(AppColor.surfaceVariant)
+            .background(AppColor.surface)
             .cornerRadius(16)
         }
     }
@@ -110,47 +111,50 @@ struct LanguageSelectionSheet: View {
     @AppStorage("app_language") private var appLanguage: String = "en"
 
     var body: some View {
-        NavigationView {
-            List {
-                Button {
-                    appLanguage = "en"
-                    dismiss()
-                } label: {
-                    HStack {
-                        Text("English")
-                        Spacer()
-                        if appLanguage == "en" {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(AppColor.tertiary)
-                        }
-                    }
-                }
-                .foregroundColor(AppColor.onSurface)
+        VStack(spacing: 0) {
+            HStack {
+                Text(NSLocalizedString("choose_language", comment: ""))
+                    .font(.bodyMedium)
+                    .foregroundColor(AppColor.onSurface)
 
-                Button {
-                    appLanguage = "ru"
+                Spacer()
+
+                Button(NSLocalizedString("done", comment: "")) {
                     dismiss()
-                } label: {
-                    HStack {
-                        Text("Русский")
-                        Spacer()
-                        if appLanguage == "ru" {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(AppColor.tertiary)
-                        }
-                    }
                 }
-                .foregroundColor(AppColor.onSurface)
+                .font(.bodySmall)
+                .foregroundColor(AppColor.primary)
             }
-            .navigationTitle(NSLocalizedString("settings_item_language", comment: ""))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("done", comment: "")) {
-                        dismiss()
-                    }
+            .padding(16)
+
+            Divider()
+
+            languageRow(title: "English", language: "en")
+            languageRow(title: "Русский", language: "ru")
+
+            Spacer()
+        }
+        .background(AppColor.surface)
+    }
+
+    private func languageRow(title: String, language: String) -> some View {
+        Button {
+            appLanguage = language
+            dismiss()
+        } label: {
+            HStack {
+                Text(title)
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.onSurface)
+
+                Spacer()
+
+                if appLanguage == language {
+                    Image(systemName: "checkmark")
+                        .foregroundColor(AppColor.primary)
                 }
             }
+            .padding(16)
         }
     }
 }
