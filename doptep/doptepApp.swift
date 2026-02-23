@@ -10,8 +10,9 @@ import SwiftData
 
 @main
 struct doptepApp: App {
-    
+
     let container: ModelContainer
+    @StateObject private var languageManager = LanguageManager()
 
     init() {
         container = try! ModelContainer(
@@ -23,12 +24,14 @@ struct doptepApp: App {
             PlayerHistoryModel.self
         )
     }
-    
+
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .id(languageManager.currentLanguage)
                 .accentColor(AppColor.primary)
                 .preferredColorScheme(.light)
+                .environmentObject(languageManager)
         }
         .modelContainer(container)
     }

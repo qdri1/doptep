@@ -88,7 +88,7 @@ struct SettingsItemRow: View {
                     .font(.bodySmall)
 
                 Text(item.displayName)
-                    .font(.bodyMedium)
+                    .font(.bodySmall)
 
                 Spacer()
 
@@ -108,7 +108,7 @@ struct SettingsItemRow: View {
 
 struct LanguageSelectionSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("app_language") private var appLanguage: String = "en"
+    @EnvironmentObject private var languageManager: LanguageManager
 
     var body: some View {
         VStack(spacing: 0) {
@@ -116,21 +116,13 @@ struct LanguageSelectionSheet: View {
                 Text(NSLocalizedString("choose_language", comment: ""))
                     .font(.bodyMedium)
                     .foregroundColor(AppColor.onSurface)
-
-                Spacer()
-
-                Button(NSLocalizedString("done", comment: "")) {
-                    dismiss()
-                }
-                .font(.bodySmall)
-                .foregroundColor(AppColor.primary)
             }
             .padding(16)
 
             Divider()
 
-            languageRow(title: "English", language: "en")
             languageRow(title: "Русский", language: "ru")
+            languageRow(title: "English", language: "en")
 
             Spacer()
         }
@@ -139,7 +131,7 @@ struct LanguageSelectionSheet: View {
 
     private func languageRow(title: String, language: String) -> some View {
         Button {
-            appLanguage = language
+            languageManager.setLanguage(language)
             dismiss()
         } label: {
             HStack {
@@ -149,7 +141,7 @@ struct LanguageSelectionSheet: View {
 
                 Spacer()
 
-                if appLanguage == language {
+                if languageManager.currentLanguage == language {
                     Image(systemName: "checkmark")
                         .foregroundColor(AppColor.primary)
                 }
