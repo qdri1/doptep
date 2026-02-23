@@ -438,6 +438,7 @@ final class GameViewModel: ObservableObject {
                 }
             } else {
                 try await updateTeamsDraw(liveGame: liveGame)
+                try await updateLiveGameRuleTeam4WhenDraw(liveGame: liveGame)
             }
         }
     }
@@ -492,6 +493,7 @@ final class GameViewModel: ObservableObject {
             }
         } else {
             try await updateTeamsDraw(liveGame: liveGame)
+            try await updateLiveGameRuleTeam4WhenDraw(liveGame: liveGame)
         }
     }
 
@@ -505,6 +507,53 @@ final class GameViewModel: ObservableObject {
                 effect = .showStayTeamSelectionBottomSheet
             }
         }
+    }
+
+    private func updateLiveGameRuleTeam4WhenDraw(liveGame: LiveGameUiModel) async throws {
+        let nextTeams = uiState.teamUiModelList.filter {
+            $0.id != liveGame.leftTeamId && $0.id != liveGame.rightTeamId
+        }
+
+        let newTeam: TeamUiModel?
+        let oldTeam: TeamUiModel?
+
+        if oldTeamId == nextTeams.first?.id {
+            newTeam = nextTeams.count > 1 ? nextTeams[1] : nil
+            oldTeam = nextTeams.first
+        } else if oldTeamId == (nextTeams.count > 1 ? nextTeams[1] : nil)?.id {
+            newTeam = nextTeams.first
+            oldTeam = nextTeams.count > 1 ? nextTeams[1] : nil
+        } else {
+            newTeam = nextTeams.first
+            oldTeam = nextTeams.count > 1 ? nextTeams[1] : nil
+        }
+
+        if let newTeam, let oldTeam {
+            oldTeamId = liveGame.leftTeamWinCount > liveGame.rightTeamWinCount
+                ? liveGame.leftTeamId
+                : liveGame.rightTeamId
+            try await updateLiveGameBothTeam(newTeam: newTeam, oldTeam: oldTeam, liveGame: liveGame)
+        }
+    }
+
+    private func updateLiveGameBothTeam(newTeam: TeamUiModel, oldTeam: TeamUiModel, liveGame: LiveGameUiModel) async throws {
+        let updated = LiveGameUiModel(
+            id: liveGame.id,
+            gameId: liveGame.gameId,
+            leftTeamId: newTeam.id,
+            leftTeamName: newTeam.name,
+            leftTeamColor: newTeam.color,
+            leftTeamGoals: 0,
+            leftTeamWinCount: 0,
+            rightTeamId: oldTeam.id,
+            rightTeamName: oldTeam.name,
+            rightTeamColor: oldTeam.color,
+            rightTeamGoals: 0,
+            rightTeamWinCount: 1,
+            gameCount: liveGame.gameCount + 1,
+            isLive: false
+        )
+        try liveGameRepository.updateLiveGame(updated)
     }
 
     private func findNextTeam(excludingIds: [UUID]) -> TeamUiModel? {
