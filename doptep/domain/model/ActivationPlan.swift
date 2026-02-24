@@ -6,9 +6,9 @@
 import Foundation
 
 enum ActivationPlan: String, CaseIterable {
-    case monthly = "monthly_premium_upgrade"
-    case yearly = "yearly_premium_upgrade"
-    case unlimited = "premium_upgrade"
+    case monthly = "subscription_monthly"
+    case yearly = "annual_subscription"
+    case unlimited = "lifetime_dop_tep"
 
     var productId: String {
         return rawValue

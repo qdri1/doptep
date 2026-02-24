@@ -41,6 +41,11 @@ final class BillingManager: ObservableObject {
         return billingType
     }
 
+    func setBillingType(_ type: BillingType) {
+        billingType = type
+        userDefaults.set(type.rawValue, forKey: "billingType")
+    }
+
     func purchase(_ plan: ActivationPlan) async throws -> Bool {
         guard let product = products.first(where: { $0.id == plan.productId }) else {
             return false

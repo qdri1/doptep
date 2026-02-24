@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AAAA00042F03B97D00CC9D10 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA00022F03B97D00CC9D10 /* RevenueCat */; };
+		AAAA00052F03B97D00CC9D10 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA00032F03B97D00CC9D10 /* RevenueCatUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		FC39999B2F03B98500CC9D10 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAAA00042F03B97D00CC9D10 /* RevenueCat in Frameworks */,
+				AAAA00052F03B97D00CC9D10 /* RevenueCatUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = doptep;
 			packageProductDependencies = (
+				AAAA00022F03B97D00CC9D10 /* RevenueCat */,
+				AAAA00032F03B97D00CC9D10 /* RevenueCatUI */,
 			);
 			productName = doptep;
 			productReference = FC39998A2F03B97D00CC9D10 /* doptep.app */;
@@ -196,6 +205,9 @@
 			);
 			mainGroup = FC3999812F03B97D00CC9D10;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AAAA00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FC39998B2F03B97D00CC9D10 /* Products */;
 			projectDirPath = "";
@@ -268,6 +280,30 @@
 			targetProxy = FC3999A52F03B98500CC9D10 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AAAA00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = "5.0.0";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AAAA00022F03B97D00CC9D10 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAAA00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
+		};
+		AAAA00032F03B97D00CC9D10 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AAAA00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCatUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FC3999AC2F03B98500CC9D10 /* Debug */ = {

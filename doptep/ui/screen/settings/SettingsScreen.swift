@@ -4,6 +4,8 @@
 //
 
 import SwiftUI
+import RevenueCat
+import RevenueCatUI
 
 private let appStoreUrl = "https://apps.apple.com/app/id6758735315"
 private let telegramUrl = "https://t.me/+_Ur1Ixp_1bNhNTc6"
@@ -14,6 +16,7 @@ struct SettingsScreen: View {
     @State private var showLanguageSelection = false
     @State private var showShareSheet = false
     @State private var navigateToActivation = false
+    @State private var showPaywall = false
 
     var body: some View {
         ScrollView {
@@ -49,6 +52,17 @@ struct SettingsScreen: View {
             ActivationScreen()
                 .toolbar(.hidden, for: .tabBar)
         }
+        .sheet(isPresented: $showPaywall) {
+            RevenueCatUI.PaywallView()
+                .onPurchaseCompleted { customerInfo in
+                    RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                    showPaywall = false
+                }
+                .onRestoreCompleted { customerInfo in
+                    RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                    showPaywall = false
+                }
+        }
     }
 
     private func handleEffect(_ effect: SettingsEffect) {
@@ -71,6 +85,9 @@ struct SettingsScreen: View {
 
         case .openActivationScreen:
             navigateToActivation = true
+
+        case .showPaywall:
+            showPaywall = true
         }
     }
 }

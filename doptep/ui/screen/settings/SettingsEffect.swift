@@ -11,6 +11,7 @@ enum SettingsEffect: Hashable, Identifiable, Equatable {
     case openAppStore
     case openTelegram
     case openActivationScreen
+    case showPaywall
 
     var id: String {
         switch self {
@@ -19,6 +20,7 @@ enum SettingsEffect: Hashable, Identifiable, Equatable {
         case .openAppStore: return "openAppStore"
         case .openTelegram: return "openTelegram"
         case .openActivationScreen: return "openActivationScreen"
+        case .showPaywall: return "showPaywall"
         }
     }
 }

@@ -10,6 +10,12 @@ final class SettingsViewModel: ObservableObject {
 
     @Published var effect: SettingsEffect?
 
+    private let billingManager: BillingManager
+
+    init(billingManager: BillingManager = .shared) {
+        self.billingManager = billingManager
+    }
+
     func action(_ action: SettingsAction) {
         switch action {
         case .onSettingsItemClicked(let item):
@@ -30,7 +36,11 @@ final class SettingsViewModel: ObservableObject {
         case .evaluate:
             setEffect(.openAppStore)
         case .activation:
-            setEffect(.openActivationScreen)
+            if billingManager.billingType.isPremium {
+                setEffect(.openActivationScreen)
+            } else {
+                setEffect(.showPaywall)
+            }
         }
     }
 

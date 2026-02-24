@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import RevenueCat
 
 @main
 struct doptepApp: App {
@@ -23,6 +24,7 @@ struct doptepApp: App {
             TeamHistoryModel.self,
             PlayerHistoryModel.self
         )
+        RevenueCatManager.shared.configure()
     }
 
     var body: some Scene {
