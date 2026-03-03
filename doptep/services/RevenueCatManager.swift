@@ -11,7 +11,7 @@ final class RevenueCatManager: NSObject {
     static let shared = RevenueCatManager()
 
     // Replace with your actual API key from the RevenueCat dashboard
-    private let apiKey = "appl_XfdhOgttCOBDdtEfJunkgVHnOWD"
+    private let apiKey = "test_qCFhGPJIpQlLUhTPBpjrNYNOTmF"
 
     // Replace with your entitlement identifier from the RevenueCat dashboard
     private let entitlementId = "dop_tep_pro"
