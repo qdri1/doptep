@@ -28,25 +28,30 @@ struct ActivationScreen: View {
             .padding(16)
             .background(AppColor.surface)
 
+            ActivatedContent(
+                uiState: viewModel.uiState,
+                onAction: viewModel.action
+            )
+            
             // Content
-            if viewModel.uiState.billingType == .limited {
-                switch viewModel.uiState.pageIndex {
-                case 0:
-                    ActivationTextContent(onAction: viewModel.action)
-                case 1:
-                    ActivationPlanContent(
-                        uiState: viewModel.uiState,
-                        onAction: viewModel.action
-                    )
-                default:
-                    EmptyView()
-                }
-            } else {
-                ActivatedContent(
-                    uiState: viewModel.uiState,
-                    onAction: viewModel.action
-                )
-            }
+//            if viewModel.uiState.billingType == .limited {
+//                switch viewModel.uiState.pageIndex {
+//                case 0:
+//                    ActivationTextContent(onAction: viewModel.action)
+//                case 1:
+//                    ActivationPlanContent(
+//                        uiState: viewModel.uiState,
+//                        onAction: viewModel.action
+//                    )
+//                default:
+//                    EmptyView()
+//                }
+//            } else {
+//                ActivatedContent(
+//                    uiState: viewModel.uiState,
+//                    onAction: viewModel.action
+//                )
+//            }
         }
         .background(AppColor.surface)
         .navigationBarHidden(true)

@@ -11,7 +11,7 @@ final class RevenueCatManager: NSObject {
     static let shared = RevenueCatManager()
 
     // Replace with your actual API key from the RevenueCat dashboard
-    private let apiKey = "test_qCFhGPJIpQlLUhTPBpjrNYNOTmF"
+    private let apiKey = "appl_XfdhOgttCOBDdtEfJunkgVHnOWD"
 
     // Replace with your entitlement identifier from the RevenueCat dashboard
     private let entitlementId = "dop_tep_pro"
@@ -23,17 +23,17 @@ final class RevenueCatManager: NSObject {
         Purchases.configure(withAPIKey: apiKey)
     }
 
-    func updateBillingType(from customerInfo: CustomerInfo) {
+    @MainActor func updateBillingType(from customerInfo: CustomerInfo) {
         guard let entitlement = customerInfo.entitlements.active[entitlementId] else {
-//            BillingManager.shared.setBillingType(.limited)
+            BillingManager.shared.setBillingType(.limited)
             return
         }
 
         let productId = entitlement.productIdentifier
         if productId == ActivationPlan.unlimited.productId {
-//            BillingManager.shared.setBillingType(.lifetime)
+            BillingManager.shared.setBillingType(.lifetime)
         } else {
-//            BillingManager.shared.setBillingType(.subscribe)
+            BillingManager.shared.setBillingType(.subscribe)
         }
     }
 }

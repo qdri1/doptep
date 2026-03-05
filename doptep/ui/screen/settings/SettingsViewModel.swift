@@ -35,12 +35,12 @@ final class SettingsViewModel: ObservableObject {
             setEffect(.share)
         case .evaluate:
             setEffect(.openAppStore)
-//        case .activation:
-//            if billingManager.billingType.isPremium {
-//                setEffect(.openActivationScreen)
-//            } else {
-//                setEffect(.showPaywall)
-//            }
+        case .activation:
+            if billingManager.billingType.isPremium {
+                setEffect(.openActivationScreen)
+            } else {
+                setEffect(.showPaywall)
+            }
         }
     }
 
