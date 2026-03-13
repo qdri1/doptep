@@ -355,14 +355,21 @@ struct GameScreen: View {
                         )
                     }
                 }
-
-                Button {
-                    viewModel.send(.onTeamChangeIconClicked)
-                } label: {
-                    Image(systemName: "arrow.left.arrow.right")
+                
+                if liveGame.isLive {
+                    Text("vs")
                         .font(.titleLarge)
                         .foregroundColor(AppColor.onSurfaceVariant)
                         .padding(.horizontal, 8)
+                } else {
+                    Button {
+                        viewModel.send(.onTeamChangeIconClicked)
+                    } label: {
+                        Image(systemName: "arrow.left.arrow.right")
+                            .font(.titleLarge)
+                            .foregroundColor(AppColor.onSurfaceVariant)
+                            .padding(.horizontal, 8)
+                    }
                 }
 
                 teamScoreView(
