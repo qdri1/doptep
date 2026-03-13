@@ -23,10 +23,10 @@ final class RevenueCatManager: NSObject {
         Purchases.configure(withAPIKey: apiKey)
     }
 
-    @MainActor func updateBillingType(from customerInfo: CustomerInfo) {
+    @MainActor func updateBillingType(from customerInfo: CustomerInfo) -> Bool {
         guard let entitlement = customerInfo.entitlements.active[entitlementId] else {
             BillingManager.shared.setBillingType(.limited)
-            return
+            return false
         }
 
         let productId = entitlement.productIdentifier
@@ -35,6 +35,7 @@ final class RevenueCatManager: NSObject {
         } else {
             BillingManager.shared.setBillingType(.subscribe)
         }
+        return true
     }
 }
 

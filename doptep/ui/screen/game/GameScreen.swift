@@ -4,6 +4,8 @@
 //
 
 import SwiftUI
+import RevenueCat
+import RevenueCatUI
 
 struct GameScreen: View {
     @StateObject private var viewModel: GameViewModel
@@ -28,11 +30,14 @@ struct GameScreen: View {
     @State private var updateGameId: UUID?
     @State private var showGameResultsScreen = false
     @State private var showActivationScreen = false
+    @State private var showPaywall = false
+    @State private var showNoEntitlementAlert = false
     @State private var gameResultsGameId: UUID?
     @State private var showLeftTeamOptionsDropdown = false
     @State private var showRightTeamOptionsDropdown = false
     @State private var showLeftTeamChangeDropdown = false
     @State private var showRightTeamChangeDropdown = false
+    @State private var restoreFailureMessage: String?
 
     @State private var currentOptionPlayers: OptionPlayersUiModel?
     @State private var currentPlayerResult: PlayerResultUiModel?
@@ -241,13 +246,44 @@ struct GameScreen: View {
                 GameResultsScreen(viewModel: viewModel.createGameResultsViewModel(gameId: gameId, modelContext: modelContext))
             }
         }
-        .fullScreenCover(isPresented: $showActivationScreen, onDismiss: {
-            let billingType = BillingManager.shared.getCurrentBillingType()
-            let gameCount = viewModel.uiState.liveGameUiModel?.gameCount ?? 0
-            viewModel.uiState.billingType = billingType
-            viewModel.uiState.uiLimited = billingType == .limited && gameCount >= 5
-        }) {
+        .fullScreenCover(isPresented: $showActivationScreen, onDismiss: { viewModel.updateBillingState() }) {
             ActivationScreen()
+        }
+        .sheet(isPresented: $showPaywall) {
+            RevenueCatUI.PaywallView()
+                .onPurchaseCompleted { customerInfo in
+                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                    if success {
+                        showPaywall = false
+                        showActivationScreen = true
+                    } else {
+                        showNoEntitlementAlert = true
+                    }
+                }
+                .onPurchaseCancelled {
+                    // User cancelled the payment sheet — paywall remains visible, no action needed
+                }
+                .onRestoreCompleted { customerInfo in
+                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                    if success {
+                        showPaywall = false
+                        showActivationScreen = true
+                    } else {
+                        showNoEntitlementAlert = true
+                    }
+                }
+                .onRestoreFailure { error in
+                    restoreFailureMessage = error.localizedDescription
+                }
+        }
+        .alert(NSLocalizedString("no_active_entitlement", comment: ""), isPresented: $showNoEntitlementAlert) {
+            Button("OK", role: .cancel) {}
+        }
+        .alert(restoreFailureMessage ?? "", isPresented: Binding(
+            get: { restoreFailureMessage != nil },
+            set: { if !$0 { restoreFailureMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
         }
         .confirmationDialog("", isPresented: $showDeleteConfirmation) {
             Button(NSLocalizedString("delete", comment: ""), role: .destructive) {
@@ -898,7 +934,7 @@ struct GameScreen: View {
         case .showGameInfoBottomSheet:
             showGameInfoSheet = true
         case .openActivationScreen:
-            showActivationScreen = true
+            showPaywall = true
         case .showBestPlayersBottomSheet(let bestPlayers):
             currentBestPlayers = bestPlayers
             showBestPlayersSheet = true

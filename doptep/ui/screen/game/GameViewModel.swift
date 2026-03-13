@@ -736,7 +736,7 @@ final class GameViewModel: ObservableObject {
         updateBillingState()
     }
 
-    private func updateBillingState() {
+    func updateBillingState() {
         let billingType = BillingManager.shared.getCurrentBillingType()
         let gameCount = uiState.liveGameUiModel?.gameCount ?? 0
         uiState.billingType = billingType

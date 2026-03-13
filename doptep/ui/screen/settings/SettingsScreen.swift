@@ -17,6 +17,8 @@ struct SettingsScreen: View {
     @State private var showShareSheet = false
     @State private var navigateToActivation = false
     @State private var showPaywall = false
+    @State private var showNoEntitlementAlert = false
+    @State private var restoreFailureMessage: String?
 
     var body: some View {
         ScrollView {
@@ -55,13 +57,38 @@ struct SettingsScreen: View {
         .sheet(isPresented: $showPaywall) {
             RevenueCatUI.PaywallView()
                 .onPurchaseCompleted { customerInfo in
-                    RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                    showPaywall = false
+                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                    if success {
+                        showPaywall = false
+                        navigateToActivation = true
+                    } else {
+                        showNoEntitlementAlert = true
+                    }
+                }
+                .onPurchaseCancelled {
+                    // User cancelled the payment sheet — paywall remains visible, no action needed
                 }
                 .onRestoreCompleted { customerInfo in
-                    RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                    showPaywall = false
+                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                    if success {
+                        showPaywall = false
+                        navigateToActivation = true
+                    } else {
+                        showNoEntitlementAlert = true
+                    }
                 }
+                .onRestoreFailure { error in
+                    restoreFailureMessage = error.localizedDescription
+                }
+        }
+        .alert(NSLocalizedString("no_active_entitlement", comment: ""), isPresented: $showNoEntitlementAlert) {
+            Button("OK", role: .cancel) {}
+        }
+        .alert(restoreFailureMessage ?? "", isPresented: Binding(
+            get: { restoreFailureMessage != nil },
+            set: { if !$0 { restoreFailureMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
         }
     }
 

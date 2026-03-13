@@ -59,9 +59,7 @@ struct GameResultsScreen: View {
                             onPlayerResultClicked: { playerResult in
                                 viewModel.action(GameResultsAction.onPlayerResultClicked(playerResultUiModel: playerResult))
                             },
-                            onActivateClicked: {
-                                
-                            }
+                            onActivateClicked: {}
                         )
                     }
                 }

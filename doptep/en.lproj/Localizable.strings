@@ -214,6 +214,7 @@
 "purchase_success" = "Purchase successful!";
 "purchase_failed" = "Purchase failed. Please try again.";
 "restore_success" = "Purchases restored successfully!";
+"no_active_entitlement" = "No active subscription found. Please try again or restore your purchases.";
 
 // MARK: - Additional UI
 "delete" = "Delete";
