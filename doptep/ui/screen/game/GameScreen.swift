@@ -398,7 +398,7 @@ struct GameScreen: View {
 
     private func teamScoreView(name: String, color: Color, goals: Int, winCount: Int, isWinning: Bool, isLeft: Bool) -> some View {
         VStack(spacing: 4) {
-            
+
             Text(name)
                 .font(.bodyMedium)
                 .foregroundColor(AppColor.onSurface)
@@ -409,11 +409,12 @@ struct GameScreen: View {
             Text("\(goals)")
                 .font(.custom("Montserrat-Bold", size: 48))
                 .foregroundColor(AppColor.onSurface)
-
+            
+            Spacer().frame(height: 4)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
-        .background(color.opacity(0.1))
+        .background(color.opacity(0.2))
         .cornerRadius(12)
     }
 
