@@ -34,6 +34,9 @@ struct doptepApp: App {
                 .accentColor(AppColor.primary)
                 .preferredColorScheme(.light)
                 .environmentObject(languageManager)
+                .onChange(of: languageManager.currentLanguage) { _, language in
+                    RevenueCatManager.shared.updateLocale(language)
+                }
         }
         .modelContainer(container)
     }

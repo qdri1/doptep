@@ -21,6 +21,12 @@ final class RevenueCatManager: NSObject {
     func configure() {
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: apiKey)
+        let language = UserDefaults.standard.string(forKey: "app_language") ?? "ru"
+        Purchases.shared.overridePreferredUILocale(language)
+    }
+
+    func updateLocale(_ language: String) {
+        Purchases.shared.overridePreferredUILocale(language)
     }
 
     @MainActor func updateBillingType(from customerInfo: CustomerInfo) -> Bool {
