@@ -58,6 +58,9 @@ struct GameResultsScreen: View {
                             uiLimited: viewModel.uiState.uiLimited,
                             onPlayerResultClicked: { playerResult in
                                 viewModel.action(GameResultsAction.onPlayerResultClicked(playerResultUiModel: playerResult))
+                            },
+                            onActivateClicked: {
+                                
                             }
                         )
                     }
@@ -213,6 +216,7 @@ struct PlayersResultsBlock: View {
     let playerUiModelList: [PlayerUiModel]
     let uiLimited: Bool
     let onPlayerResultClicked: (PlayerResultUiModel) -> Void
+    let onActivateClicked: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -308,6 +312,27 @@ struct PlayersResultsBlock: View {
             .padding(12)
             .background(AppColor.surface)
             .cornerRadius(12)
+            .overlay {
+                if uiLimited {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(AppColor.surface)
+                    
+                    VStack(spacing: 12) {
+                        Image(systemName: "lock.fill")
+                            .font(.largeTitle)
+                            .foregroundColor(AppColor.outline)
+                        
+                        Text(NSLocalizedString("player_result_limited_text", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 16)
+                    }
+                    .onTapGesture {
+                        onActivateClicked()
+                    }
+                }
+            }
         }
         .padding(.horizontal, 16)
     }
