@@ -11,7 +11,7 @@ final class RevenueCatManager: NSObject {
     static let shared = RevenueCatManager()
 
     // Replace with your actual API key from the RevenueCat dashboard
-    private let apiKey = "appl_XfdhOgttCOBDdtEfJunkgVHnOWD"
+    private let apiKey = "test_qCFhGPJIpQlLUhTPBpjrNYNOTmF"
 
     // Replace with your entitlement identifier from the RevenueCat dashboard
     private let entitlementId = "dop_tep_pro"
@@ -21,8 +21,19 @@ final class RevenueCatManager: NSObject {
     func configure() {
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: apiKey)
+        Purchases.shared.delegate = self
         let language = UserDefaults.standard.string(forKey: "app_language") ?? "ru"
         Purchases.shared.overridePreferredUILocale(language)
+        checkPurchaseStatus()
+    }
+
+    func checkPurchaseStatus() {
+        Purchases.shared.getCustomerInfo { customerInfo, _ in
+            guard let customerInfo else { return }
+            Task { @MainActor in
+                _ = self.updateBillingType(from: customerInfo)
+            }
+        }
     }
 
     func updateLocale(_ language: String) {
@@ -47,6 +58,8 @@ final class RevenueCatManager: NSObject {
 
 extension RevenueCatManager: PurchasesDelegate {
     func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
-        
+        Task { @MainActor in
+            _ = self.updateBillingType(from: customerInfo)
+        }
     }
 }

@@ -65,9 +65,6 @@ struct SettingsScreen: View {
                         showNoEntitlementAlert = true
                     }
                 }
-                .onPurchaseCancelled {
-                    // User cancelled the payment sheet — paywall remains visible, no action needed
-                }
                 .onRestoreCompleted { customerInfo in
                     let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
                     if success {
