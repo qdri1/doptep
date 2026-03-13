@@ -188,7 +188,7 @@
 
 // MARK: - Activation
 "activation_orange_text" = "You are using a limited version. Some features are unavailable. Upgrade to the full version.";
-"activation_green_text" = "You are using the trial version of the app. Remaining attempts to Clear this game results: %@";
+"activation_green_text" = "Limit after 5 games played";
 "activation_button" = "Activate";
 "activation_title" = "Activation";
 "activation_text_title" = "What's included?";

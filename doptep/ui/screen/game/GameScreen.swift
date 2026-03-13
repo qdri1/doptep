@@ -27,6 +27,7 @@ struct GameScreen: View {
     @State private var showAddGameScreen = false
     @State private var updateGameId: UUID?
     @State private var showGameResultsScreen = false
+    @State private var showActivationScreen = false
     @State private var gameResultsGameId: UUID?
     @State private var showLeftTeamOptionsDropdown = false
     @State private var showRightTeamOptionsDropdown = false
@@ -43,6 +44,9 @@ struct GameScreen: View {
             topBar
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 16) {
+                    if viewModel.uiState.billingType == .limited {
+                        activationInfoBlock
+                    }
                     infoSection
                     if let liveGame = viewModel.uiState.liveGameUiModel {
                         scoreboardSection(liveGame: liveGame)
@@ -237,6 +241,14 @@ struct GameScreen: View {
                 GameResultsScreen(viewModel: viewModel.createGameResultsViewModel(gameId: gameId, modelContext: modelContext))
             }
         }
+        .fullScreenCover(isPresented: $showActivationScreen, onDismiss: {
+            let billingType = BillingManager.shared.getCurrentBillingType()
+            let gameCount = viewModel.uiState.liveGameUiModel?.gameCount ?? 0
+            viewModel.uiState.billingType = billingType
+            viewModel.uiState.uiLimited = billingType == .limited && gameCount >= 5
+        }) {
+            ActivationScreen()
+        }
         .confirmationDialog("", isPresented: $showDeleteConfirmation) {
             Button(NSLocalizedString("delete", comment: ""), role: .destructive) {
                 viewModel.send(.onDeleteGameConfirmationClicked)
@@ -308,9 +320,15 @@ struct GameScreen: View {
     private func scoreboardSection(liveGame: LiveGameUiModel) -> some View {
         VStack(spacing: 8) {
             HStack {
-                Text(NSLocalizedString("game_number", comment: "") + ": \(liveGame.gameCount)")
-                    .font(.labelSmall)
-                    .foregroundColor(AppColor.onSurfaceVariant)
+                if liveGame.isLive {
+                    Text("Live")
+                        .font(.labelSmall)
+                        .foregroundColor(Color(hex: "#EC7063"))
+                } else {
+                    Text(NSLocalizedString("game_number", comment: "") + ": \(liveGame.gameCount)")
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.onSurfaceVariant)
+                }
             }
 
             HStack(spacing: 0) {
@@ -392,14 +410,6 @@ struct GameScreen: View {
                 .font(.custom("Montserrat-Bold", size: 48))
                 .foregroundColor(AppColor.onSurface)
 
-            HStack(spacing: 2) {
-                ForEach(0..<winCount, id: \.self) { _ in
-                    Circle()
-                        .fill(color)
-                        .frame(width: 8, height: 8)
-                }
-            }
-            .frame(height: 12)
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -443,30 +453,44 @@ struct GameScreen: View {
                 .foregroundColor(AppColor.onPrimary)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(viewModel.uiState.liveGameUiModel?.isLive == true ? AppColor.error : AppColor.primary)
+                .background(viewModel.uiState.liveGameUiModel?.isLive == true ? Color(hex: "#EC7063") : AppColor.primary)
                 .cornerRadius(16)
                 .padding(.horizontal, 16)
         }
     }
 
     private var soundsSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let uiLimited = viewModel.uiState.uiLimited
+        return VStack(alignment: .leading, spacing: 8) {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(GameSounds.allCases, id: \.self) { sound in
+                        let isLocked = uiLimited && sound != .whistle
                         Button {
-                            viewModel.send(.onSoundClicked(sound: sound))
+                            if isLocked {
+                                viewModel.send(.onActivateClicked)
+                            } else {
+                                viewModel.send(.onSoundClicked(sound: sound))
+                            }
                         } label: {
                             Text(NSLocalizedString(sound.localizationKey, comment: ""))
                                 .font(.labelSmall)
-                                .foregroundColor(AppColor.onSurface)
+                                .foregroundColor(isLocked ? AppColor.outline : AppColor.onSurface)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 12)
                                 .background(AppColor.surface)
                                 .cornerRadius(8)
                                 .multilineTextAlignment(.center)
                                 .fixedSize(horizontal: true, vertical: false)
+                                .overlay(alignment: .topTrailing) {
+                                    if isLocked {
+                                        Image(systemName: "lock.fill")
+                                            .font(.caption2)
+                                            .foregroundColor(AppColor.outline)
+                                            .padding(4)
+                                    }
+                                }
                         }
                         .buttonStyle(.plain)
                     }
@@ -477,15 +501,21 @@ struct GameScreen: View {
     }
 
     private var functionsSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let uiLimited = viewModel.uiState.uiLimited
+        return VStack(alignment: .leading, spacing: 8) {
 
             LazyVGrid(columns: [
                 GridItem(.flexible()),
                 GridItem(.flexible())
             ], spacing: 8) {
                 ForEach(GameFunction.allCases, id: \.self) { function in
+                    let isLocked = function == .bestPlayers && uiLimited
                     Button {
-                        viewModel.send(.onFunctionClicked(function: function))
+                        if isLocked {
+                            viewModel.send(.onActivateClicked)
+                        } else {
+                            viewModel.send(.onFunctionClicked(function: function))
+                        }
                     } label: {
                         VStack(spacing: 4) {
                             Image(systemName: function.systemImage)
@@ -499,13 +529,46 @@ struct GameScreen: View {
                         .frame(maxWidth: .infinity)
                         .background(AppColor.surface)
                         .cornerRadius(8)
+                        .overlay(alignment: .topTrailing) {
+                            if isLocked {
+                                Image(systemName: "lock.fill")
+                                    .font(.caption2)
+                                    .foregroundColor(AppColor.outline)
+                                    .padding(4)
+                            }
+                        }
                     }
                     .buttonStyle(.plain)
-                    .foregroundColor(function == .delete ? AppColor.error : AppColor.onSurface)
+                    .foregroundColor(isLocked ? AppColor.outline : (function == .delete ? Color(hex: "#EC7063") : AppColor.onSurface))
                 }
             }
         }
         .padding(.horizontal, 16)
+    }
+
+    private var activationInfoBlock: some View {
+        return VStack(alignment: .trailing, spacing: 12) {
+            Text(NSLocalizedString("activation_orange_text", comment: ""))
+                .font(.bodySmall)
+                .foregroundColor(AppColor.onSurface)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(NSLocalizedString("activation_button", comment: ""))
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurface)
+                .padding(12)
+                .onTapGesture {
+                    viewModel.send(.onActivateClicked)
+                }
+            Text(NSLocalizedString("activation_green_text", comment: ""))
+                .font(.custom("Montserrat-Medium", size: 12))
+                .foregroundColor(AppColor.onSurface)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 16)
+        .background(Color(hex: "#FFA500"))
     }
 
     private var infoSection: some View {
@@ -765,6 +828,27 @@ struct GameScreen: View {
             .padding(12)
             .background(AppColor.surface)
             .cornerRadius(12)
+            .overlay {
+                if viewModel.uiState.uiLimited {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(AppColor.surface)
+                    
+                    VStack(spacing: 12) {
+                        Image(systemName: "lock.fill")
+                            .font(.largeTitle)
+                            .foregroundColor(AppColor.outline)
+                        
+                        Text(NSLocalizedString("player_result_limited_text", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 16)
+                    }
+                    .onTapGesture {
+                        viewModel.send(.onActivateClicked)
+                    }
+                }
+            }
         }
         .padding(.horizontal, 16)
     }
@@ -806,7 +890,7 @@ struct GameScreen: View {
         case .showGameInfoBottomSheet:
             showGameInfoSheet = true
         case .openActivationScreen:
-            break
+            showActivationScreen = true
         case .showBestPlayersBottomSheet(let bestPlayers):
             currentBestPlayers = bestPlayers
             showBestPlayersSheet = true

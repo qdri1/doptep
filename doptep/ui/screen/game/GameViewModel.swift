@@ -160,6 +160,7 @@ final class GameViewModel: ObservableObject {
                 uiState.playerUiModelList = playerList
                 uiState.liveGameUiModel = liveGameUiModel
 
+                updateBillingState()
                 setTimerValue()
             } catch {
                 snackbarMessage = "Error loading game"
@@ -732,6 +733,14 @@ final class GameViewModel: ObservableObject {
 
     private func updateLiveGameBlock() async throws {
         uiState.liveGameUiModel = try liveGameRepository.getLiveGame(gameId: gameId)
+        updateBillingState()
+    }
+
+    private func updateBillingState() {
+        let billingType = BillingManager.shared.getCurrentBillingType()
+        let gameCount = uiState.liveGameUiModel?.gameCount ?? 0
+        uiState.billingType = billingType
+        uiState.uiLimited = billingType == .limited && gameCount >= 5
     }
 
     private func updateTeamsBlock() async throws {
