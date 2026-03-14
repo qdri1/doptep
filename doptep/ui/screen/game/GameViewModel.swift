@@ -792,9 +792,13 @@ final class GameViewModel: ObservableObject {
                 self.timerValue = self.formatTime(self.timerMillis)
 
                 if self.timerMillis == 60000 {
-                    self.audioManager.playSound("minuta")
+                    if !self.uiState.uiLimited {
+                        self.audioManager.playSound("minuta")
+                    }
                 } else if self.timerMillis == 10000 {
-                    self.audioManager.playSound("do_auta")
+                    if !self.uiState.uiLimited {
+                        self.audioManager.playSound("do_auta")
+                    }
                 }
             }
         }
@@ -980,21 +984,23 @@ final class GameViewModel: ObservableObject {
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves
                     )
-                    audioManager.speak(
-                        text: String(format: NSLocalizedString("text_to_speech_goal", comment: ""), playerUiModel.name),
-                        completion: {
-                            switch Int.random(in: 0..<3) {
-                            case 0:
-                                self.audioManager.playSound("oooi_kandai_gol")
-                            case 1:
-                                self.audioManager.playSound("suiii_full")
-                            case 2:
-                                self.audioManager.playSound("gol_gol_gol")
-                            default:
-                                break
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_goal", comment: ""), playerUiModel.name),
+                            completion: {
+                                switch Int.random(in: 0..<3) {
+                                case 0:
+                                    self.audioManager.playSound("oooi_kandai_gol")
+                                case 1:
+                                    self.audioManager.playSound("suiii_full")
+                                case 2:
+                                    self.audioManager.playSound("gol_gol_gol")
+                                default:
+                                    break
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
 
                 case .assist:
                     updatedPlayer = PlayerUiModel(
@@ -1006,10 +1012,12 @@ final class GameViewModel: ObservableObject {
                         assists: playerUiModel.assists + 1, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves
                     )
-                    audioManager.speak(
-                        text: String(format: NSLocalizedString("text_to_speech_assist", comment: ""), playerUiModel.name),
-                        completion: { self.audioManager.playSound(GameSounds.girlsApplause.fileName) }
-                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_assist", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.girlsApplause.fileName) }
+                        )
+                    }
 
                 case .save:
                     updatedPlayer = PlayerUiModel(
@@ -1021,10 +1029,12 @@ final class GameViewModel: ObservableObject {
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves + 1
                     )
-                    audioManager.speak(
-                        text: String(format: NSLocalizedString("text_to_speech_save", comment: ""), playerUiModel.name),
-                        completion: { self.audioManager.playSound(GameSounds.goalSave.fileName) }
-                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_save", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.goalSave.fileName) }
+                        )
+                    }
 
                 case .dribble:
                     updatedPlayer = PlayerUiModel(
@@ -1036,10 +1046,12 @@ final class GameViewModel: ObservableObject {
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles + 1,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves
                     )
-                    audioManager.speak(
-                        text: String(format: NSLocalizedString("text_to_speech_dribble", comment: ""), playerUiModel.name),
-                        completion: { self.audioManager.playSound(GameSounds.bilgeninIstepJatyr.fileName) }
-                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_dribble", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.bilgeninIstepJatyr.fileName) }
+                        )
+                    }
                     
                 case .shot:
                     updatedPlayer = PlayerUiModel(
@@ -1051,10 +1063,12 @@ final class GameViewModel: ObservableObject {
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots + 1, saves: playerUiModel.saves
                     )
-                    audioManager.speak(
-                        text: String(format: NSLocalizedString("text_to_speech_shot", comment: ""), playerUiModel.name),
-                        completion: { self.audioManager.playSound(GameSounds.suiii.fileName) }
-                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_shot", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.suiii.fileName) }
+                        )
+                    }
                     
                 case .pass:
                     updatedPlayer = PlayerUiModel(
@@ -1066,10 +1080,12 @@ final class GameViewModel: ObservableObject {
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes + 1, shots: playerUiModel.shots, saves: playerUiModel.saves
                     )
-                    audioManager.speak(
-                        text: String(format: NSLocalizedString("text_to_speech_pass", comment: ""), playerUiModel.name),
-                        completion: { self.audioManager.playSound(GameSounds.stadiumApplause.fileName) }
-                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_pass", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.stadiumApplause.fileName) }
+                        )
+                    }
                 }
 
                 try playerRepository.updatePlayer(updatedPlayer)
@@ -1094,7 +1110,24 @@ final class GameViewModel: ObservableObject {
                 }
                 try liveGameRepository.updateLiveGame(updated)
                 uiState.liveGameUiModel = updated
-                audioManager.speak(text: NSLocalizedString("team_option_players_auto_goal", comment: ""))
+                
+                if !uiState.uiLimited {
+                    audioManager.speak(
+                        text: NSLocalizedString("team_option_players_auto_goal", comment: ""),
+                        completion: {
+                            switch Int.random(in: 0..<3) {
+                            case 0:
+                                self.audioManager.playSound("oooi_kandai_gol")
+                            case 1:
+                                self.audioManager.playSound("suiii_full")
+                            case 2:
+                                self.audioManager.playSound("gol_gol_gol")
+                            default:
+                                break
+                            }
+                        }
+                    )
+                }
             } catch {
                 snackbarMessage = "Error recording auto goal"
             }

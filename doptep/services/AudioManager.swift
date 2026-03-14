@@ -8,6 +8,8 @@ import AVFoundation
 
 final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
 
+    static let shared = AudioManager()
+
     private var audioPlayer: AVAudioPlayer?
     private let speechSynthesizer = AVSpeechSynthesizer()
     private var currentLanguage: String = "en-US"
@@ -36,7 +38,6 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
 
     func setLanguage(_ languageCode: String) {
         currentLanguage = languageCode == "ru" ? "ru-RU" : "en-US"
-        UserDefaults.standard.set(languageCode, forKey: "app_language")
     }
 
     func playSound(_ fileName: String) {

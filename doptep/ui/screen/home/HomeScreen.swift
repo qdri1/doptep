@@ -56,7 +56,7 @@ struct HomeScreen: View {
                         teamHistoryRepository: TeamHistoryRepository(context: modelContext),
                         playerRepository: PlayerRepository(context: modelContext),
                         playerHistoryRepository: PlayerHistoryRepository(context: modelContext),
-                        audioManager: AudioManager()
+                        audioManager: AudioManager.shared
                     ))
                     .toolbar(.hidden, for: .tabBar)
                 }

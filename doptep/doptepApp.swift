@@ -36,6 +36,7 @@ struct doptepApp: App {
                 .environmentObject(languageManager)
                 .onChange(of: languageManager.currentLanguage) { _, language in
                     RevenueCatManager.shared.updateLocale(language)
+                    AudioManager.shared.setLanguage(language)
                 }
         }
         .modelContainer(container)
