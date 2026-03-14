@@ -588,28 +588,32 @@ struct GameScreen: View {
     }
 
     private var activationInfoBlock: some View {
-        return VStack(alignment: .trailing, spacing: 12) {
-            Text(NSLocalizedString("activation_orange_text", comment: ""))
-                .font(.bodySmall)
-                .foregroundColor(AppColor.onSurface)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(NSLocalizedString("activation_button", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurface)
-                .padding(12)
-                .onTapGesture {
-                    viewModel.send(.onActivateClicked)
-                }
-            Text(NSLocalizedString("activation_green_text", comment: ""))
-                .font(.custom("Montserrat-Medium", size: 12))
-                .foregroundColor(AppColor.onSurface)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
+        VStack {
+            VStack(alignment: .trailing, spacing: 12) {
+                Text(NSLocalizedString("activation_orange_text", comment: ""))
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.onSurface)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(NSLocalizedString("activation_button", comment: ""))
+                    .font(.bodyMedium)
+                    .foregroundColor(AppColor.onSurface)
+                    .padding(12)
+                    .onTapGesture {
+                        viewModel.send(.onActivateClicked)
+                    }
+                Text(NSLocalizedString("activation_green_text", comment: ""))
+                    .font(.custom("Montserrat-Medium", size: 12))
+                    .foregroundColor(AppColor.onSurface)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 16)
+            .background(Color(hex: "#FFA500"))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
-        .padding(.vertical, 16)
         .padding(.horizontal, 16)
-        .background(Color(hex: "#FFA500"))
     }
 
     private var infoSection: some View {
