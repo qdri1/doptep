@@ -7,4 +7,5 @@ import Foundation
 
 enum SettingsAction {
     case onSettingsItemClicked(item: SettingsItemType)
+    case onActivationCodeSubmitted(code: String)
 }

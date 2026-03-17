@@ -23,6 +23,8 @@ final class SettingsViewModel: ObservableObject {
         switch action {
         case .onSettingsItemClicked(let item):
             onSettingsItemClicked(item)
+        case .onActivationCodeSubmitted(let code):
+            onActivationCodeSubmitted(code)
         }
     }
 
@@ -36,6 +38,21 @@ final class SettingsViewModel: ObservableObject {
 
     func onWhatsappClicked() {
         setEffect(.openWhatsapp(url: RemoteConfigManager.shared.whatsappUrl))
+    }
+
+    private func onActivationCodeSubmitted(_ code: String) {
+        if code.trimmingCharacters(in: .whitespaces) == RemoteConfigManager.shared.activationCode {
+            if billingManager.getCurrentBillingType() == .lifetime && billingManager.isSecretActivated() {
+                billingManager.setBillingType(.limited)
+                billingManager.setSecretActivated(false)
+            } else {
+                billingManager.setBillingType(.lifetime)
+                billingManager.setSecretActivated(true)
+            }
+            setEffect(.activationSuccess)
+        } else {
+            setEffect(.activationError)
+        }
     }
 
     private func onSettingsItemClicked(_ item: SettingsItemType) {

@@ -247,3 +247,11 @@
 "text_pass" = "пас";
 "text_shot" = "удар";
 "text_save" = "сейв";
+
+// MARK: - Activation Code
+"activation_code_dialog_title" = "Активация";
+"activation_code_dialog_hint" = "Активация кодын енгізіңіз";
+"activation_code_button_confirm" = "Растау";
+"activation_code_button_cancel" = "Болдырмау";
+"activation_code_success" = "Белсендірілді!";
+"activation_code_error" = "Қате код";

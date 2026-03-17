@@ -24,16 +24,6 @@ final class RevenueCatManager: NSObject {
         Purchases.shared.delegate = self
         let language = UserDefaults.standard.string(forKey: "app_language") ?? "ru"
         Purchases.shared.overridePreferredUILocale(language)
-        checkPurchaseStatus()
-    }
-
-    func checkPurchaseStatus() {
-        Purchases.shared.getCustomerInfo { customerInfo, _ in
-            guard let customerInfo else { return }
-            Task { @MainActor in
-                _ = self.updateBillingType(from: customerInfo)
-            }
-        }
     }
 
     func updateLocale(_ language: String) {
@@ -42,7 +32,9 @@ final class RevenueCatManager: NSObject {
 
     @MainActor func updateBillingType(from customerInfo: CustomerInfo) -> Bool {
         guard let entitlement = customerInfo.entitlements.active[entitlementId] else {
-            BillingManager.shared.setBillingType(.limited)
+            if !BillingManager.shared.isSecretActivated() {
+                BillingManager.shared.setBillingType(.limited)
+            }
             return false
         }
 
@@ -59,7 +51,7 @@ final class RevenueCatManager: NSObject {
 extension RevenueCatManager: PurchasesDelegate {
     func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
         Task { @MainActor in
-            _ = self.updateBillingType(from: customerInfo)
+            self.updateBillingType(from: customerInfo)
         }
     }
 }

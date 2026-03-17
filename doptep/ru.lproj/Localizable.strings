@@ -247,3 +247,11 @@
 "text_pass" = "пас";
 "text_shot" = "удар";
 "text_save" = "сейв";
+
+// MARK: - Activation Code
+"activation_code_dialog_title" = "Активация";
+"activation_code_dialog_hint" = "Введите код активации";
+"activation_code_button_confirm" = "Подтвердить";
+"activation_code_button_cancel" = "Отмена";
+"activation_code_success" = "Активировано!";
+"activation_code_error" = "Неверный код";

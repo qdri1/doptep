@@ -13,6 +13,8 @@ enum SettingsEffect: Hashable, Identifiable, Equatable {
     case openWhatsapp(url: String)
     case openActivationScreen
     case showPaywall
+    case activationSuccess
+    case activationError
 
     var id: String {
         switch self {
@@ -23,6 +25,8 @@ enum SettingsEffect: Hashable, Identifiable, Equatable {
         case .openWhatsapp: return "openWhatsapp"
         case .openActivationScreen: return "openActivationScreen"
         case .showPaywall: return "showPaywall"
+        case .activationSuccess: return "activationSuccess"
+        case .activationError: return "activationError"
         }
     }
 }

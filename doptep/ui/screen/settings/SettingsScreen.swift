@@ -18,6 +18,10 @@ struct SettingsScreen: View {
     @State private var showPaywall = false
     @State private var showNoEntitlementAlert = false
     @State private var restoreFailureMessage: String?
+    @State private var showActivationCodeDialog = false
+    @State private var showActivationSuccessAlert = false
+    @State private var showActivationErrorAlert = false
+    @State private var versionTapCount = 0
 
     var body: some View {
         ScrollView {
@@ -51,6 +55,13 @@ struct SettingsScreen: View {
                     .font(.labelSmall)
                     .foregroundColor(AppColor.outline)
                     .padding(.top, 12)
+                    .onTapGesture {
+                        versionTapCount += 1
+                        if versionTapCount >= 7 {
+                            versionTapCount = 0
+                            showActivationCodeDialog = true
+                        }
+                    }
             }
             .padding(16)
         }
@@ -95,6 +106,19 @@ struct SettingsScreen: View {
                     restoreFailureMessage = error.localizedDescription
                 }
         }
+        .sheet(isPresented: $showActivationCodeDialog) {
+            ActivationCodeSheet { code in
+                showActivationCodeDialog = false
+                viewModel.action(.onActivationCodeSubmitted(code: code))
+            }
+            .presentationDetents([.height(200)])
+        }
+        .alert(NSLocalizedString("activation_code_success", comment: ""), isPresented: $showActivationSuccessAlert) {
+            Button("OK", role: .cancel) {}
+        }
+        .alert(NSLocalizedString("activation_code_error", comment: ""), isPresented: $showActivationErrorAlert) {
+            Button("OK", role: .cancel) {}
+        }
         .alert(NSLocalizedString("no_active_entitlement", comment: ""), isPresented: $showNoEntitlementAlert) {
             Button("OK", role: .cancel) {}
         }
@@ -134,6 +158,12 @@ struct SettingsScreen: View {
 
         case .showPaywall:
             showPaywall = true
+
+        case .activationSuccess:
+            showActivationSuccessAlert = true
+
+        case .activationError:
+            showActivationErrorAlert = true
         }
     }
 }
@@ -194,6 +224,50 @@ struct SettingsCustomRow: View {
             .background(AppColor.surface)
             .cornerRadius(16)
         }
+    }
+}
+
+// MARK: - Activation Code Sheet
+
+struct ActivationCodeSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var code = ""
+    let onConfirm: (String) -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text(NSLocalizedString("activation_code_dialog_title", comment: ""))
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurface)
+                .padding(.top, 16)
+
+            TextField(NSLocalizedString("activation_code_dialog_hint", comment: ""), text: $code)
+                .font(.bodySmall)
+                .padding(12)
+                .background(AppColor.background)
+                .cornerRadius(12)
+                .padding(.horizontal, 16)
+
+            HStack(spacing: 12) {
+                Button(NSLocalizedString("activation_code_button_cancel", comment: "")) {
+                    dismiss()
+                }
+                .font(.bodySmall)
+                .foregroundColor(AppColor.onSurfaceVariant)
+                .frame(maxWidth: .infinity)
+
+                Button(NSLocalizedString("activation_code_button_confirm", comment: "")) {
+                    onConfirm(code)
+                }
+                .font(.bodySmall)
+                .foregroundColor(AppColor.primary)
+                .frame(maxWidth: .infinity)
+                .disabled(code.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
+        }
+        .background(AppColor.surface)
     }
 }
 

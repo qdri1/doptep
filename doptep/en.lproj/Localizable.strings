@@ -247,3 +247,11 @@
 "text_pass" = "pass";
 "text_shot" = "shot";
 "text_save" = "save";
+
+// MARK: - Activation Code
+"activation_code_dialog_title" = "Activation";
+"activation_code_dialog_hint" = "Enter activation code";
+"activation_code_button_confirm" = "Confirm";
+"activation_code_button_cancel" = "Cancel";
+"activation_code_success" = "Activated!";
+"activation_code_error" = "Invalid code";
