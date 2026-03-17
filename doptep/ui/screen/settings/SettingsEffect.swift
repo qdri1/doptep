@@ -9,7 +9,8 @@ enum SettingsEffect: Hashable, Identifiable, Equatable {
     case showSelectLanguage
     case share
     case openAppStore
-    case openTelegram
+    case openTelegram(url: String)
+    case openWhatsapp(url: String)
     case openActivationScreen
     case showPaywall
 
@@ -19,6 +20,7 @@ enum SettingsEffect: Hashable, Identifiable, Equatable {
         case .share: return "share"
         case .openAppStore: return "openAppStore"
         case .openTelegram: return "openTelegram"
+        case .openWhatsapp: return "openWhatsapp"
         case .openActivationScreen: return "openActivationScreen"
         case .showPaywall: return "showPaywall"
         }

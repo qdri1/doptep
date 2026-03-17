@@ -12,6 +12,9 @@ final class SettingsViewModel: ObservableObject {
 
     private let billingManager: BillingManager
 
+    var telegramUrl: String { RemoteConfigManager.shared.telegramUrl }
+    var whatsappUrl: String { RemoteConfigManager.shared.whatsappUrl }
+
     init(billingManager: BillingManager = .shared) {
         self.billingManager = billingManager
     }
@@ -25,6 +28,14 @@ final class SettingsViewModel: ObservableObject {
 
     func clearEffect() {
         effect = nil
+    }
+
+    func onTelegramClicked() {
+        setEffect(.openTelegram(url: RemoteConfigManager.shared.telegramUrl))
+    }
+
+    func onWhatsappClicked() {
+        setEffect(.openWhatsapp(url: RemoteConfigManager.shared.whatsappUrl))
     }
 
     private func onSettingsItemClicked(_ item: SettingsItemType) {

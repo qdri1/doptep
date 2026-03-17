@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import RevenueCat
+import FirebaseCore
 
 @main
 struct doptepApp: App {
@@ -24,7 +25,9 @@ struct doptepApp: App {
             TeamHistoryModel.self,
             PlayerHistoryModel.self
         )
+        FirebaseApp.configure()
         RevenueCatManager.shared.configure()
+        RemoteConfigManager.shared.configureAndActivate()
     }
 
     var body: some Scene {

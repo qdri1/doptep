@@ -132,27 +132,22 @@ final class GameResultsViewModel: ObservableObject {
 
                 let playerHistories = try playerHistoryRepository.getPlayersHistories(teamId: teamUiModel.id)
                 for playerHistoryUiModel in playerHistories {
-                    let playerUiModel = try playerRepository.getPlayer(id: playerHistoryUiModel.id)
-                    if playerUiModel == nil {
-                        try playerHistoryRepository.deletePlayerHistory(playerId: playerHistoryUiModel.id)
-                    } else {
-                        let clearedPlayer = PlayerUiModel(
-                            id: playerHistoryUiModel.id,
-                            teamId: playerHistoryUiModel.teamId,
-                            teamColor: playerHistoryUiModel.teamColor,
-                            teamName: playerHistoryUiModel.teamName,
-                            teamPoints: playerHistoryUiModel.teamPoints,
-                            teamGoalsDifference: playerHistoryUiModel.teamGoalsDifference,
-                            name: playerHistoryUiModel.name,
-                            goals: 0,
-                            assists: 0,
-                            dribbles: 0,
-                            passes: 0,
-                            shots: 0,
-                            saves: 0
-                        )
-                        try playerHistoryRepository.updatePlayerHistory(clearedPlayer)
-                    }
+                    let clearedPlayer = PlayerUiModel(
+                        id: playerHistoryUiModel.id,
+                        teamId: playerHistoryUiModel.teamId,
+                        teamColor: playerHistoryUiModel.teamColor,
+                        teamName: playerHistoryUiModel.teamName,
+                        teamPoints: playerHistoryUiModel.teamPoints,
+                        teamGoalsDifference: playerHistoryUiModel.teamGoalsDifference,
+                        name: playerHistoryUiModel.name,
+                        goals: 0,
+                        assists: 0,
+                        dribbles: 0,
+                        passes: 0,
+                        shots: 0,
+                        saves: 0
+                    )
+                    try playerHistoryRepository.updatePlayerHistory(clearedPlayer)
                 }
             }
 

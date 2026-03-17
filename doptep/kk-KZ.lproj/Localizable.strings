@@ -1,0 +1,249 @@
+/*
+  Localizable.strings (Kazakh)
+  doptep
+*/
+
+// MARK: - Tabs
+"tab_home" = "Басты бет";
+"tab_settings" = "Баптаулар";
+
+// MARK: - Home Screen
+"home_game_name" = "Атауы:";
+"home_game_format" = "Форматы:";
+"home_game_team_quantity" = "Командалар:";
+"home_game_time" = "Тайм уақыты:";
+"home_game_rule" = "Ереже:";
+"game_empty" = "Сізде әлі ойындар жоқ";
+"add_game" = "Ойын қосу";
+"update_game" = "Ойынды өңдеу";
+"time_in_minutes" = "%d минут";
+
+// MARK: - Add/Edit Game
+"game_name" = "Ойын атауы";
+"game_time" = "Матч уақыты (минут)";
+"game_format" = "Ойын форматы";
+"game_rules" = "Ойын ережелері";
+"team_quantity" = "Командалар саны";
+"team_number" = "К-%@";
+"team_name" = "Команда атауы";
+"choose_team_color" = "Түсті таңдаңыз";
+"choose_team" = "Команданы таңдаңыз";
+"player_number" = "Ойыншы %@";
+"add_player" = "Ойыншы қосу";
+"save" = "Сақтау";
+"save_success" = "Сақталды";
+"cancel" = "Болдырмау";
+"done" = "Дайын";
+"yes" = "Иә";
+"no" = "Жоқ";
+"edit_result" = "Нәтижені өңдеу";
+
+// MARK: - Game Rules (2 teams)
+"game_rule_2_change_side" = "Әр таймнан кейін алаң ауыстырамыз";
+"game_rule_2_stay_side" = "Алаң ауыстырмаймыз";
+
+// MARK: - Game Rules (3 teams)
+"game_rule_3_only_2_games" = "Дәл 2 ойын";
+"game_rule_3_winner_stay_2" = "Жеңген команда қалады (макс. 2 ойын)";
+"game_rule_3_winner_stay_3" = "Жеңген команда қалады (макс. 3 ойын)";
+"game_rule_3_winner_stay_4" = "Жеңген команда қалады (макс. 4 ойын)";
+"game_rule_3_winner_stay_unlimited" = "Жеңген команда әрдайым қалады";
+
+// MARK: - Game Rules (4 teams)
+"game_rule_4_only_3_games" = "Дәл 3 ойын";
+"game_rule_4_winner_stay_3" = "Жеңген команда қалады (макс. 3 ойын)";
+"game_rule_4_winner_stay_4" = "Жеңген команда қалады (макс. 4 ойын)";
+"game_rule_4_winner_stay_5" = "Жеңген команда қалады (макс. 5 ойын)";
+"game_rule_4_winner_stay_6" = "Жеңген команда қалады (макс. 6 ойын)";
+"game_rule_4_winner_stay_unlimited" = "Жеңген команда әрдайым қалады";
+
+// MARK: - Validation
+"game_name_empty_text" = "Ойын атауын енгізу керек";
+"game_time_empty_text" = "Матч уақытын енгізу керек";
+"team_name_empty_text" = "Команда атауын енгізу керек";
+
+// MARK: - Team Results Table
+"team" = "Команда";
+"teams_leaderboard" = "Командалар кестесі";
+"games_short" = "О";
+"wins_short" = "Ж";
+"draws_short" = "Т";
+"loses_short" = "Ұ";
+"goals_short" = "+/-";
+"goal_difference_short" = "ГА";
+"points_short" = "ҰП";
+
+// MARK: - Player Results Table
+"player" = "Ойыншы";
+"players_leaderboard" = "Ойыншылар кестесі";
+"goals_icon" = "⚽️";
+"assists_icon" = "А";
+"saves_icon" = "С";
+"dribbles_icon" = "Д";
+"shots_icon" = "У";
+"passes_icon" = "П";
+
+// MARK: - Team Options
+"team_option_goal" = "Гол ⚽️";
+"team_option_assist" = "Ассист";
+"team_option_dribble" = "Дриблинг";
+"team_option_pass" = "Пас";
+"team_option_shot" = "Удар";
+"team_option_save" = "Сейв";
+"team_option_players_title" = "Авторды таңдаңыз";
+"team_option_players_auto_goal" = "Автогол";
+
+// MARK: - Best Player Options
+"best_player_option_best_player" = "Үздік ойыншы 🔥";
+"best_player_option_goals" = "Үздік бомбардир️ ⚽️";
+"best_player_option_assists" = "Үздік ассист";
+"best_player_option_saves" = "Үздік сейв";
+"best_player_option_dribbles" = "Үздік дриблинг";
+"best_player_option_passes" = "Үздік пас";
+"best_player_option_shots" = "Үздік удар";
+
+// MARK: - Text to Speech
+"text_to_speech_goal" = "%@ голы";
+"text_to_speech_assist" = "%@ ассисті";
+"text_to_speech_dribble" = "%@ дриблингі";
+"text_to_speech_pass" = "%@ пасы";
+"text_to_speech_shot" = "%@ удары";
+"text_to_speech_save" = "%@ сейві";
+
+// MARK: - Confirmation Dialogs
+"stay_team_selection_title" = "Алаңда қалатын команданы таңдаңыз";
+"delete_game_title" = "Бұл ойынды жоюды қалайсыз ба?";
+"clear_results_title" = "Осы ойынның нәтижелерін тазартқыңыз келе ме?";
+"clear_all_results_title" = "Барлық ойындардың нәтижелерін тазартқыңыз келе ме?";
+"finish_game_title" = "Бұл матчты аяқтағыңыз келе ме?";
+"go_back_title" = "Бұл беттен шыққыңыз келе ме?";
+
+// MARK: - Snackbar Messages
+"finish_game_snackbar_text" = "Нәтижелерді тазарту үшін матчты аяқтау керек!";
+"delete_game_snackbar_text" = "Ойынды жою үшін матчты аяқтау керек!";
+"update_game_snackbar_text" = "Ойынды өңдеу үшін матчты аяқтау керек!";
+"open_game_results_snackbar_text" = "Барлық нәтижелерге өту үшін матчты аяқтау керек!";
+"open_activation_screen_snackbar_text" = "Активация бетіне өту үшін матчты аяқтау керек!";
+"game_count" = "ойын ойналды: %@";
+
+// MARK: - Sounds
+"sound_limited_text" = "Дыбыстар тек қосымшаның толық нұсқасында қолжетімді";
+"sound_league_chemp" = "Чемпиондар\nлигасы";
+"sound_goal_fans" = "Стадион\nГоооооол";
+"sound_anarbekov" = "Темірлан\nАнарбеков";
+"sound_uo_uo_uo" = "UO UO UO";
+"sound_whistle" = "Ысқырық";
+"sound_stadium_applause" = "Стадион\nшапалақ";
+"sound_girls_applause" = "Қыздар\nшапалақ";
+"sound_bilgenin_istep_jatyr" = "Білгенін\nістеп жатыр";
+"sound_europa_karashy" = "Европа\nқарашы";
+"sound_goal_save" = "Не деген\nсейв";
+"sound_suiii" = "Suiii";
+"sound_suiii_full" = "Suiiiii\nFull";
+"sound_goal_goal_goal" = "Голь Голь\nГоль";
+"sound_oooi_kandai_gol" = "Уйиии қандай\nшебер гол";
+"sound_modrichtyn_pasy" = "Модричтың\nпасы";
+"sound_tondyryp_tastagan" = "Тоңдырып\nтастаған";
+
+// MARK: - Game Functions
+"function_best_players" = "Үздік ойыншылар";
+"function_edit" = "Ойынды өңдеу";
+"function_clear_result" = "Осы ойынның нәтижелерін тазарту";
+"function_info" = "Ақпарат";
+"function_all_results" = "Барлық ойындардың нәтижелері";
+"function_remove" = "Ойынды жою";
+
+// MARK: - Game Info
+"live_game_info_replace_teams" = "Сол және оң командаларды ауыстыру";
+"live_game_info_pause_timer" = "Таймерді тоқтату";
+"live_game_info_play_timer" = "Таймерді жалғастыру";
+"result_correction_text" = "Назар аударыңыз! Бұл бөлім қате нәтижелерді түзетуге арналған. Егер жаңа нәтижені қосқыңыз келсе, ойын барысында сол немесе оң команданың атауын басыңыз.";
+
+// MARK: - Teams Block Info
+"teams_block_info_games" = "Ойындар";
+"teams_block_info_wins" = "Жеңістер";
+"teams_block_info_draws" = "Тең ойындар";
+"teams_block_info_loses" = "Ұтылыстар";
+"teams_block_info_goals_conceded" = "Соғылған/жіберілген голдар саны (+/-)";
+"teams_block_info_goals_difference" = "Гол айырмасы";
+"teams_block_info_points" = "Ұпай саны";
+
+// MARK: - Players Block Info
+"players_block_info_goals" = "Гол";
+"players_block_info_assists" = "Ассист";
+"players_block_info_saves" = "Үздік сейв";
+"players_block_info_dribbles" = "Әдемі дриблинг";
+"players_block_info_shots" = "Күшті дәл соққы (удар)";
+"players_block_info_passes" = "Әдемі пас";
+"player_result_limited_text" = "Ойыншылардың нәтижелері тек қосымшаның толық нұсқасында қолжетімді";
+
+// MARK: - Settings
+"settings_item_language" = "Тіл";
+"settings_item_share" = "Бөлісу";
+"settings_item_star" = "Бағалау";
+"settings_item_telegram" = "Telegram тобы";
+"settings_item_activation" = "Жазылымды басқару";
+"settings_version" = "Нұсқа";
+"choose_language" = "Тілді таңдаңыз";
+"telegram_not_installed" = "Сізде Telegram орнатылмаған!";
+
+// MARK: - Activation
+"activation_orange_text" = "Сіз қосымшаның шектеулі нұсқасын пайдаланып отырсыз. Кейбір функциялар қолжетімсіз болуы мүмкін. Толық нұсқаны алыңыз.";
+"activation_green_text" = "Шектеу 5 ойыннан кейін";
+"activation_button" = "Толық нұсқа алу";
+"activation_title" = "Активация";
+"activation_text_title" = "Не кіреді?";
+"activation_text_1" = "Аттың дыбысталуы және мерекелік дыбыстар (гол, ассист, т.б.)";
+"activation_text_2" = "«Бір минут қалды» фразасының дыбысталуы";
+"activation_text_3" = "«Аутқа дейін ойнаймыз» фразасының дыбысталуы";
+"activation_text_4" = "Футбол дыбыстарының тізімі";
+"activation_text_5" = "Ойыншылардың нәтижелері";
+"activation_text_6" = "Үздік ойыншылар";
+"activation_text_button" = "Бағаларды көрсету";
+"activation_plan_title" = "Тарифті таңдаңыз";
+"activation_plan_1" = "Ай сайын";
+"activation_plan_2" = "Жыл сайын";
+"activation_plan_3" = "Өмір бойы";
+"activation_plan_button" = "Сатып алу";
+"activation_plan_desc_subscribe" = "Жазылым";
+"activation_plan_desc_lifetime" = "Бір реттік сатып алу";
+"activation_plan_select_error_text" = "Тарифті таңдаңыз";
+"activation_plan_activated_text" = "Сізде толық нұсқа";
+"activation_plan_activated_button" = "Жазылымды басқару";
+"restore_purchases" = "Сатып алуларды қалпына келтіру";
+"purchase_success" = "Сатып алу сәтті өтті!";
+"purchase_failed" = "Сатып алу сәтсіз аяқталды. Қайталап көріңіз.";
+"restore_success" = "Сатып алулар сәтті қалпына келтірілді!";
+"no_active_entitlement" = "Белсенді жазылым табылмады.";
+
+// MARK: - Additional UI
+"delete" = "Жою";
+"clear" = "Тазарту";
+"finish" = "Аяқтау";
+"start" = "Бастау";
+"leave" = "Шығу";
+"delete_game_confirmation" = "Бұл ойынды жоюды қалайсыз ба?";
+"clear_results_confirmation" = "Нәтижелерді тазартқыңыз келе ме?";
+"finish_game_confirmation" = "Бұл матчты аяқтағыңыз келе ме?";
+"go_back_confirmation" = "Кері қайтқыңыз келе ме?";
+"choose_staying_team" = "Қалатын команданы таңдаңыз";
+"game_number" = "Ойын ойналды";
+"start_game" = "GO ⚽️";
+"finish_game" = "FINISH 🏁";
+"sounds" = "Дыбыстар";
+"functions" = "Функциялар";
+"auto_goal" = "Автогол";
+"best_players" = "Үздік ойыншылар";
+"game_info" = "Ойын туралы";
+
+"value" = "нәтиже";
+"goals" = "голдар";
+"edit_team_goals" = "Гол нәтижелерін өңдеу";
+"edit_player_stats" = "Нәтижелерді өңдеу";
+
+"text_goal" = "гол";
+"text_assist" = "ассист";
+"text_dribble" = "дриблинг";
+"text_pass" = "пас";
+"text_shot" = "удар";
+"text_save" = "сейв";

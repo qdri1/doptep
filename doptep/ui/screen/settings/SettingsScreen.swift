@@ -8,7 +8,6 @@ import RevenueCat
 import RevenueCatUI
 
 private let appStoreUrl = "https://apps.apple.com/app/id6758735315"
-private let telegramUrl = "https://t.me/+_Ur1Ixp_1bNhNTc6"
 
 struct SettingsScreen: View {
     @StateObject private var viewModel = SettingsViewModel()
@@ -26,6 +25,24 @@ struct SettingsScreen: View {
                 ForEach(SettingsItemType.allCases, id: \.self) { item in
                     SettingsItemRow(item: item) {
                         viewModel.action(.onSettingsItemClicked(item: item))
+                    }
+                }
+
+                if !viewModel.telegramUrl.isEmpty {
+                    SettingsCustomRow(
+                        iconName: "paperplane",
+                        title: "Telegram"
+                    ) {
+                        viewModel.onTelegramClicked()
+                    }
+                }
+
+                if !viewModel.whatsappUrl.isEmpty {
+                    SettingsCustomRow(
+                        iconName: "message",
+                        title: "WhatsApp"
+                    ) {
+                        viewModel.onWhatsappClicked()
                     }
                 }
 
@@ -102,8 +119,13 @@ struct SettingsScreen: View {
                 UIApplication.shared.open(url)
             }
 
-        case .openTelegram:
-            if let url = URL(string: telegramUrl) {
+        case .openTelegram(let url):
+            if let url = URL(string: url) {
+                UIApplication.shared.open(url)
+            }
+
+        case .openWhatsapp(let url):
+            if let url = URL(string: url) {
                 UIApplication.shared.open(url)
             }
 
@@ -145,6 +167,36 @@ struct SettingsItemRow: View {
     }
 }
 
+// MARK: - Custom Settings Row
+
+struct SettingsCustomRow: View {
+    let iconName: String
+    let title: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                Image(systemName: iconName)
+                    .font(.bodySmall)
+
+                Text(title)
+                    .font(.bodySmall)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.labelMedium)
+                    .foregroundColor(AppColor.onSurfaceVariant)
+            }
+            .foregroundColor(AppColor.onSurface)
+            .padding(16)
+            .background(AppColor.surface)
+            .cornerRadius(16)
+        }
+    }
+}
+
 // MARK: - Language Selection Sheet
 
 struct LanguageSelectionSheet: View {
@@ -162,6 +214,7 @@ struct LanguageSelectionSheet: View {
 
             Divider()
 
+            languageRow(title: "Қазақша", language: "kk-KZ")
             languageRow(title: "Русский", language: "ru")
             languageRow(title: "English", language: "en")
 
