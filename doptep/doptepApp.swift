@@ -15,6 +15,7 @@ struct doptepApp: App {
 
     let container: ModelContainer
     @StateObject private var languageManager = LanguageManager()
+    @State private var showLanguagePicker = UserDefaults.standard.string(forKey: "app_language") == nil
 
     init() {
         container = try! ModelContainer(
@@ -40,6 +41,11 @@ struct doptepApp: App {
                 .onChange(of: languageManager.currentLanguage) { _, language in
                     RevenueCatManager.shared.updateLocale(language)
                     AudioManager.shared.setLanguage(language)
+                }
+                .sheet(isPresented: $showLanguagePicker) {
+                    LanguageSelectionSheet()
+                        .environmentObject(languageManager)
+                        .presentationDetents([.medium])
                 }
         }
         .modelContainer(container)

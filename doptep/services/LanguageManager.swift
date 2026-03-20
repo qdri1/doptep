@@ -11,8 +11,8 @@ final class LanguageManager: ObservableObject {
     }
 
     func setLanguage(_ language: String) {
-        guard language != currentLanguage else { return }
         UserDefaults.standard.set(language, forKey: "app_language")
+        guard language != currentLanguage else { return }
         Bundle.setLanguage(language)
         currentLanguage = language
     }
