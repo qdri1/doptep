@@ -392,7 +392,7 @@ struct GameScreen: View {
                 if liveGame.isLive {
                     Text("vs")
                         .font(.titleLarge)
-                        .foregroundColor(AppColor.onSurfaceVariant)
+                        .foregroundColor(AppColor.onSurface)
                         .padding(.horizontal, 8)
                 } else {
                     Button {

@@ -26,7 +26,7 @@ struct MainTabView: View {
         TabView {
             HomeScreen(viewModel: HomeViewModel(repository: GameRepository(context: modelContext)))
                 .tabItem {
-                    Label(NSLocalizedString("tab_home", comment: ""), systemImage: "house")
+                    Label(NSLocalizedString("tab_home", comment: ""), image: "ic_games")
                 }
 
             NavigationStack {
