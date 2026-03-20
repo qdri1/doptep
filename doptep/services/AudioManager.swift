@@ -12,7 +12,7 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
 
     private var audioPlayer: AVAudioPlayer?
     private let speechSynthesizer = AVSpeechSynthesizer()
-    private var currentLanguage: String = "en-US"
+    private var currentLanguageCode: String = "en"
     private var completion: (() -> Void)?
 
     override init() {
@@ -33,11 +33,23 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
 
     private func loadLanguagePreference() {
         let savedLanguage = UserDefaults.standard.string(forKey: "app_language") ?? "ru"
-        currentLanguage = savedLanguage == "ru" ? "ru-RU" : "en-US"
+        currentLanguageCode = ttsPrefix(for: savedLanguage)
     }
 
     func setLanguage(_ languageCode: String) {
-        currentLanguage = languageCode == "ru" ? "ru-RU" : "en-US"
+        currentLanguageCode = ttsPrefix(for: languageCode)
+    }
+
+    private func ttsPrefix(for appLanguage: String) -> String {
+        switch appLanguage {
+        case "ru": return "ru"
+        case "kk-KZ", "kk": return "ru"
+        default: return "en"
+        }
+    }
+
+    private func bestVoice(for prefix: String) -> AVSpeechSynthesisVoice? {
+        AVSpeechSynthesisVoice.speechVoices().first { $0.language.hasPrefix(prefix) }
     }
 
     func playSound(_ fileName: String) {
@@ -63,7 +75,7 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
         speechSynthesizer.stopSpeaking(at: .immediate)
 
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: currentLanguage)
+        utterance.voice = bestVoice(for: currentLanguageCode)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
