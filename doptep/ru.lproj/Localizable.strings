@@ -242,6 +242,7 @@
 "goals" = "голы";
 "edit_team_goals" = "Редактировать гол";
 "edit_player_stats" = "Редактировать результаты";
+"remove_player_confirm_text" = "Удалить игрока %@?";
 
 "text_goal" = "гол";
 "text_assist" = "ассист";

@@ -17,6 +17,8 @@ struct GameResultsScreen: View {
     @State private var showBestPlayersSheet = false
     @State private var bestPlayersForSheet: [BestPlayerUiModel] = []
     @State private var showClearAllGamesConfirmation = false
+    @State private var showRemovePlayerConfirmation = false
+    @State private var playerToRemove: PlayerUiModel?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -50,9 +52,14 @@ struct GameResultsScreen: View {
                     if !viewModel.uiState.playerUiModelList.isEmpty {
                         PlayersResultsBlock(
                             playerUiModelList: viewModel.uiState.playerUiModelList,
+                            deletedPlayerIds: viewModel.uiState.deletedPlayerIds,
                             uiLimited: viewModel.uiState.uiLimited,
                             onPlayerResultClicked: { playerResult in
                                 viewModel.action(GameResultsAction.onPlayerResultClicked(playerResultUiModel: playerResult))
+                            },
+                            onRemovePlayerClicked: { player in
+                                playerToRemove = player
+                                showRemovePlayerConfirmation = true
                             },
                             onActivateClicked: {}
                         )
@@ -111,6 +118,18 @@ struct GameResultsScreen: View {
         .sheet(isPresented: $showBestPlayersSheet) {
             BestPlayersSheet(bestPlayers: bestPlayersForSheet)
                 .presentationDetents([.medium, .large])
+        }
+        .confirmationDialog(
+            String(format: NSLocalizedString("remove_player_confirm_text", comment: ""), playerToRemove?.name ?? ""),
+            isPresented: $showRemovePlayerConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("yes", comment: ""), role: .destructive) {
+                if let player = playerToRemove {
+                    viewModel.action(.onRemovePlayerClicked(playerId: player.id))
+                }
+            }
+            Button(NSLocalizedString("no", comment: ""), role: .cancel) {}
         }
         .snackbar(message: $snackbarMessage)
     }
@@ -275,8 +294,10 @@ struct TeamsResultsBlock: View {
 
 struct PlayersResultsBlock: View {
     let playerUiModelList: [PlayerUiModel]
+    let deletedPlayerIds: Set<UUID>
     let uiLimited: Bool
     let onPlayerResultClicked: (PlayerResultUiModel) -> Void
+    let onRemovePlayerClicked: (PlayerUiModel) -> Void
     let onActivateClicked: () -> Void
 
     var body: some View {
@@ -314,6 +335,16 @@ struct PlayersResultsBlock: View {
                                     .foregroundColor(AppColor.onSurface)
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.7)
+                            }
+
+                            if deletedPlayerIds.contains(player.id) {
+                                Button {
+                                    onRemovePlayerClicked(player)
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .font(.labelSmall)
+                                        .foregroundColor(AppColor.outline)
+                                }
                             }
                         }
                     }

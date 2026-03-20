@@ -56,6 +56,9 @@ final class GameResultsViewModel: ObservableObject {
 
         case .onClearAllGamesResultsConfirmationClicked:
             onClearAllGamesResultsConfirmationClicked()
+
+        case .onRemovePlayerClicked(let playerId):
+            onRemovePlayerClicked(playerId: playerId)
         }
     }
 
@@ -106,12 +109,20 @@ final class GameResultsViewModel: ObservableObject {
                 return player1.name < player2.name
             }
 
+            var deletedPlayerIds = Set<UUID>()
+            for player in playerUiModelList {
+                if (try? playerRepository.getPlayer(id: player.id)) == nil {
+                    deletedPlayerIds.insert(player.id)
+                }
+            }
+
             let billingType = BillingManager.shared.getCurrentBillingType()
             let uiLimited = billingType == .limited
 
             uiState = GameResultsUiState(
                 teamUiModelList: teamUiModelList,
                 playerUiModelList: playerUiModelList,
+                deletedPlayerIds: deletedPlayerIds,
                 uiLimited: uiLimited
             )
         } catch {
@@ -362,6 +373,15 @@ final class GameResultsViewModel: ObservableObject {
             fetchGameHistory()
         } catch {
             print("Error clearing all games results: \(error)")
+        }
+    }
+
+    private func onRemovePlayerClicked(playerId: UUID) {
+        do {
+            try playerHistoryRepository.deletePlayerHistory(playerId: playerId)
+            fetchGameHistory()
+        } catch {
+            print("Error removing player history: \(error)")
         }
     }
 

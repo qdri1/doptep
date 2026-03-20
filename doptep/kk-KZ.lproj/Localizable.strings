@@ -242,6 +242,7 @@
 "goals" = "голдар";
 "edit_team_goals" = "Гол нәтижелерін өңдеу";
 "edit_player_stats" = "Нәтижелерді өңдеу";
+"remove_player_confirm_text" = "%@ ойыншыны жою керек па?";
 
 "text_goal" = "гол";
 "text_assist" = "ассист";

@@ -242,6 +242,7 @@
 "goals" = "goals";
 "edit_team_goals" = "Edit goal results";
 "edit_player_stats" = "Edit results";
+"remove_player_confirm_text" = "Remove player %@?";
 
 "text_goal" = "goal";
 "text_assist" = "assist";
