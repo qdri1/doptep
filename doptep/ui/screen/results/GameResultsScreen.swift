@@ -14,6 +14,9 @@ struct GameResultsScreen: View {
     @State private var showPlayerResultSheet = false
     @State private var playerResultUiModel: PlayerResultUiModel?
     @State private var snackbarMessage: String?
+    @State private var showBestPlayersSheet = false
+    @State private var bestPlayersForSheet: [BestPlayerUiModel] = []
+    @State private var showClearAllGamesConfirmation = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -31,14 +34,6 @@ struct GameResultsScreen: View {
                     .font(.bodyMedium)
 
                 Spacer()
-
-                Button {
-                    viewModel.action(.onClearResultsClicked)
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.titleLarge)
-                        .foregroundColor(AppColor.onSurface)
-                }
             }
             .padding(16)
             .background(AppColor.surface)
@@ -62,6 +57,8 @@ struct GameResultsScreen: View {
                             onActivateClicked: {}
                         )
                     }
+                    
+                    functionsSection
                 }
                 .padding(.vertical, 16)
             }
@@ -101,6 +98,20 @@ struct GameResultsScreen: View {
             }
             Button(NSLocalizedString("no", comment: ""), role: .cancel) {}
         }
+        .confirmationDialog(
+            NSLocalizedString("clear_all_results_title", comment: ""),
+            isPresented: $showClearAllGamesConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(NSLocalizedString("yes", comment: ""), role: .destructive) {
+                viewModel.action(.onClearAllGamesResultsConfirmationClicked)
+            }
+            Button(NSLocalizedString("no", comment: ""), role: .cancel) {}
+        }
+        .sheet(isPresented: $showBestPlayersSheet) {
+            BestPlayersSheet(bestPlayers: bestPlayersForSheet)
+                .presentationDetents([.medium, .large])
+        }
         .snackbar(message: $snackbarMessage)
     }
 
@@ -118,7 +129,59 @@ struct GameResultsScreen: View {
 
         case .showSnackbar(let message):
             snackbarMessage = message
+
+        case .showBestPlayersBottomSheet(let bestPlayers):
+            bestPlayersForSheet = bestPlayers
+            showBestPlayersSheet = true
+
+        case .showClearAllGamesResultsConfirmationBottomSheet:
+            showClearAllGamesConfirmation = true
         }
+    }
+
+    private var functionsSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button {
+                viewModel.action(.onBestPlayersAllGamesClicked)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "hand.thumbsup.fill")
+                        .frame(width: 24, height: 24)
+                        .font(.titleLarge)
+                    Text(NSLocalizedString("function_best_players_all_games", comment: ""))
+                        .font(.labelMedium)
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(AppColor.surface)
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(AppColor.onSurface)
+
+            Button {
+                viewModel.action(.onClearAllGamesResultsClicked)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "arrow.clockwise")
+                        .frame(width: 24, height: 24)
+                        .font(.titleLarge)
+                    Text(NSLocalizedString("function_clear_all_results", comment: ""))
+                        .font(.labelMedium)
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(AppColor.surface)
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(AppColor.onSurface)
+        }
+        .padding(.horizontal, 16)
     }
 }
 

@@ -152,6 +152,8 @@
 "function_info" = "Info";
 "function_all_results" = "All games results";
 "function_remove" = "Delete game";
+"function_best_players_all_games" = "Best players of all games";
+"function_clear_all_results" = "Clear all games results";
 
 // MARK: - Game Info
 "live_game_info_replace_teams" = "Swap left and right teams";

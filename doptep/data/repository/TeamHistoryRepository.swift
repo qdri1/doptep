@@ -37,6 +37,26 @@ final class TeamHistoryRepository {
         }
     }
 
+    func getAllTeamsHistories() throws -> [TeamUiModel] {
+        let descriptor = FetchDescriptor<TeamHistoryModel>()
+        let models = try context.fetch(descriptor)
+        return models.map { model in
+            TeamUiModel(
+                id: model.originalId,
+                gameId: model.gameId,
+                name: model.name,
+                color: TeamColor.from(model.color),
+                games: model.games,
+                wins: model.wins,
+                draws: model.draws,
+                loses: model.loses,
+                goals: model.goals,
+                conceded: model.conceded,
+                points: model.points
+            )
+        }
+    }
+
     func getTeamHistory(teamId: UUID) throws -> TeamUiModel? {
         let descriptor = FetchDescriptor<TeamHistoryModel>(
             predicate: #Predicate { $0.originalId == teamId }

@@ -47,6 +47,15 @@ final class GameResultsViewModel: ObservableObject {
             
         case .onSavePlayerResultClicked(let playerResultUiModel, let playerResultValue):
             onSavePlayerResultClicked(playerResultUiModel: playerResultUiModel, playerResultValue: playerResultValue)
+
+        case .onBestPlayersAllGamesClicked:
+            onBestPlayersAllGamesClicked()
+
+        case .onClearAllGamesResultsClicked:
+            setEffect(.showClearAllGamesResultsConfirmationBottomSheet)
+
+        case .onClearAllGamesResultsConfirmationClicked:
+            onClearAllGamesResultsConfirmationClicked()
         }
     }
 
@@ -269,6 +278,90 @@ final class GameResultsViewModel: ObservableObject {
             setEffect(.showSnackbar(message: NSLocalizedString("save_success", comment: "")))
         } catch {
             print("Error saving player result: \(error)")
+        }
+    }
+
+    private func onBestPlayersAllGamesClicked() {
+        do {
+            let allTeams = try teamHistoryRepository.getAllTeamsHistories()
+            var allPlayers: [PlayerUiModel] = []
+            for team in allTeams {
+                let players = try playerHistoryRepository.getPlayersHistories(teamId: team.id)
+                allPlayers.append(contentsOf: players)
+            }
+
+            var bestPlayers: [BestPlayerUiModel] = []
+
+            if let best = allPlayers.max(by: { lhs, rhs in
+                let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots
+                let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots
+                return lhsScore < rhsScore
+            }) {
+                bestPlayers.append(BestPlayerUiModel(option: .bestPlayer, playerUiModel: best))
+            }
+
+            let statOptions: [(BestPlayerOption, (PlayerUiModel) -> Bool, (PlayerUiModel) -> Int)] = [
+                (.goals, { $0.goals > 0 }, { $0.goals }),
+                (.assists, { $0.assists > 0 }, { $0.assists }),
+                (.saves, { $0.saves > 0 }, { $0.saves }),
+                (.dribbles, { $0.dribbles > 0 }, { $0.dribbles }),
+                (.passes, { $0.passes > 0 }, { $0.passes }),
+                (.shots, { $0.shots > 0 }, { $0.shots }),
+            ]
+            for (option, filter, selector) in statOptions {
+                if let best = allPlayers.filter(filter).max(by: { selector($0) < selector($1) }) {
+                    bestPlayers.append(BestPlayerUiModel(option: option, playerUiModel: best))
+                }
+            }
+
+            setEffect(.showBestPlayersBottomSheet(bestPlayers: bestPlayers))
+        } catch {
+            print("Error computing best players of all games: \(error)")
+        }
+    }
+
+    private func onClearAllGamesResultsConfirmationClicked() {
+        do {
+            let allTeams = try teamHistoryRepository.getAllTeamsHistories()
+            for teamUiModel in allTeams {
+                let clearedTeam = TeamUiModel(
+                    id: teamUiModel.id,
+                    gameId: teamUiModel.gameId,
+                    name: teamUiModel.name,
+                    color: teamUiModel.color,
+                    games: 0,
+                    wins: 0,
+                    draws: 0,
+                    loses: 0,
+                    goals: 0,
+                    conceded: 0,
+                    points: 0
+                )
+                try teamHistoryRepository.updateTeamHistory(clearedTeam)
+
+                let playerHistories = try playerHistoryRepository.getPlayersHistories(teamId: teamUiModel.id)
+                for player in playerHistories {
+                    let clearedPlayer = PlayerUiModel(
+                        id: player.id,
+                        teamId: player.teamId,
+                        teamColor: player.teamColor,
+                        teamName: player.teamName,
+                        teamPoints: player.teamPoints,
+                        teamGoalsDifference: player.teamGoalsDifference,
+                        name: player.name,
+                        goals: 0,
+                        assists: 0,
+                        dribbles: 0,
+                        passes: 0,
+                        shots: 0,
+                        saves: 0
+                    )
+                    try playerHistoryRepository.updatePlayerHistory(clearedPlayer)
+                }
+            }
+            fetchGameHistory()
+        } catch {
+            print("Error clearing all games results: \(error)")
         }
     }
 

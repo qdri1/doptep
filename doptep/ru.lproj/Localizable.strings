@@ -152,6 +152,8 @@
 "function_info" = "Инфо";
 "function_all_results" = "Результаты всех игр";
 "function_remove" = "Удалить игру";
+"function_best_players_all_games" = "Лучшие игроки всех игр";
+"function_clear_all_results" = "Сбросить результаты всех игр";
 
 // MARK: - Game Info
 "live_game_info_replace_teams" = "Поменять левую и правую команду местами";
