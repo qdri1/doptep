@@ -544,44 +544,36 @@ struct GameScreen: View {
     private var functionsSection: some View {
         let uiLimited = viewModel.uiState.uiLimited
         return VStack(alignment: .leading, spacing: 8) {
-
-            LazyVGrid(columns: [
-                GridItem(.flexible()),
-                GridItem(.flexible())
-            ], spacing: 8) {
-                ForEach(GameFunction.allCases, id: \.self) { function in
-                    let isLocked = function == .bestPlayers && uiLimited
-                    Button {
+            ForEach(GameFunction.allCases, id: \.self) { function in
+                let isLocked = function == .bestPlayers && uiLimited
+                Button {
+                    if isLocked {
+                        viewModel.send(.onActivateClicked)
+                    } else {
+                        viewModel.send(.onFunctionClicked(function: function))
+                    }
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: function.systemImage)
+                            .frame(width: 24, height: 24)
+                            .font(.titleLarge)
+                        Text(NSLocalizedString(function.localizationKey, comment: ""))
+                            .font(.labelMedium)
+                        Spacer()
                         if isLocked {
-                            viewModel.send(.onActivateClicked)
-                        } else {
-                            viewModel.send(.onFunctionClicked(function: function))
-                        }
-                    } label: {
-                        VStack(spacing: 4) {
-                            Image(systemName: function.systemImage)
-                                .frame(width: 24, height: 24)
-                                .font(.titleLarge)
-                            Text(NSLocalizedString(function.localizationKey, comment: ""))
-                                .font(.labelMedium)
-                                .lineLimit(1)
-                        }
-                        .padding(.vertical, 12)
-                        .frame(maxWidth: .infinity)
-                        .background(AppColor.surface)
-                        .cornerRadius(8)
-                        .overlay(alignment: .topTrailing) {
-                            if isLocked {
-                                Image(systemName: "lock.fill")
-                                    .font(.caption2)
-                                    .foregroundColor(AppColor.outline)
-                                    .padding(4)
-                            }
+                            Image(systemName: "lock.fill")
+                                .font(.caption2)
+                                .foregroundColor(AppColor.outline)
                         }
                     }
-                    .buttonStyle(.plain)
-                    .foregroundColor(isLocked ? AppColor.outline : (function == .delete ? Color(hex: "#EC7063") : AppColor.onSurface))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: .infinity)
+                    .background(AppColor.surface)
+                    .cornerRadius(8)
                 }
+                .buttonStyle(.plain)
+                .foregroundColor(isLocked ? AppColor.outline : (function == .delete ? Color(hex: "#EC7063") : AppColor.onSurface))
             }
         }
         .padding(.horizontal, 16)
