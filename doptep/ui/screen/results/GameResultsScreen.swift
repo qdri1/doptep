@@ -555,8 +555,6 @@ struct GameResultPlayerResultSheet: View {
                     }
                 }
 
-                Spacer()
-
                 // Save Button
                 Button {
                     onSaveClicked(playerResultUiModel, value)
@@ -570,10 +568,16 @@ struct GameResultPlayerResultSheet: View {
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)
+                
+                Text(NSLocalizedString("result_correction_text", comment: ""))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.error)
+                    .padding(.horizontal)
             }
             .padding(.top, 24)
             .padding(.bottom, 16)
-            .background(AppColor.background)
+            .background(AppColor.surface)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {

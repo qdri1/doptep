@@ -1240,8 +1240,6 @@ struct PlayerResultSheet: View {
                     }
                 }
 
-                Spacer()
-
                 // Save Button
                 Button {
                     onSave(playerResult.option, value)
@@ -1255,10 +1253,16 @@ struct PlayerResultSheet: View {
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)
+                
+                Text(NSLocalizedString("result_correction_text", comment: ""))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.error)
+                    .padding(.horizontal)
             }
             .padding(.top, 24)
             .padding(.bottom, 16)
-            .background(AppColor.background)
+            .background(AppColor.surface)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -1355,8 +1359,6 @@ struct LiveGameResultSheet: View {
                     }
                 }
 
-                Spacer()
-
                 // Save Button
                 Button {
                     onSave(value)
@@ -1370,10 +1372,16 @@ struct LiveGameResultSheet: View {
                         .cornerRadius(12)
                 }
                 .padding(.horizontal)
+                
+                Text(NSLocalizedString("result_correction_text", comment: ""))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.error)
+                    .padding(.horizontal)
             }
             .padding(.top, 24)
             .padding(.bottom, 16)
-            .background(AppColor.background)
+            .background(AppColor.surface)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {

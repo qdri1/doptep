@@ -243,6 +243,7 @@
 "edit_team_goals" = "Edit goal results";
 "edit_player_stats" = "Edit results";
 "remove_player_confirm_text" = "Remove player %@?";
+"result_correction_text" = "Attention! This section is intended for correcting incorrect results. To add a new result, tap the left or right team name during the game.";
 
 "text_goal" = "goal";
 "text_assist" = "assist";
