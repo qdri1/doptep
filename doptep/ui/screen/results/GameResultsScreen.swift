@@ -159,9 +159,15 @@ struct GameResultsScreen: View {
     }
 
     private var functionsSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let uiLimited = viewModel.uiState.uiLimited
+        return VStack(alignment: .leading, spacing: 8) {
+            let isLocked = uiLimited
             Button {
-                viewModel.action(.onBestPlayersAllGamesClicked)
+                if isLocked {
+                    viewModel.action(.onActivateClicked)
+                } else {
+                    viewModel.action(.onBestPlayersAllGamesClicked)
+                }
             } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "hand.thumbsup.fill")
@@ -170,6 +176,11 @@ struct GameResultsScreen: View {
                     Text(NSLocalizedString("function_best_players_all_games", comment: ""))
                         .font(.labelMedium)
                     Spacer()
+                    if isLocked {
+                        Image(systemName: "lock.fill")
+                            .font(.caption2)
+                            .foregroundColor(AppColor.outline)
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -178,7 +189,7 @@ struct GameResultsScreen: View {
                 .cornerRadius(8)
             }
             .buttonStyle(.plain)
-            .foregroundColor(AppColor.onSurface)
+            .foregroundColor(isLocked ? AppColor.outline : AppColor.onSurface)
 
             Button {
                 viewModel.action(.onClearAllGamesResultsClicked)

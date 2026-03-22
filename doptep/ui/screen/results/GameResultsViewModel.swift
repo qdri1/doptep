@@ -59,6 +59,9 @@ final class GameResultsViewModel: ObservableObject {
 
         case .onRemovePlayerClicked(let playerId):
             onRemovePlayerClicked(playerId: playerId)
+
+        case .onActivateClicked:
+            break
         }
     }
 

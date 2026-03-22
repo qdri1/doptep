@@ -15,4 +15,5 @@ enum GameResultsAction {
     case onClearAllGamesResultsClicked
     case onClearAllGamesResultsConfirmationClicked
     case onRemovePlayerClicked(playerId: UUID)
+    case onActivateClicked
 }
