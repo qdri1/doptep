@@ -274,6 +274,7 @@ struct ActivationCodeSheet: View {
 // MARK: - Language Selection Sheet
 
 struct LanguageSelectionSheet: View {
+    var showCheckmark: Bool = true
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var languageManager: LanguageManager
 
@@ -309,7 +310,7 @@ struct LanguageSelectionSheet: View {
 
                 Spacer()
 
-                if languageManager.currentLanguage == language {
+                if showCheckmark && languageManager.currentLanguage == language {
                     Image(systemName: "checkmark")
                         .foregroundColor(AppColor.primary)
                 }

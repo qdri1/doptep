@@ -43,7 +43,7 @@ struct doptepApp: App {
                     AudioManager.shared.setLanguage(language)
                 }
                 .sheet(isPresented: $showLanguagePicker) {
-                    LanguageSelectionSheet()
+                    LanguageSelectionSheet(showCheckmark: false)
                         .environmentObject(languageManager)
                         .presentationDetents([.medium])
                 }
