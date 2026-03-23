@@ -5,7 +5,7 @@ final class LanguageManager: ObservableObject {
     @Published private(set) var currentLanguage: String
 
     init() {
-        let saved = UserDefaults.standard.string(forKey: "app_language") ?? "ru"
+        let saved = UserDefaults.standard.string(forKey: "app_language") ?? "kk-KZ"
         currentLanguage = saved
         Bundle.setLanguage(saved)
     }
