@@ -1140,7 +1140,7 @@ struct GameInfoSheet: View {
                 }
                 .padding()
             }
-            .background(AppColor.background)
+            .background(AppColor.surface)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
