@@ -439,20 +439,19 @@ struct GameScreen: View {
     private func teamScoreView(name: String, color: Color, goals: Int, winCount: Int, isWinning: Bool, isLeft: Bool) -> some View {
         VStack(spacing: 4) {
 
+            Text("\(goals)")
+                .font(.custom("Montserrat-Bold", size: 48))
+                .foregroundColor(AppColor.onSurface)
+            
             Text(name)
                 .font(.bodyMedium)
                 .foregroundColor(AppColor.onSurface)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.7)
-
-            Text("\(goals)")
-                .font(.custom("Montserrat-Bold", size: 48))
-                .foregroundColor(AppColor.onSurface)
             
-            Spacer().frame(height: 4)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding()
         .background(color.opacity(0.2))
         .cornerRadius(12)
