@@ -506,7 +506,7 @@ struct GameScreen: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(GameSounds.allCases, id: \.self) { sound in
-                        let isLocked = uiLimited && sound != .whistle
+                        let isLocked = uiLimited && sound != .whistle && sound != .startMatch
                         Button {
                             if isLocked {
                                 viewModel.send(.onActivateClicked)
