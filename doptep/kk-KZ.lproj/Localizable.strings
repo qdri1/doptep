@@ -160,7 +160,6 @@
 "live_game_info_replace_teams" = "Сол және оң командаларды ауыстыру";
 "live_game_info_pause_timer" = "Таймерді тоқтату";
 "live_game_info_play_timer" = "Таймерді жалғастыру";
-"result_correction_text" = "Назар аударыңыз! Бұл бөлім қате нәтижелерді түзетуге арналған. Егер жаңа нәтижені қосқыңыз келсе, ойын барысында сол немесе оң команданың атауын басыңыз.";
 
 // MARK: - Teams Block Info
 "teams_block_info_games" = "Ойындар";

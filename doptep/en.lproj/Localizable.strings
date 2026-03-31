@@ -160,7 +160,6 @@
 "live_game_info_replace_teams" = "Swap left and right teams";
 "live_game_info_pause_timer" = "Pause timer";
 "live_game_info_play_timer" = "Resume timer";
-"result_correction_text" = "Attention! This section is intended for correcting incorrect results. To add a new result, tap the left or right team name during the game.";
 
 // MARK: - Teams Block Info
 "teams_block_info_games" = "Games";

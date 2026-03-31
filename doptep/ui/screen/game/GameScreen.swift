@@ -1195,72 +1195,74 @@ struct PlayerResultSheet: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                // Player Info
-                HStack(spacing: 12) {
-                    Circle()
-                        .fill(playerResult.playerUiModel.teamColor.color)
-                        .frame(width: 24, height: 24)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 24) {
+                    // Player Info
+                    HStack(spacing: 12) {
+                        Circle()
+                            .fill(playerResult.playerUiModel.teamColor.color)
+                            .frame(width: 24, height: 24)
 
-                    Text(playerResult.playerUiModel.name)
-                        .font(.titleMedium)
+                        Text(playerResult.playerUiModel.name)
+                            .font(.titleMedium)
 
-                    Spacer()
-                }
-                .padding(.horizontal)
-
-                // Stat Type
-                Text(NSLocalizedString(playerResult.option.localizationKey, comment: ""))
-                    .font(.titleMedium)
-                    .foregroundColor(AppColor.onSurfaceVariant)
-
-                // Value Stepper
-                HStack(spacing: 32) {
-                    Button {
-                        if value > 0 {
-                            value -= 1
-                        }
-                    } label: {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.custom("Montserrat-SemiBold", size: 44))
-                            .foregroundColor(AppColor.error)
+                        Spacer()
                     }
-
-                    Text("\(value)")
-                        .font(.custom("Montserrat-Bold", size: 48))
-                        .frame(minWidth: 80)
-
-                    Button {
-                        value += 1
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.custom("Montserrat-SemiBold", size: 44))
-                            .foregroundColor(AppColor.primary)
-                    }
-                }
-
-                // Save Button
-                Button {
-                    onSave(playerResult.option, value)
-                } label: {
-                    Text(NSLocalizedString("save", comment: ""))
-                        .font(.titleMedium)
-                        .foregroundColor(AppColor.onPrimary)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(AppColor.primary)
-                        .cornerRadius(12)
-                }
-                .padding(.horizontal)
-                
-                Text(NSLocalizedString("result_correction_text", comment: ""))
-                    .fixedSize(horizontal: false, vertical: true)
-                    .font(.bodySmall)
-                    .foregroundColor(AppColor.error)
                     .padding(.horizontal)
+
+                    // Stat Type
+                    Text(NSLocalizedString(playerResult.option.localizationKey, comment: ""))
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onSurfaceVariant)
+
+                    // Value Stepper
+                    HStack(spacing: 32) {
+                        Button {
+                            if value > 0 {
+                                value -= 1
+                            }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.custom("Montserrat-SemiBold", size: 44))
+                                .foregroundColor(AppColor.error)
+                        }
+
+                        Text("\(value)")
+                            .font(.custom("Montserrat-Bold", size: 48))
+                            .frame(minWidth: 80)
+
+                        Button {
+                            value += 1
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.custom("Montserrat-SemiBold", size: 44))
+                                .foregroundColor(AppColor.primary)
+                        }
+                    }
+
+                    // Save Button
+                    Button {
+                        onSave(playerResult.option, value)
+                    } label: {
+                        Text(NSLocalizedString("save", comment: ""))
+                            .font(.titleMedium)
+                            .foregroundColor(AppColor.onPrimary)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(AppColor.primary)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+
+                    Text(NSLocalizedString("result_correction_text", comment: ""))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.bodySmall)
+                        .foregroundColor(AppColor.error)
+                        .padding(.horizontal)
+                }
+                .padding(.top, 24)
+                .padding(.bottom, 16)
             }
-            .padding(.top, 24)
-            .padding(.bottom, 16)
             .background(AppColor.surface)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -1314,72 +1316,74 @@ struct LiveGameResultSheet: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                // Team Info
-                HStack(spacing: 12) {
-                    Circle()
-                        .fill(teamColor)
-                        .frame(width: 24, height: 24)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 24) {
+                    // Team Info
+                    HStack(spacing: 12) {
+                        Circle()
+                            .fill(teamColor)
+                            .frame(width: 24, height: 24)
 
-                    Text(teamName)
-                        .font(.titleMedium)
+                        Text(teamName)
+                            .font(.titleMedium)
 
-                    Spacer()
-                }
-                .padding(.horizontal)
-
-                // Stat Type
-                Text(NSLocalizedString("goals", comment: ""))
-                    .font(.titleMedium)
-                    .foregroundColor(AppColor.onSurfaceVariant)
-
-                // Value Stepper
-                HStack(spacing: 32) {
-                    Button {
-                        if value > 0 {
-                            value -= 1
-                        }
-                    } label: {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.custom("Montserrat-SemiBold", size: 44))
-                            .foregroundColor(AppColor.error)
+                        Spacer()
                     }
-
-                    Text("\(value)")
-                        .font(.custom("Montserrat-Bold", size: 48))
-                        .frame(minWidth: 80)
-
-                    Button {
-                        value += 1
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.custom("Montserrat-SemiBold", size: 44))
-                            .foregroundColor(AppColor.primary)
-                    }
-                }
-
-                // Save Button
-                Button {
-                    onSave(value)
-                } label: {
-                    Text(NSLocalizedString("save", comment: ""))
-                        .font(.titleMedium)
-                        .foregroundColor(AppColor.onPrimary)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(AppColor.primary)
-                        .cornerRadius(12)
-                }
-                .padding(.horizontal)
-                
-                Text(NSLocalizedString("result_correction_text", comment: ""))
-                    .fixedSize(horizontal: false, vertical: true)
-                    .font(.bodySmall)
-                    .foregroundColor(AppColor.error)
                     .padding(.horizontal)
+
+                    // Stat Type
+                    Text(NSLocalizedString("goals", comment: ""))
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onSurfaceVariant)
+
+                    // Value Stepper
+                    HStack(spacing: 32) {
+                        Button {
+                            if value > 0 {
+                                value -= 1
+                            }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.custom("Montserrat-SemiBold", size: 44))
+                                .foregroundColor(AppColor.error)
+                        }
+
+                        Text("\(value)")
+                            .font(.custom("Montserrat-Bold", size: 48))
+                            .frame(minWidth: 80)
+
+                        Button {
+                            value += 1
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.custom("Montserrat-SemiBold", size: 44))
+                                .foregroundColor(AppColor.primary)
+                        }
+                    }
+
+                    // Save Button
+                    Button {
+                        onSave(value)
+                    } label: {
+                        Text(NSLocalizedString("save", comment: ""))
+                            .font(.titleMedium)
+                            .foregroundColor(AppColor.onPrimary)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(AppColor.primary)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+
+                    Text(NSLocalizedString("result_correction_text", comment: ""))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.bodySmall)
+                        .foregroundColor(AppColor.error)
+                        .padding(.horizontal)
+                }
+                .padding(.top, 24)
+                .padding(.bottom, 16)
             }
-            .padding(.top, 24)
-            .padding(.bottom, 16)
             .background(AppColor.surface)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
