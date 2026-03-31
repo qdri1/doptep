@@ -7,6 +7,7 @@ import Foundation
 
 enum GameSounds: String, CaseIterable {
     case whistle
+    case startMatch = "start_match"
     case leagueChemp = "sound_league_chemp"
     case goalFans = "sound_goal_fans"
     case uoUoUo = "sound_uo_uo_uo"
@@ -26,6 +27,7 @@ enum GameSounds: String, CaseIterable {
     var localizationKey: String {
         switch self {
         case .whistle: return "sound_whistle"
+        case .startMatch: return "sound_start_match"
         case .leagueChemp: return "sound_league_chemp"
         case .goalFans: return "sound_goal_fans"
         case .anarbekov: return "sound_anarbekov"

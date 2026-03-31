@@ -132,7 +132,8 @@
 "sound_goal_fans" = "Stadium\nGooooal";
 "sound_anarbekov" = "Temirlan\nAnarbekov";
 "sound_uo_uo_uo" = "UO UO UO";
-"sound_whistle" = "Whistle";
+"sound_whistle" = "Whistle\n№1";
+"sound_start_match" = "Whistle\n№2";
 "sound_stadium_applause" = "Stadium\napplause";
 "sound_girls_applause" = "Girls\napplause";
 "sound_bilgenin_istep_jatyr" = "Білгенін\nістеп жатыр";
