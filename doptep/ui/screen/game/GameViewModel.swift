@@ -8,6 +8,7 @@ import SwiftUI
 import Combine
 import AVFoundation
 import SwiftData
+import UIKit
 
 @MainActor
 final class GameViewModel: ObservableObject {
@@ -29,6 +30,8 @@ final class GameViewModel: ObservableObject {
     private var timer: Timer? = nil
     private var timerMillis: Int = 0
     private var oldTeamId: UUID = UUID()
+    private var backgroundDate: Date? = nil
+    private var lifecycleObservers: [NSObjectProtocol] = []
 
     private var isLive: Bool {
         uiState.liveGameUiModel?.isLive ?? false
@@ -58,6 +61,47 @@ final class GameViewModel: ObservableObject {
         self.audioManager = audioManager
 
         fetchGame()
+        setupLifecycleObservers()
+    }
+
+    deinit {
+        lifecycleObservers.forEach { NotificationCenter.default.removeObserver($0) }
+    }
+
+    private func setupLifecycleObservers() {
+        let didEnterBackground = NotificationCenter.default.addObserver(
+            forName: UIApplication.didEnterBackgroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            Task { @MainActor in
+                if self.timer != nil {
+                    self.backgroundDate = Date()
+                    self.timer?.invalidate()
+                    self.timer = nil
+                }
+            }
+        }
+
+        let willEnterForeground = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self else { return }
+            Task { @MainActor in
+                if let bg = self.backgroundDate {
+                    let elapsed = Int(Date().timeIntervalSince(bg)) * 1000
+                    self.timerMillis = max(0, self.timerMillis - elapsed)
+                    self.timerValue = self.formatTime(self.timerMillis)
+                    self.backgroundDate = nil
+                    self.resumeTimer()
+                }
+            }
+        }
+
+        lifecycleObservers = [didEnterBackground, willEnterForeground]
     }
 
     func send(_ action: GameAction) {
@@ -782,7 +826,12 @@ final class GameViewModel: ObservableObject {
 
     private func startTimer() {
         uiState.isTimerPlay = true
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        resumeTimer()
+    }
+
+    private func resumeTimer() {
+        guard timer == nil else { return }
+        let t = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self = self else { return }
                 self.timerMillis -= 1000
@@ -802,6 +851,8 @@ final class GameViewModel: ObservableObject {
                 }
             }
         }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
 
     private func stopTimer() {
@@ -1359,6 +1410,7 @@ final class GameViewModel: ObservableObject {
             liveGameRepository.saveTimerValue(timerMillis)
         }
         stopTimer()
+        backgroundDate = nil
     }
 
     func createAddGameViewModel(gameId: UUID) -> AddGameViewModel {
