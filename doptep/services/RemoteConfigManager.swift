@@ -28,6 +28,14 @@ final class RemoteConfigManager {
     var whatsappUrl: String {
         remoteConfig.configValue(forKey: "whatsapp_url").stringValue
     }
+    
+    var isAppUpdateRequired: Bool {
+        remoteConfig.configValue(forKey: "ios_app_update_required").boolValue
+    }
+    
+    var appVersionCode: Int {
+        remoteConfig.configValue(forKey: "ios_app_version_code").numberValue.intValue
+    }
 
     var activationCode: String {
         let value = remoteConfig.configValue(forKey: "activation_code").stringValue

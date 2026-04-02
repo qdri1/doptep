@@ -259,3 +259,8 @@
 "activation_code_button_cancel" = "Отмена";
 "activation_code_success" = "Активировано!";
 "activation_code_error" = "Неверный код";
+
+// MARK: - App Update
+"update_required_title" = "Доступна новая версия приложения";
+"update_button_update" = "Обновить";
+"update_button_skip" = "Пропустить";

@@ -259,3 +259,8 @@
 "activation_code_button_cancel" = "Cancel";
 "activation_code_success" = "Activated!";
 "activation_code_error" = "Invalid code";
+
+// MARK: - App Update
+"update_required_title" = "A new version of the app is available";
+"update_button_update" = "Update";
+"update_button_skip" = "Skip";

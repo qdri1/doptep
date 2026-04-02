@@ -16,6 +16,7 @@ struct doptepApp: App {
     let container: ModelContainer
     @StateObject private var languageManager = LanguageManager()
     @State private var showLanguagePicker = UserDefaults.standard.string(forKey: "app_language") == nil
+    @State private var showUpdateDialog = false
 
     init() {
         container = try! ModelContainer(
@@ -46,6 +47,19 @@ struct doptepApp: App {
                     LanguageSelectionSheet(showCheckmark: false)
                         .environmentObject(languageManager)
                         .presentationDetents([.medium])
+                }
+                .alert(NSLocalizedString("update_required_title", comment: ""), isPresented: $showUpdateDialog) {
+                    Button(NSLocalizedString("update_button_update", comment: "")) {
+                        if let url = URL(string: "https://apps.apple.com/app/id6758735315") {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                    Button(NSLocalizedString("update_button_skip", comment: ""), role: .cancel) {}
+                }
+                .onAppear {
+                    let currentBuild = Int(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1") ?? 1
+                    showUpdateDialog = !showLanguagePicker && RemoteConfigManager.shared.isAppUpdateRequired
+                        && RemoteConfigManager.shared.appVersionCode > currentBuild
                 }
         }
         .modelContainer(container)

@@ -259,3 +259,8 @@
 "activation_code_button_cancel" = "Болдырмау";
 "activation_code_success" = "Белсендірілді!";
 "activation_code_error" = "Қате код";
+
+// MARK: - App Update
+"update_required_title" = "Қосымшаның жаңа версиясы шықты";
+"update_button_update" = "Жаңарту";
+"update_button_skip" = "Өткізіп жіберу";
