@@ -353,7 +353,9 @@ final class AddGameViewModel: ObservableObject {
                                     dribbles: existingPlayer.dribbles,
                                     passes: existingPlayer.passes,
                                     shots: existingPlayer.shots,
-                                    saves: existingPlayer.saves
+                                    saves: existingPlayer.saves,
+                                    yellowCards: existingPlayer.yellowCards,
+                                    redCards: existingPlayer.redCards
                                 )
                                 let _ = playerRepository.savePlayer(newPlayer)
                                 
@@ -369,20 +371,16 @@ final class AddGameViewModel: ObservableObject {
                                         dribbles: historyPlayer.dribbles,
                                         passes: historyPlayer.passes,
                                         shots: historyPlayer.shots,
-                                        saves: historyPlayer.saves
+                                        saves: historyPlayer.saves,
+                                        yellowCards: historyPlayer.yellowCards,
+                                        redCards: historyPlayer.redCards
                                     )
                                     playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
                                 } else {
                                     let newPlayerHistory = PlayerModel(
                                         id: newPlayer.id,
                                         teamId: newPlayer.teamId,
-                                        name: newPlayer.name,
-                                        goals: 0,
-                                        assists: 0,
-                                        dribbles: 0,
-                                        passes: 0,
-                                        shots: 0,
-                                        saves: 0
+                                        name: newPlayer.name
                                     )
                                     playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
                                 }
@@ -395,10 +393,10 @@ final class AddGameViewModel: ObservableObject {
                             name: trimmedName
                         )
                         let _ = playerRepository.savePlayer(newPlayer)
-                        
+
                         if let historyPlayer = try playerHistoryRepository.getPlayerHistory(teamId: newPlayer.teamId, playerName: newPlayer.name) {
                             try playerHistoryRepository.deletePlayerHistory(playerId: historyPlayer.id)
-                            
+
                             let newPlayerHistory = PlayerModel(
                                 id: newPlayer.id,
                                 teamId: newPlayer.teamId,
@@ -408,7 +406,9 @@ final class AddGameViewModel: ObservableObject {
                                 dribbles: historyPlayer.dribbles,
                                 passes: historyPlayer.passes,
                                 shots: historyPlayer.shots,
-                                saves: historyPlayer.saves
+                                saves: historyPlayer.saves,
+                                yellowCards: historyPlayer.yellowCards,
+                                redCards: historyPlayer.redCards
                             )
                             playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
                         } else {

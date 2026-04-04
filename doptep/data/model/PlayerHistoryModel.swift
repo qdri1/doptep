@@ -18,6 +18,8 @@ final class PlayerHistoryModel {
     var passes: Int
     var shots: Int
     var saves: Int
+    var yellowCards: Int?
+    var redCards: Int?
 
     init(
         originalId: UUID,
@@ -28,7 +30,9 @@ final class PlayerHistoryModel {
         dribbles: Int = 0,
         passes: Int = 0,
         shots: Int = 0,
-        saves: Int = 0
+        saves: Int = 0,
+        yellowCards: Int = 0,
+        redCards: Int = 0
     ) {
         self.id = UUID()
         self.originalId = originalId
@@ -40,5 +44,7 @@ final class PlayerHistoryModel {
         self.passes = passes
         self.shots = shots
         self.saves = saves
+        self.yellowCards = yellowCards
+        self.redCards = redCards
     }
 }

@@ -191,6 +191,8 @@ final class GameViewModel: ObservableObject {
                     let lhsOther = lhs.dribbles + lhs.shots + lhs.passes
                     let rhsOther = rhs.dribbles + rhs.shots + rhs.passes
                     if lhsOther != rhsOther { return lhsOther > rhsOther }
+                    if lhs.redCards != rhs.redCards { return lhs.redCards < rhs.redCards }
+                    if lhs.yellowCards != rhs.yellowCards { return lhs.yellowCards < rhs.yellowCards }
                     if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
                     if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
                     if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
@@ -808,6 +810,8 @@ final class GameViewModel: ObservableObject {
             let lhsOther = lhs.dribbles + lhs.shots + lhs.passes
             let rhsOther = rhs.dribbles + rhs.shots + rhs.passes
             if lhsOther != rhsOther { return lhsOther > rhsOther }
+            if lhs.redCards != rhs.redCards { return lhs.redCards < rhs.redCards }
+            if lhs.yellowCards != rhs.yellowCards { return lhs.yellowCards < rhs.yellowCards }
             if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
             if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
             if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
@@ -1033,7 +1037,8 @@ final class GameViewModel: ObservableObject {
                         name: playerUiModel.name,
                         goals: playerUiModel.goals + 1,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
-                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves
+                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards
                     )
                     if !uiState.uiLimited {
                         audioManager.speak(
@@ -1061,7 +1066,8 @@ final class GameViewModel: ObservableObject {
                         name: playerUiModel.name,
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists + 1, dribbles: playerUiModel.dribbles,
-                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves
+                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards
                     )
                     if !uiState.uiLimited {
                         audioManager.speak(
@@ -1078,7 +1084,8 @@ final class GameViewModel: ObservableObject {
                         name: playerUiModel.name,
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
-                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves + 1
+                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves + 1,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards
                     )
                     if !uiState.uiLimited {
                         audioManager.speak(
@@ -1095,7 +1102,8 @@ final class GameViewModel: ObservableObject {
                         name: playerUiModel.name,
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles + 1,
-                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves
+                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards
                     )
                     if !uiState.uiLimited {
                         audioManager.speak(
@@ -1103,7 +1111,7 @@ final class GameViewModel: ObservableObject {
                             completion: { self.audioManager.playSound(GameSounds.bilgeninIstepJatyr.fileName) }
                         )
                     }
-                    
+
                 case .shot:
                     updatedPlayer = PlayerUiModel(
                         id: playerUiModel.id, teamId: playerUiModel.teamId,
@@ -1112,7 +1120,8 @@ final class GameViewModel: ObservableObject {
                         name: playerUiModel.name,
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
-                        passes: playerUiModel.passes, shots: playerUiModel.shots + 1, saves: playerUiModel.saves
+                        passes: playerUiModel.passes, shots: playerUiModel.shots + 1, saves: playerUiModel.saves,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards
                     )
                     if !uiState.uiLimited {
                         audioManager.speak(
@@ -1129,12 +1138,49 @@ final class GameViewModel: ObservableObject {
                         name: playerUiModel.name,
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
-                        passes: playerUiModel.passes + 1, shots: playerUiModel.shots, saves: playerUiModel.saves
+                        passes: playerUiModel.passes + 1, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards
                     )
                     if !uiState.uiLimited {
                         audioManager.speak(
                             text: String(format: NSLocalizedString("text_to_speech_pass", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.stadiumApplause.fileName) }
+                        )
+                    }
+
+                case .yellowCard:
+                    updatedPlayer = PlayerUiModel(
+                        id: playerUiModel.id, teamId: playerUiModel.teamId,
+                        teamColor: playerUiModel.teamColor, teamName: playerUiModel.teamName,
+                        teamPoints: playerUiModel.teamPoints, teamGoalsDifference: playerUiModel.teamGoalsDifference,
+                        name: playerUiModel.name,
+                        goals: playerUiModel.goals,
+                        assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
+                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        yellowCards: playerUiModel.yellowCards + 1, redCards: playerUiModel.redCards
+                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_yellow_card", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.penaltyRealMadrid.fileName) }
+                        )
+                    }
+
+                case .redCard:
+                    updatedPlayer = PlayerUiModel(
+                        id: playerUiModel.id, teamId: playerUiModel.teamId,
+                        teamColor: playerUiModel.teamColor, teamName: playerUiModel.teamName,
+                        teamPoints: playerUiModel.teamPoints, teamGoalsDifference: playerUiModel.teamGoalsDifference,
+                        name: playerUiModel.name,
+                        goals: playerUiModel.goals,
+                        assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
+                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards + 1
+                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_red_card", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.penaltyRealMadrid.fileName) }
                         )
                     }
                 }
@@ -1255,8 +1301,8 @@ final class GameViewModel: ObservableObject {
         let players = uiState.playerUiModelList
 
         if let best = players.max(by: { lhs, rhs in
-            let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots
-            let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots
+            let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots - lhs.yellowCards - (lhs.redCards * 3)
+            let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots - rhs.yellowCards - (rhs.redCards * 3)
             return lhsScore < rhsScore
         }) {
             bestPlayers.append(BestPlayerUiModel(option: .bestPlayer, playerUiModel: best))
@@ -1275,6 +1321,11 @@ final class GameViewModel: ObservableObject {
             if let best = players.filter(filter).max(by: { selector($0) < selector($1) }) {
                 bestPlayers.append(BestPlayerUiModel(option: option, playerUiModel: best))
             }
+        }
+
+        if let aggressive = players.filter({ $0.yellowCards > 0 || $0.redCards > 0 })
+            .max(by: { ($0.yellowCards + ($0.redCards * 3)) < ($1.yellowCards + ($1.redCards * 3)) }) {
+            bestPlayers.append(BestPlayerUiModel(option: .aggressivePlayer, playerUiModel: aggressive))
         }
 
         effect = .showBestPlayersBottomSheet(bestPlayers: bestPlayers)
@@ -1327,7 +1378,8 @@ final class GameViewModel: ObservableObject {
                         teamName: player.teamName, teamPoints: player.teamPoints,
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: value, assists: player.assists, dribbles: player.dribbles,
-                        passes: player.passes, shots: player.shots, saves: player.saves
+                        passes: player.passes, shots: player.shots, saves: player.saves,
+                        yellowCards: player.yellowCards, redCards: player.redCards
                     )
                 case .assist:
                     diffs = value - player.assists
@@ -1336,7 +1388,8 @@ final class GameViewModel: ObservableObject {
                         teamName: player.teamName, teamPoints: player.teamPoints,
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: value, dribbles: player.dribbles,
-                        passes: player.passes, shots: player.shots, saves: player.saves
+                        passes: player.passes, shots: player.shots, saves: player.saves,
+                        yellowCards: player.yellowCards, redCards: player.redCards
                     )
                 case .save:
                     diffs = value - player.saves
@@ -1345,7 +1398,8 @@ final class GameViewModel: ObservableObject {
                         teamName: player.teamName, teamPoints: player.teamPoints,
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
-                        passes: player.passes, shots: player.shots, saves: value
+                        passes: player.passes, shots: player.shots, saves: value,
+                        yellowCards: player.yellowCards, redCards: player.redCards
                     )
                 case .dribble:
                     diffs = value - player.dribbles
@@ -1354,7 +1408,8 @@ final class GameViewModel: ObservableObject {
                         teamName: player.teamName, teamPoints: player.teamPoints,
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: value,
-                        passes: player.passes, shots: player.shots, saves: player.saves
+                        passes: player.passes, shots: player.shots, saves: player.saves,
+                        yellowCards: player.yellowCards, redCards: player.redCards
                     )
                 case .shot:
                     diffs = value - player.shots
@@ -1363,7 +1418,8 @@ final class GameViewModel: ObservableObject {
                         teamName: player.teamName, teamPoints: player.teamPoints,
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
-                        passes: player.passes, shots: value, saves: player.saves
+                        passes: player.passes, shots: value, saves: player.saves,
+                        yellowCards: player.yellowCards, redCards: player.redCards
                     )
                 case .pass:
                     diffs = value - player.passes
@@ -1372,7 +1428,28 @@ final class GameViewModel: ObservableObject {
                         teamName: player.teamName, teamPoints: player.teamPoints,
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
-                        passes: value, shots: player.shots, saves: player.saves
+                        passes: value, shots: player.shots, saves: player.saves,
+                        yellowCards: player.yellowCards, redCards: player.redCards
+                    )
+                case .yellowCard:
+                    diffs = value - player.yellowCards
+                    player = PlayerUiModel(
+                        id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                        teamName: player.teamName, teamPoints: player.teamPoints,
+                        teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                        goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                        passes: player.passes, shots: player.shots, saves: player.saves,
+                        yellowCards: value, redCards: player.redCards
+                    )
+                case .redCard:
+                    diffs = value - player.redCards
+                    player = PlayerUiModel(
+                        id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                        teamName: player.teamName, teamPoints: player.teamPoints,
+                        teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                        goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                        passes: player.passes, shots: player.shots, saves: player.saves,
+                        yellowCards: player.yellowCards, redCards: value
                     )
                 }
                 try playerRepository.updatePlayer(player)

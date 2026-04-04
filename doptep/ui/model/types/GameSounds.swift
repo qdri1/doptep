@@ -8,9 +8,12 @@ import Foundation
 enum GameSounds: String, CaseIterable {
     case whistle
     case startMatch = "start_match"
+    case penaltyRealMadrid = "sound_penalty_real_madrid"
     case leagueChemp = "sound_league_chemp"
+    case freedFromDesire = "sound_freed_from_desire"
     case goalFans = "sound_goal_fans"
     case uoUoUo = "sound_uo_uo_uo"
+    case stadiumAtmosphere = "sound_stadium_atmosphere"
     case stadiumApplause = "stadium_applause"
     case girlsApplause = "girls_applause"
     case suiii = "suiiiii"
@@ -28,10 +31,13 @@ enum GameSounds: String, CaseIterable {
         switch self {
         case .whistle: return "sound_whistle"
         case .startMatch: return "sound_start_match"
+        case .penaltyRealMadrid: return "sound_penalty_real_madrid"
         case .leagueChemp: return "sound_league_chemp"
+        case .freedFromDesire: return "sound_freed_from_desire"
         case .goalFans: return "sound_goal_fans"
         case .anarbekov: return "sound_anarbekov"
         case .uoUoUo: return "sound_uo_uo_uo"
+        case .stadiumAtmosphere: return "sound_stadium_atmosphere"
         case .stadiumApplause: return "sound_stadium_applause"
         case .girlsApplause: return "sound_girls_applause"
         case .bilgeninIstepJatyr: return "sound_bilgenin_istep_jatyr"

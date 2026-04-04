@@ -13,6 +13,7 @@ enum BestPlayerOption: String, CaseIterable {
     case dribbles
     case passes
     case shots
+    case aggressivePlayer
 
     var localizationKey: String {
         switch self {
@@ -23,6 +24,7 @@ enum BestPlayerOption: String, CaseIterable {
         case .dribbles: return "best_player_option_dribbles"
         case .passes: return "best_player_option_passes"
         case .shots: return "best_player_option_shots"
+        case .aggressivePlayer: return "best_player_option_aggressive_player"
         }
     }
 }

@@ -82,6 +82,8 @@
 "dribbles_icon" = "Д";
 "shots_icon" = "У";
 "passes_icon" = "П";
+"player_result_yellow_card" = "🟨";
+"player_result_red_card" = "🟥";
 
 // MARK: - Team Options
 "team_option_goal" = "Гол ⚽️";
@@ -90,6 +92,8 @@
 "team_option_pass" = "Пас";
 "team_option_shot" = "Удар";
 "team_option_save" = "Сейв";
+"team_option_yellow_card" = "Жёлтая 🟨";
+"team_option_red_card" = "Красная 🟥";
 "team_option_players_title" = "выберите автора";
 "team_option_players_auto_goal" = "Автогол";
 
@@ -101,6 +105,7 @@
 "best_player_option_dribbles" = "Лучший дриблинг";
 "best_player_option_passes" = "Лучший пас";
 "best_player_option_shots" = "Лучший удар";
+"best_player_option_aggressive_player" = "Самый грубый игрок 👎";
 
 // MARK: - Text to Speech
 "text_to_speech_goal" = "Гол от %@";
@@ -109,6 +114,8 @@
 "text_to_speech_pass" = "Красивый пас от %@";
 "text_to_speech_shot" = "Мощный удар от %@";
 "text_to_speech_save" = "Лучший сейв от %@";
+"text_to_speech_yellow_card" = "Жёлтая карточка %@";
+"text_to_speech_red_card" = "Красная карточка %@";
 
 // MARK: - Confirmation Dialogs
 "stay_team_selection_title" = "Выберите команду которая остается на поле";
@@ -128,6 +135,7 @@
 
 // MARK: - Sounds
 "sound_limited_text" = "Звуки и озвучки доступны только в полной версии приложения";
+"sound_penalty_real_madrid" = "Penalti a favor del\nReal Madrid";
 "sound_league_chemp" = "Лига\nЧемпионов";
 "sound_goal_fans" = "Стадион\nГоооооол";
 "sound_anarbekov" = "Темирлан\nАнарбеков";
@@ -145,6 +153,8 @@
 "sound_oooi_kandai_gol" = "Уйиии қандай\nшебер гол";
 "sound_modrichtyn_pasy" = "Модричтың\nпасы";
 "sound_tondyryp_tastagan" = "Тоңдырып\nтастаған";
+"sound_freed_from_desire" = "Freed From\nDesire";
+"sound_stadium_atmosphere" = "Атмосфера\nСтадиона";
 
 // MARK: - Game Functions
 "function_best_players" = "Лучшие игроки";
@@ -177,6 +187,8 @@
 "players_block_info_dribbles" = "Красивый проход/дриблинг";
 "players_block_info_shots" = "Мощный точный удар";
 "players_block_info_passes" = "Красивый пас";
+"players_block_info_yellow_card" = "Жёлтая карточка";
+"players_block_info_red_card" = "Красная карточка";
 "player_result_limited_text" = "Результаты игроков доступны только в полной версии приложения";
 
 // MARK: - Settings
@@ -251,6 +263,8 @@
 "text_pass" = "пас";
 "text_shot" = "удар";
 "text_save" = "сейв";
+"text_yellow_card" = "жёлтая 🟨";
+"text_red_card" = "красная 🟥";
 
 // MARK: - Activation Code
 "activation_code_dialog_title" = "Активация";

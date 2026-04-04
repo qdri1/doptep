@@ -19,6 +19,42 @@ struct PlayerUiModel: Identifiable, Equatable {
     let passes: Int
     let shots: Int
     let saves: Int
+    let yellowCards: Int
+    let redCards: Int
+
+    init(
+        id: UUID,
+        teamId: UUID,
+        teamColor: TeamColor,
+        teamName: String,
+        teamPoints: Int,
+        teamGoalsDifference: Int,
+        name: String,
+        goals: Int,
+        assists: Int,
+        dribbles: Int,
+        passes: Int,
+        shots: Int,
+        saves: Int,
+        yellowCards: Int = 0,
+        redCards: Int = 0
+    ) {
+        self.id = id
+        self.teamId = teamId
+        self.teamColor = teamColor
+        self.teamName = teamName
+        self.teamPoints = teamPoints
+        self.teamGoalsDifference = teamGoalsDifference
+        self.name = name
+        self.goals = goals
+        self.assists = assists
+        self.dribbles = dribbles
+        self.passes = passes
+        self.shots = shots
+        self.saves = saves
+        self.yellowCards = yellowCards
+        self.redCards = redCards
+    }
 }
 
 extension PlayerUiModel {
@@ -32,7 +68,9 @@ extension PlayerUiModel {
             dribbles: dribbles,
             passes: passes,
             shots: shots,
-            saves: saves
+            saves: saves,
+            yellowCards: yellowCards,
+            redCards: redCards
         )
     }
 
@@ -46,7 +84,9 @@ extension PlayerUiModel {
             dribbles: dribbles,
             passes: passes,
             shots: shots,
-            saves: saves
+            saves: saves,
+            yellowCards: yellowCards,
+            redCards: redCards
         )
     }
 
@@ -64,7 +104,9 @@ extension PlayerUiModel {
             dribbles: 0,
             passes: 0,
             shots: 0,
-            saves: 0
+            saves: 0,
+            yellowCards: 0,
+            redCards: 0
         )
     }
 }

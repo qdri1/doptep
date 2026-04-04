@@ -37,7 +37,9 @@ final class PlayerHistoryRepository {
                 dribbles: model.dribbles,
                 passes: model.passes,
                 shots: model.shots,
-                saves: model.saves
+                saves: model.saves,
+                yellowCards: model.yellowCards ?? 0,
+                redCards: model.redCards ?? 0
             )
         }
     }
@@ -62,7 +64,9 @@ final class PlayerHistoryRepository {
             dribbles: model.dribbles,
             passes: model.passes,
             shots: model.shots,
-            saves: model.saves
+            saves: model.saves,
+            yellowCards: model.yellowCards ?? 0,
+            redCards: model.redCards ?? 0
         )
     }
 
@@ -86,7 +90,9 @@ final class PlayerHistoryRepository {
             dribbles: model.dribbles,
             passes: model.passes,
             shots: model.shots,
-            saves: model.saves
+            saves: model.saves,
+            yellowCards: model.yellowCards ?? 0,
+            redCards: model.redCards ?? 0
         )
     }
 
@@ -103,11 +109,13 @@ final class PlayerHistoryRepository {
         model.passes = uiModel.passes
         model.shots = uiModel.shots
         model.saves = uiModel.saves
+        model.yellowCards = uiModel.yellowCards
+        model.redCards = uiModel.redCards
     }
-    
+
     func updatePlayerHistory(playerId: UUID, option: TeamOption, value: Int) throws {
         guard let model = try getPlayerHistoryEntity(playerId: playerId) else { return }
-        
+
         switch option {
         case .goal:
             model.goals = model.goals + value
@@ -121,6 +129,10 @@ final class PlayerHistoryRepository {
             model.shots = model.shots + value
         case .pass:
             model.passes = model.passes + value
+        case .yellowCard:
+            model.yellowCards = (model.yellowCards ?? 0) + value
+        case .redCard:
+            model.redCards = (model.redCards ?? 0) + value
         }
     }
 

@@ -860,6 +860,18 @@ struct GameScreen: View {
                     valuePath: \.passes,
                     option: .pass
                 )
+                playerStatColumn(
+                    header: NSLocalizedString("player_result_yellow_card", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.yellowCards,
+                    option: .yellowCard
+                )
+                playerStatColumn(
+                    header: NSLocalizedString("player_result_red_card", comment: ""),
+                    players: viewModel.uiState.playerUiModelList,
+                    valuePath: \.redCards,
+                    option: .redCard
+                )
             }
             .padding(12)
             .background(AppColor.surface)
@@ -1020,7 +1032,9 @@ struct BestPlayersSheet: View {
                                     stat(bestPlayer.playerUiModel.saves, "text_save"),
                                     stat(bestPlayer.playerUiModel.dribbles, "text_dribble"),
                                     stat(bestPlayer.playerUiModel.passes, "text_pass"),
-                                    stat(bestPlayer.playerUiModel.shots, "text_shot")
+                                    stat(bestPlayer.playerUiModel.shots, "text_shot"),
+                                    stat(bestPlayer.playerUiModel.yellowCards, "text_yellow_card"),
+                                    stat(bestPlayer.playerUiModel.redCards, "text_red_card")
                                 ]
                                 .compactMap { $0 }
                                 .joined(separator: ", ")
@@ -1051,6 +1065,17 @@ struct BestPlayersSheet: View {
                                     .foregroundColor(AppColor.onSurface)
                             case .shots:
                                 Text("\(bestPlayer.playerUiModel.shots) \(NSLocalizedString("text_shot", comment: ""))")
+                                    .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
+                            case .aggressivePlayer:
+                                let result = [
+                                    stat(bestPlayer.playerUiModel.yellowCards, "text_yellow_card"),
+                                    stat(bestPlayer.playerUiModel.redCards, "text_red_card")
+                                ]
+                                .compactMap { $0 }
+                                .joined(separator: ", ")
+
+                                Text(result)
                                     .font(.bodySmall)
                                     .foregroundColor(AppColor.onSurface)
                             }
@@ -1133,6 +1158,8 @@ struct GameInfoSheet: View {
                         InfoRow(symbol: NSLocalizedString("dribbles_icon", comment: ""), description: NSLocalizedString("players_block_info_dribbles", comment: ""))
                         InfoRow(symbol: NSLocalizedString("shots_icon", comment: ""), description: NSLocalizedString("players_block_info_shots", comment: ""))
                         InfoRow(symbol: NSLocalizedString("passes_icon", comment: ""), description: NSLocalizedString("players_block_info_passes", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("player_result_yellow_card", comment: ""), description: NSLocalizedString("players_block_info_yellow_card", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("player_result_red_card", comment: ""), description: NSLocalizedString("players_block_info_red_card", comment: ""))
                     }
 
                     Spacer()
@@ -1189,6 +1216,8 @@ struct PlayerResultSheet: View {
         case .dribble: initialValue = playerResult.playerUiModel.dribbles
         case .shot: initialValue = playerResult.playerUiModel.shots
         case .pass: initialValue = playerResult.playerUiModel.passes
+        case .yellowCard: initialValue = playerResult.playerUiModel.yellowCards
+        case .redCard: initialValue = playerResult.playerUiModel.redCards
         }
         _value = State(initialValue: initialValue)
     }

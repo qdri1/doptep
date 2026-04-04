@@ -95,10 +95,19 @@ final class GameResultsViewModel: ObservableObject {
                 if player1.assists != player2.assists {
                     return player1.assists > player2.assists
                 }
-                let player1Extra = player1.saves + player1.dribbles + player1.shots + player1.passes
-                let player2Extra = player2.saves + player2.dribbles + player2.shots + player2.passes
+                if player1.saves != player2.saves {
+                    return player1.saves > player2.saves
+                }
+                let player1Extra = player1.dribbles + player1.shots + player1.passes
+                let player2Extra = player2.dribbles + player2.shots + player2.passes
                 if player1Extra != player2Extra {
                     return player1Extra > player2Extra
+                }
+                if player1.redCards != player2.redCards {
+                    return player1.redCards < player2.redCards
+                }
+                if player1.yellowCards != player2.yellowCards {
+                    return player1.yellowCards < player2.yellowCards
                 }
                 if player1.teamPoints != player2.teamPoints {
                     return player1.teamPoints > player2.teamPoints
@@ -190,99 +199,75 @@ final class GameResultsViewModel: ObservableObject {
         switch playerResultUiModel.option {
         case .goal:
             updatedPlayer = PlayerUiModel(
-                id: player.id,
-                teamId: player.teamId,
-                teamColor: player.teamColor,
-                teamName: player.teamName,
-                teamPoints: player.teamPoints,
-                teamGoalsDifference: player.teamGoalsDifference,
-                name: player.name,
-                goals: playerResultValue,
-                assists: player.assists,
-                dribbles: player.dribbles,
-                passes: player.passes,
-                shots: player.shots,
-                saves: player.saves
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: playerResultValue, assists: player.assists, dribbles: player.dribbles,
+                passes: player.passes, shots: player.shots, saves: player.saves,
+                yellowCards: player.yellowCards, redCards: player.redCards
             )
         case .assist:
             updatedPlayer = PlayerUiModel(
-                id: player.id,
-                teamId: player.teamId,
-                teamColor: player.teamColor,
-                teamName: player.teamName,
-                teamPoints: player.teamPoints,
-                teamGoalsDifference: player.teamGoalsDifference,
-                name: player.name,
-                goals: player.goals,
-                assists: playerResultValue,
-                dribbles: player.dribbles,
-                passes: player.passes,
-                shots: player.shots,
-                saves: player.saves
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: player.goals, assists: playerResultValue, dribbles: player.dribbles,
+                passes: player.passes, shots: player.shots, saves: player.saves,
+                yellowCards: player.yellowCards, redCards: player.redCards
             )
         case .save:
             updatedPlayer = PlayerUiModel(
-                id: player.id,
-                teamId: player.teamId,
-                teamColor: player.teamColor,
-                teamName: player.teamName,
-                teamPoints: player.teamPoints,
-                teamGoalsDifference: player.teamGoalsDifference,
-                name: player.name,
-                goals: player.goals,
-                assists: player.assists,
-                dribbles: player.dribbles,
-                passes: player.passes,
-                shots: player.shots,
-                saves: playerResultValue
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                passes: player.passes, shots: player.shots, saves: playerResultValue,
+                yellowCards: player.yellowCards, redCards: player.redCards
             )
         case .dribble:
             updatedPlayer = PlayerUiModel(
-                id: player.id,
-                teamId: player.teamId,
-                teamColor: player.teamColor,
-                teamName: player.teamName,
-                teamPoints: player.teamPoints,
-                teamGoalsDifference: player.teamGoalsDifference,
-                name: player.name,
-                goals: player.goals,
-                assists: player.assists,
-                dribbles: playerResultValue,
-                passes: player.passes,
-                shots: player.shots,
-                saves: player.saves
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: player.goals, assists: player.assists, dribbles: playerResultValue,
+                passes: player.passes, shots: player.shots, saves: player.saves,
+                yellowCards: player.yellowCards, redCards: player.redCards
             )
         case .shot:
             updatedPlayer = PlayerUiModel(
-                id: player.id,
-                teamId: player.teamId,
-                teamColor: player.teamColor,
-                teamName: player.teamName,
-                teamPoints: player.teamPoints,
-                teamGoalsDifference: player.teamGoalsDifference,
-                name: player.name,
-                goals: player.goals,
-                assists: player.assists,
-                dribbles: player.dribbles,
-                passes: player.passes,
-                shots: playerResultValue,
-                saves: player.saves
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                passes: player.passes, shots: playerResultValue, saves: player.saves,
+                yellowCards: player.yellowCards, redCards: player.redCards
             )
         case .pass:
             updatedPlayer = PlayerUiModel(
-                id: player.id,
-                teamId: player.teamId,
-                teamColor: player.teamColor,
-                teamName: player.teamName,
-                teamPoints: player.teamPoints,
-                teamGoalsDifference: player.teamGoalsDifference,
-                name: player.name,
-                goals: player.goals,
-                assists: player.assists,
-                dribbles: player.dribbles,
-                passes: playerResultValue,
-                shots: player.shots,
-                saves: player.saves
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                passes: playerResultValue, shots: player.shots, saves: player.saves,
+                yellowCards: player.yellowCards, redCards: player.redCards
+            )
+        case .yellowCard:
+            updatedPlayer = PlayerUiModel(
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                passes: player.passes, shots: player.shots, saves: player.saves,
+                yellowCards: playerResultValue, redCards: player.redCards
+            )
+        case .redCard:
+            updatedPlayer = PlayerUiModel(
+                id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                teamName: player.teamName, teamPoints: player.teamPoints,
+                teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                passes: player.passes, shots: player.shots, saves: player.saves,
+                yellowCards: player.yellowCards, redCards: playerResultValue
             )
         }
 
@@ -307,8 +292,8 @@ final class GameResultsViewModel: ObservableObject {
             var bestPlayers: [BestPlayerUiModel] = []
 
             if let best = allPlayers.max(by: { lhs, rhs in
-                let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots
-                let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots
+                let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots - lhs.yellowCards - (lhs.redCards * 3)
+                let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots - rhs.yellowCards - (rhs.redCards * 3)
                 return lhsScore < rhsScore
             }) {
                 bestPlayers.append(BestPlayerUiModel(option: .bestPlayer, playerUiModel: best))
@@ -326,6 +311,11 @@ final class GameResultsViewModel: ObservableObject {
                 if let best = allPlayers.filter(filter).max(by: { selector($0) < selector($1) }) {
                     bestPlayers.append(BestPlayerUiModel(option: option, playerUiModel: best))
                 }
+            }
+
+            if let aggressive = allPlayers.filter({ $0.yellowCards > 0 || $0.redCards > 0 })
+                .max(by: { ($0.yellowCards + ($0.redCards * 3)) < ($1.yellowCards + ($1.redCards * 3)) }) {
+                bestPlayers.append(BestPlayerUiModel(option: .aggressivePlayer, playerUiModel: aggressive))
             }
 
             setEffect(.showBestPlayersBottomSheet(bestPlayers: bestPlayers))

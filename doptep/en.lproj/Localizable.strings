@@ -82,6 +82,8 @@
 "dribbles_icon" = "D";
 "shots_icon" = "SH";
 "passes_icon" = "P";
+"player_result_yellow_card" = "🟨";
+"player_result_red_card" = "🟥";
 
 // MARK: - Team Options
 "team_option_goal" = "Goal ⚽️";
@@ -90,6 +92,8 @@
 "team_option_pass" = "Pass";
 "team_option_shot" = "Shot";
 "team_option_save" = "Save";
+"team_option_yellow_card" = "Yellow 🟨";
+"team_option_red_card" = "Red 🟥";
 "team_option_players_title" = "Select player";
 "team_option_players_auto_goal" = "Own goal";
 
@@ -101,6 +105,7 @@
 "best_player_option_dribbles" = "Best dribbles";
 "best_player_option_passes" = "Best passes";
 "best_player_option_shots" = "Best shots";
+"best_player_option_aggressive_player" = "Most aggressive player 👎";
 
 // MARK: - Text to Speech
 "text_to_speech_goal" = "Goal by %@";
@@ -109,6 +114,8 @@
 "text_to_speech_pass" = "Great pass by %@";
 "text_to_speech_shot" = "Powerful shot by %@";
 "text_to_speech_save" = "Great save by %@";
+"text_to_speech_yellow_card" = "Yellow card %@";
+"text_to_speech_red_card" = "Red card %@";
 
 // MARK: - Confirmation Dialogs
 "stay_team_selection_title" = "Select the team that stays on the field";
@@ -128,6 +135,7 @@
 
 // MARK: - Sounds
 "sound_limited_text" = "Sounds and voice-overs are available only in the full version of the app";
+"sound_penalty_real_madrid" = "Penalti a favor del\nReal Madrid";
 "sound_league_chemp" = "Champions\nLeague";
 "sound_goal_fans" = "Stadium\nGooooal";
 "sound_anarbekov" = "Temirlan\nAnarbekov";
@@ -145,6 +153,8 @@
 "sound_oooi_kandai_gol" = "Уйиии қандай\nшебер гол";
 "sound_modrichtyn_pasy" = "Модричтың\nпасы";
 "sound_tondyryp_tastagan" = "Тоңдырып\nтастаған";
+"sound_freed_from_desire" = "Freed From\nDesire";
+"sound_stadium_atmosphere" = "Stadium\nAtmosphere";
 
 // MARK: - Game Functions
 "function_best_players" = "Best players";
@@ -177,6 +187,8 @@
 "players_block_info_dribbles" = "Nice dribble";
 "players_block_info_shots" = "Powerful accurate shot";
 "players_block_info_passes" = "Nice pass";
+"players_block_info_yellow_card" = "Yellow card";
+"players_block_info_red_card" = "Red card";
 "player_result_limited_text" = "Player results are available only in the full version of the app";
 
 // MARK: - Settings
@@ -251,6 +263,8 @@
 "text_pass" = "pass";
 "text_shot" = "shot";
 "text_save" = "save";
+"text_yellow_card" = "yellow 🟨";
+"text_red_card" = "red 🟥";
 
 // MARK: - Activation Code
 "activation_code_dialog_title" = "Activation";

@@ -411,6 +411,22 @@ struct PlayersResultsBlock: View {
                     uiLimited: uiLimited,
                     onPlayerResultClicked: onPlayerResultClicked
                 )
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("player_result_yellow_card", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.yellowCards,
+                    option: .yellowCard,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
+                resultsPlayerStatColumn(
+                    header: NSLocalizedString("player_result_red_card", comment: ""),
+                    players: playerUiModelList,
+                    valuePath: \.redCards,
+                    option: .redCard,
+                    uiLimited: uiLimited,
+                    onPlayerResultClicked: onPlayerResultClicked
+                )
             }
             .padding(12)
             .background(AppColor.surface)
@@ -516,6 +532,8 @@ struct GameResultPlayerResultSheet: View {
         case .dribble: initialValue = playerResultUiModel.playerUiModel.dribbles
         case .shot: initialValue = playerResultUiModel.playerUiModel.shots
         case .pass: initialValue = playerResultUiModel.playerUiModel.passes
+        case .yellowCard: initialValue = playerResultUiModel.playerUiModel.yellowCards
+        case .redCard: initialValue = playerResultUiModel.playerUiModel.redCards
         }
         _value = State(initialValue: initialValue)
     }
