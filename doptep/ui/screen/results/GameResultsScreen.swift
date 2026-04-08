@@ -23,21 +23,24 @@ struct GameResultsScreen: View {
     var body: some View {
         VStack(spacing: 0) {
             // Top Bar
-            HStack(spacing: 12) {
+            HStack {
                 Button {
                     viewModel.action(.onBackClicked)
                 } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "arrow.left")
                         .font(.titleLarge)
                         .foregroundColor(AppColor.onSurface)
                 }
 
                 Text(NSLocalizedString("function_all_results", comment: ""))
-                    .font(.bodyMedium)
-
+                    .font(.titleMedium)
+                    .foregroundColor(AppColor.onSurface)
+                    .frame(maxWidth: .infinity)
+                
                 Spacer()
+                    .frame(width: 24)
             }
-            .padding(16)
+            .padding()
             .background(AppColor.surface)
 
             // Content
@@ -117,7 +120,7 @@ struct GameResultsScreen: View {
         }
         .sheet(isPresented: $showBestPlayersSheet) {
             BestPlayersSheet(bestPlayers: bestPlayersForSheet)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.large])
         }
         .confirmationDialog(
             String(format: NSLocalizedString("remove_player_confirm_text", comment: ""), playerToRemove?.name ?? ""),

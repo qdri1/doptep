@@ -112,11 +112,11 @@ struct GameScreen: View {
         }
         .sheet(isPresented: $showBestPlayersSheet) {
             BestPlayersSheet(bestPlayers: currentBestPlayers)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.large])
         }
         .sheet(isPresented: $showGameInfoSheet) {
             GameInfoSheet()
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.large])
         }
         .sheet(isPresented: $showPlayerResultSheet) {
             if let playerResult = currentPlayerResult {
