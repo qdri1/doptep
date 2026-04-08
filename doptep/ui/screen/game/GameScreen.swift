@@ -358,9 +358,15 @@ struct GameScreen: View {
                         .font(.labelSmall)
                         .foregroundColor(Color(hex: "#EC7063"))
                 } else {
-                    Text(NSLocalizedString("game_number", comment: "") + ": \(liveGame.gameCount)")
-                        .font(.labelSmall)
-                        .foregroundColor(AppColor.onSurfaceVariant)
+                    if viewModel.uiState.gameUiModel?.teamQuantity == .team2 {
+                        Text(String(format: NSLocalizedString("half_count", comment: ""), "\(liveGame.gameCount)"))
+                            .font(.labelSmall)
+                            .foregroundColor(AppColor.onSurfaceVariant)
+                    } else {
+                        Text(String(format: NSLocalizedString("game_count", comment: ""), "\(liveGame.gameCount)"))
+                            .font(.labelSmall)
+                            .foregroundColor(AppColor.onSurfaceVariant)
+                    }
                 }
             }
 
@@ -427,6 +433,28 @@ struct GameScreen: View {
                             )
                         )
                     }
+                }
+            }
+
+            let shouldShowStreak: Bool = {
+                guard let gameUiModel = viewModel.uiState.gameUiModel else { return false }
+                if gameUiModel.teamQuantity == .team4 { return true }
+                guard gameUiModel.teamQuantity == .team3, let rule = gameUiModel.gameRule as? GameRuleTeam3 else { return false }
+                return rule == .winnerStay3 || rule == .winnerStay4 || rule == .winnerStayUnlimited
+            }()
+            if shouldShowStreak {
+                HStack {
+                    Text(String(format: NSLocalizedString("win_streak", comment: ""), "\(liveGame.leftTeamWinCount)"))
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.onSurfaceVariant)
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
+                    
+                    Text(String(format: NSLocalizedString("win_streak", comment: ""), "\(liveGame.rightTeamWinCount)"))
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.onSurfaceVariant)
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
                 }
             }
         }
@@ -1128,7 +1156,7 @@ struct GameInfoSheet: View {
                         HStack(spacing: 12) {
                             Image(systemName: "play.fill")
                                 .foregroundColor(AppColor.onSurface)
-                            
+
                             Text(NSLocalizedString("live_game_info_play_timer", comment: ""))
                                 .font(.labelSmall)
                                 .foregroundColor(AppColor.onSurface)
@@ -1160,6 +1188,18 @@ struct GameInfoSheet: View {
                         InfoRow(symbol: NSLocalizedString("passes_icon", comment: ""), description: NSLocalizedString("players_block_info_passes", comment: ""))
                         InfoRow(symbol: NSLocalizedString("player_result_yellow_card", comment: ""), description: NSLocalizedString("players_block_info_yellow_card", comment: ""))
                         InfoRow(symbol: NSLocalizedString("player_result_red_card", comment: ""), description: NSLocalizedString("players_block_info_red_card", comment: ""))
+                    }
+                    
+                    Divider()
+                    
+                    HStack(spacing: 12) {
+                        Text(NSLocalizedString("live_game_info_streak_title", comment: ""))
+                            .font(.labelSmall)
+                            .foregroundColor(AppColor.outline)
+
+                        Text(NSLocalizedString("live_game_info_streak_desc", comment: ""))
+                            .font(.labelSmall)
+                            .foregroundColor(AppColor.onSurface)
                     }
 
                     Spacer()

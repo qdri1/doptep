@@ -132,6 +132,8 @@
 "open_game_results_snackbar_text" = "You must finish the match to view all results!";
 "open_activation_screen_snackbar_text" = "You must finish the match to open the activation screen!";
 "game_count" = "games played: %@";
+"half_count" = "half played: %@";
+"win_streak" = "streak: %@";
 
 // MARK: - Sounds
 "sound_limited_text" = "Sounds and voice-overs are available only in the full version of the app";
@@ -170,6 +172,8 @@
 "live_game_info_replace_teams" = "Swap left and right teams";
 "live_game_info_pause_timer" = "Pause timer";
 "live_game_info_play_timer" = "Resume timer";
+"live_game_info_streak_title" = "streak";
+"live_game_info_streak_desc" = "game streak, games in a row";
 
 // MARK: - Teams Block Info
 "teams_block_info_games" = "Games";

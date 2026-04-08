@@ -132,6 +132,8 @@
 "open_game_results_snackbar_text" = "Барлық нәтижелерге өту үшін матчты аяқтау керек!";
 "open_activation_screen_snackbar_text" = "Активация бетіне өту үшін матчты аяқтау керек!";
 "game_count" = "ойын ойналды: %@";
+"half_count" = "тайм ойналды: %@";
+"win_streak" = "серия: %@";
 
 // MARK: - Sounds
 "sound_limited_text" = "Дыбыстар тек қосымшаның толық нұсқасында қолжетімді";
@@ -170,6 +172,8 @@
 "live_game_info_replace_teams" = "Сол және оң командаларды ауыстыру";
 "live_game_info_pause_timer" = "Таймерді тоқтату";
 "live_game_info_play_timer" = "Таймерді жалғастыру";
+"live_game_info_streak_title" = "серия";
+"live_game_info_streak_desc" = "ойын сериясы, қатарынан ойындар";
 
 // MARK: - Teams Block Info
 "teams_block_info_games" = "Ойындар";

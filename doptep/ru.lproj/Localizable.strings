@@ -132,6 +132,8 @@
 "open_game_results_snackbar_text" = "Нужно завершить матч чтобы перейти на результаты всех игр!";
 "open_activation_screen_snackbar_text" = "Нужно завершить матч чтобы открыть страницу активации!";
 "game_count" = "сыграно игр: %@";
+"half_count" = "cыграно тайм: %@";
+"win_streak" = "серия: %@";
 
 // MARK: - Sounds
 "sound_limited_text" = "Звуки и озвучки доступны только в полной версии приложения";
@@ -170,6 +172,8 @@
 "live_game_info_replace_teams" = "Поменять левую и правую команду местами";
 "live_game_info_pause_timer" = "Остановить таймер";
 "live_game_info_play_timer" = "Продолжить таймер";
+"live_game_info_streak_title" = "серия";
+"live_game_info_streak_desc" = "серия игр, игр подряд";
 
 // MARK: - Teams Block Info
 "teams_block_info_games" = "Игр";
