@@ -314,6 +314,7 @@ final class GameResultsViewModel: ObservableObject {
             }
 
             if let aggressive = allPlayers.filter({ $0.yellowCards > 0 || $0.redCards > 0 })
+                .reversed()
                 .max(by: { ($0.yellowCards + ($0.redCards * 3)) < ($1.yellowCards + ($1.redCards * 3)) }) {
                 bestPlayers.append(BestPlayerUiModel(option: .aggressivePlayer, playerUiModel: aggressive))
             }
