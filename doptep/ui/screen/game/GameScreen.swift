@@ -1042,7 +1042,7 @@ struct BestPlayersSheet: View {
                             .foregroundColor(AppColor.outline)
 
                         HStack {
-                            Circle()
+                            RoundedRectangle(cornerRadius: 4)
                                 .fill(bestPlayer.playerUiModel.teamColor.color)
                                 .frame(width: 12, height: 12)
 
@@ -1268,7 +1268,7 @@ struct PlayerResultSheet: View {
                 VStack(spacing: 24) {
                     // Player Info
                     HStack(spacing: 12) {
-                        Circle()
+                        RoundedRectangle(cornerRadius: 6)
                             .fill(playerResult.playerUiModel.teamColor.color)
                             .frame(width: 24, height: 24)
 
@@ -1389,7 +1389,7 @@ struct LiveGameResultSheet: View {
                 VStack(spacing: 24) {
                     // Team Info
                     HStack(spacing: 12) {
-                        Circle()
+                        RoundedRectangle(cornerRadius: 6)
                             .fill(teamColor)
                             .frame(width: 24, height: 24)
 
@@ -1535,7 +1535,7 @@ struct TeamChangeDropdown: View {
                         onTeamSelected(team.id)
                     } label: {
                         HStack {
-                            Circle()
+                            RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
                                 .frame(width: 12, height: 12)
                             Text(team.name)

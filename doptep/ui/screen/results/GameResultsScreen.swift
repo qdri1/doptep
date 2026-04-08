@@ -547,7 +547,7 @@ struct GameResultPlayerResultSheet: View {
                 VStack(spacing: 24) {
                     // Player Info
                     HStack(spacing: 12) {
-                        Circle()
+                        RoundedRectangle(cornerRadius: 6)
                             .fill(Color(hex: playerResultUiModel.playerUiModel.teamColor.rawValue))
                             .frame(width: 24, height: 24)
 

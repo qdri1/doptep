@@ -72,14 +72,10 @@ final class GameResultsViewModel: ObservableObject {
     private func fetchGameHistory() {
         do {
             let teamUiModelList = try teamHistoryRepository.getTeamsHistories(gameId: gameId)
-                .sorted { (team1, team2) -> Bool in
-                    if team1.points != team2.points {
-                        return team1.points > team2.points
-                    }
-                    if team1.goalsDifference != team2.goalsDifference {
-                        return team1.goalsDifference > team2.goalsDifference
-                    }
-                    return team1.name < team2.name
+                .sorted { lhs, rhs in
+                    if lhs.points != rhs.points { return lhs.points > rhs.points }
+                    if lhs.goalsDifference != rhs.goalsDifference { return lhs.goalsDifference > rhs.goalsDifference }
+                    return lhs.name < rhs.name
                 }
 
             var allPlayers: [PlayerUiModel] = []
@@ -88,37 +84,19 @@ final class GameResultsViewModel: ObservableObject {
                 allPlayers.append(contentsOf: players)
             }
 
-            let playerUiModelList = allPlayers.sorted { (player1, player2) -> Bool in
-                if player1.goals != player2.goals {
-                    return player1.goals > player2.goals
-                }
-                if player1.assists != player2.assists {
-                    return player1.assists > player2.assists
-                }
-                if player1.saves != player2.saves {
-                    return player1.saves > player2.saves
-                }
-                let player1Extra = player1.dribbles + player1.shots + player1.passes
-                let player2Extra = player2.dribbles + player2.shots + player2.passes
-                if player1Extra != player2Extra {
-                    return player1Extra > player2Extra
-                }
-                if player1.redCards != player2.redCards {
-                    return player1.redCards < player2.redCards
-                }
-                if player1.yellowCards != player2.yellowCards {
-                    return player1.yellowCards < player2.yellowCards
-                }
-                if player1.teamPoints != player2.teamPoints {
-                    return player1.teamPoints > player2.teamPoints
-                }
-                if player1.teamGoalsDifference != player2.teamGoalsDifference {
-                    return player1.teamGoalsDifference > player2.teamGoalsDifference
-                }
-                if player1.teamName != player2.teamName {
-                    return player1.teamName < player2.teamName
-                }
-                return player1.name < player2.name
+            let playerUiModelList = allPlayers.sorted { lhs, rhs in
+                if lhs.goals != rhs.goals { return lhs.goals > rhs.goals }
+                if lhs.assists != rhs.assists { return lhs.assists > rhs.assists }
+                if lhs.saves != rhs.saves { return lhs.saves > rhs.saves }
+                let lhsOther = lhs.dribbles + lhs.shots + lhs.passes
+                let rhsOther = rhs.dribbles + rhs.shots + rhs.passes
+                if lhsOther != rhsOther { return lhsOther > rhsOther }
+                if lhs.redCards != rhs.redCards { return lhs.redCards < rhs.redCards }
+                if lhs.yellowCards != rhs.yellowCards { return lhs.yellowCards < rhs.yellowCards }
+                if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
+                if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
+                if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
+                return lhs.name < rhs.name
             }
 
             var deletedPlayerIds = Set<UUID>()
@@ -281,48 +259,38 @@ final class GameResultsViewModel: ObservableObject {
     }
 
     private func onBestPlayersAllGamesClicked() {
-        do {
-            let allTeams = try teamHistoryRepository.getAllTeamsHistories()
-            var allPlayers: [PlayerUiModel] = []
-            for team in allTeams {
-                let players = try playerHistoryRepository.getPlayersHistories(teamId: team.id)
-                allPlayers.append(contentsOf: players)
-            }
-
-            var bestPlayers: [BestPlayerUiModel] = []
-
-            if let best = allPlayers.max(by: { lhs, rhs in
-                let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots - lhs.yellowCards - (lhs.redCards * 3)
-                let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots - rhs.yellowCards - (rhs.redCards * 3)
-                return lhsScore < rhsScore
-            }) {
-                bestPlayers.append(BestPlayerUiModel(option: .bestPlayer, playerUiModel: best))
-            }
-
-            let statOptions: [(BestPlayerOption, (PlayerUiModel) -> Bool, (PlayerUiModel) -> Int)] = [
-                (.goals, { $0.goals > 0 }, { $0.goals }),
-                (.assists, { $0.assists > 0 }, { $0.assists }),
-                (.saves, { $0.saves > 0 }, { $0.saves }),
-                (.dribbles, { $0.dribbles > 0 }, { $0.dribbles }),
-                (.passes, { $0.passes > 0 }, { $0.passes }),
-                (.shots, { $0.shots > 0 }, { $0.shots }),
-            ]
-            for (option, filter, selector) in statOptions {
-                if let best = allPlayers.filter(filter).max(by: { selector($0) < selector($1) }) {
-                    bestPlayers.append(BestPlayerUiModel(option: option, playerUiModel: best))
-                }
-            }
-
-            if let aggressive = allPlayers.filter({ $0.yellowCards > 0 || $0.redCards > 0 })
-                .reversed()
-                .max(by: { ($0.yellowCards + ($0.redCards * 3)) < ($1.yellowCards + ($1.redCards * 3)) }) {
-                bestPlayers.append(BestPlayerUiModel(option: .aggressivePlayer, playerUiModel: aggressive))
-            }
-
-            setEffect(.showBestPlayersBottomSheet(bestPlayers: bestPlayers))
-        } catch {
-            print("Error computing best players of all games: \(error)")
+        var bestPlayers: [BestPlayerUiModel] = []
+        let allPlayers = uiState.playerUiModelList
+        
+        if let best = allPlayers.max(by: { lhs, rhs in
+            let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots - lhs.yellowCards - (lhs.redCards * 3)
+            let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots - rhs.yellowCards - (rhs.redCards * 3)
+            return lhsScore < rhsScore
+        }) {
+            bestPlayers.append(BestPlayerUiModel(option: .bestPlayer, playerUiModel: best))
         }
+
+        let statOptions: [(BestPlayerOption, (PlayerUiModel) -> Bool, (PlayerUiModel) -> Int)] = [
+            (.goals, { $0.goals > 0 }, { $0.goals }),
+            (.assists, { $0.assists > 0 }, { $0.assists }),
+            (.saves, { $0.saves > 0 }, { $0.saves }),
+            (.dribbles, { $0.dribbles > 0 }, { $0.dribbles }),
+            (.passes, { $0.passes > 0 }, { $0.passes }),
+            (.shots, { $0.shots > 0 }, { $0.shots }),
+        ]
+        for (option, filter, selector) in statOptions {
+            if let best = allPlayers.filter(filter).max(by: { selector($0) < selector($1) }) {
+                bestPlayers.append(BestPlayerUiModel(option: option, playerUiModel: best))
+            }
+        }
+
+        if let aggressive = allPlayers.filter({ $0.yellowCards > 0 || $0.redCards > 0 })
+            .reversed()
+            .max(by: { ($0.yellowCards + ($0.redCards * 3)) < ($1.yellowCards + ($1.redCards * 3)) }) {
+            bestPlayers.append(BestPlayerUiModel(option: .aggressivePlayer, playerUiModel: aggressive))
+        }
+
+        setEffect(.showBestPlayersBottomSheet(bestPlayers: bestPlayers))
     }
 
     private func onClearAllGamesResultsConfirmationClicked() {
