@@ -134,6 +134,7 @@
 "game_count" = "сыграно игр: %@";
 "half_count" = "cыграно тайм: %@";
 "win_streak" = "серия: %@";
+"next_playing_teams" = "Следующие играют";
 
 // MARK: - Sounds
 "sound_limited_text" = "Звуки и озвучки доступны только в полной версии приложения";

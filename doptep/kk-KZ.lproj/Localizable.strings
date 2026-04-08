@@ -134,6 +134,7 @@
 "game_count" = "ойын ойналды: %@";
 "half_count" = "тайм ойналды: %@";
 "win_streak" = "серия: %@";
+"next_playing_teams" = "Келесі ойнайды";
 
 // MARK: - Sounds
 "sound_limited_text" = "Дыбыстар тек қосымшаның толық нұсқасында қолжетімді";

@@ -205,6 +205,7 @@ final class GameViewModel: ObservableObject {
                 uiState.teamUiModelList = teamList
                 uiState.playerUiModelList = playerList
                 uiState.liveGameUiModel = liveGameUiModel
+                setNextPlayingTeamsUiModelList()
 
                 updateBillingState()
                 setTimerValue()
@@ -779,6 +780,7 @@ final class GameViewModel: ObservableObject {
 
     private func updateLiveGameBlock() async throws {
         uiState.liveGameUiModel = try liveGameRepository.getLiveGame(gameId: gameId)
+        setNextPlayingTeamsUiModelList()
         updateBillingState()
     }
 
@@ -787,6 +789,72 @@ final class GameViewModel: ObservableObject {
         let gameCount = uiState.liveGameUiModel?.gameCount ?? 0
         uiState.billingType = billingType
         uiState.uiLimited = billingType == .limited && gameCount >= 5
+    }
+
+    private func setNextPlayingTeamsUiModelList() {
+        guard let gameUiModel = uiState.gameUiModel else { return }
+
+        switch gameUiModel.teamQuantity {
+        case .team2, .team4:
+            break
+        case .team3:
+            guard let rule = gameUiModel.gameRule as? GameRuleTeam3 else { return }
+            switch rule {
+            case .only2Games:
+                setTeam3Only2GamesNextPlayingTeams()
+            case .winnerStay2:
+                setTeam3WinnerStayNextPlayingTeams(winCount: 1)
+            case .winnerStay3:
+                setTeam3WinnerStayNextPlayingTeams(winCount: 2)
+            case .winnerStay4:
+                setTeam3WinnerStayNextPlayingTeams(winCount: 3)
+            case .winnerStayUnlimited:
+                break
+            }
+        }
+    }
+
+    private func setTeam3Only2GamesNextPlayingTeams() {
+        guard let liveGame = uiState.liveGameUiModel else { return }
+        let teamList = uiState.teamUiModelList
+
+        let currentLeftTeam = teamList.first { $0.id == liveGame.leftTeamId }
+        let currentRightTeam = teamList.first { $0.id == liveGame.rightTeamId }
+        let restTeam = teamList.first { $0.id != liveGame.leftTeamId && $0.id != liveGame.rightTeamId }
+
+        let firstNextPlayingTeams: NextPlayingTeamsUiModel
+        let secondNextPlayingTeams: NextPlayingTeamsUiModel
+
+        if liveGame.leftTeamWinCount > liveGame.rightTeamWinCount {
+            firstNextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: restTeam, rightTeam: currentRightTeam)
+            secondNextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: restTeam, rightTeam: currentLeftTeam)
+        } else {
+            firstNextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: currentLeftTeam, rightTeam: restTeam)
+            secondNextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: currentRightTeam, rightTeam: restTeam)
+        }
+
+        uiState.nextPlayingTeamsUiModelList = [firstNextPlayingTeams, secondNextPlayingTeams]
+    }
+
+    private func setTeam3WinnerStayNextPlayingTeams(winCount: Int) {
+        guard let liveGame = uiState.liveGameUiModel else { return }
+        let teamList = uiState.teamUiModelList
+
+        let currentLeftTeam = teamList.first { $0.id == liveGame.leftTeamId }
+        let currentRightTeam = teamList.first { $0.id == liveGame.rightTeamId }
+        let restTeam = teamList.first { $0.id != liveGame.leftTeamId && $0.id != liveGame.rightTeamId }
+
+        let nextPlayingTeams: NextPlayingTeamsUiModel
+
+        if liveGame.leftTeamWinCount >= winCount {
+            nextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: restTeam, rightTeam: currentRightTeam)
+        } else if liveGame.rightTeamWinCount >= winCount {
+            nextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: currentLeftTeam, rightTeam: restTeam)
+        } else {
+            nextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: restTeam, rightTeam: nil)
+        }
+
+        uiState.nextPlayingTeamsUiModelList = [nextPlayingTeams]
     }
 
     private func updateTeamsBlock() async throws {
@@ -946,6 +1014,7 @@ final class GameViewModel: ObservableObject {
                 )
                 try liveGameRepository.updateLiveGame(updated)
                 uiState.liveGameUiModel = updated
+                setNextPlayingTeamsUiModelList()
             } catch {
                 snackbarMessage = "Error changing team"
             }
@@ -978,6 +1047,7 @@ final class GameViewModel: ObservableObject {
                 )
                 try liveGameRepository.updateLiveGame(updated)
                 uiState.liveGameUiModel = updated
+                setNextPlayingTeamsUiModelList()
             } catch {
                 snackbarMessage = "Error changing team"
             }
@@ -1007,6 +1077,7 @@ final class GameViewModel: ObservableObject {
                 )
                 try liveGameRepository.updateLiveGame(swapped)
                 uiState.liveGameUiModel = swapped
+                setNextPlayingTeamsUiModelList()
             } catch {
                 snackbarMessage = "Error swapping teams"
             }

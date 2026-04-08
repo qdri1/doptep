@@ -134,6 +134,7 @@
 "game_count" = "games played: %@";
 "half_count" = "half played: %@";
 "win_streak" = "streak: %@";
+"next_playing_teams" = "Next to play";
 
 // MARK: - Sounds
 "sound_limited_text" = "Sounds and voice-overs are available only in the full version of the app";

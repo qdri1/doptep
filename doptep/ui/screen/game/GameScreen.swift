@@ -449,12 +449,89 @@ struct GameScreen: View {
                         .foregroundColor(AppColor.onSurfaceVariant)
                         .frame(maxWidth: .infinity)
                         .multilineTextAlignment(.center)
-                    
+
                     Text(String(format: NSLocalizedString("win_streak", comment: ""), "\(liveGame.rightTeamWinCount)"))
                         .font(.labelSmall)
                         .foregroundColor(AppColor.onSurfaceVariant)
                         .frame(maxWidth: .infinity)
                         .multilineTextAlignment(.center)
+                }
+            }
+
+            if !viewModel.uiState.nextPlayingTeamsUiModelList.isEmpty {
+                VStack(spacing: 4) {
+                    
+                    Spacer().frame(height: 2)
+                    
+                    HStack(spacing: 12) {
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 1)
+                            .foregroundColor(AppColor.background)
+                        Text(NSLocalizedString("next_playing_teams", comment: ""))
+                            .font(.labelSmall)
+                            .foregroundColor(AppColor.outline)
+                            .fixedSize()
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 1)
+                            .foregroundColor(AppColor.background)
+                    }
+
+                    Spacer().frame(height: 4)
+
+                    ForEach(viewModel.uiState.nextPlayingTeamsUiModelList.indices, id: \.self) { index in
+                        let nextTeams = viewModel.uiState.nextPlayingTeamsUiModelList[index]
+                        HStack(spacing: 6) {
+                            if let leftTeam = nextTeams.leftTeam {
+                                Text(leftTeam.name)
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(leftTeam.color.color)
+                                    .overlay(
+                                        leftTeam.color == .white ?
+                                        RoundedRectangle(cornerRadius: 4).stroke(AppColor.onSurfaceVariant, lineWidth: 1) : nil
+                                    )
+                            } else {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(AppColor.onSurfaceVariant.opacity(0.0))
+                                Text("?")
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                            }
+
+                            Text("-")
+                                .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
+
+                            if let rightTeam = nextTeams.rightTeam {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(rightTeam.color.color)
+                                    .overlay(
+                                        rightTeam.color == .white ?
+                                        RoundedRectangle(cornerRadius: 4).stroke(AppColor.onSurfaceVariant, lineWidth: 1) : nil
+                                    )
+                                Text(rightTeam.name)
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .lineLimit(1)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            } else {
+                                Text("?")
+                                    .font(.labelSmall)
+                                    .foregroundColor(AppColor.onSurface)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                RoundedRectangle(cornerRadius: 4)
+                                    .frame(width: 12, height: 12)
+                                    .foregroundColor(AppColor.onSurfaceVariant.opacity(0.0))
+                            }
+                        }
+                    }
                 }
             }
         }
