@@ -805,9 +805,9 @@ final class GameViewModel: ObservableObject {
             case .winnerStay2:
                 setTeam3WinnerStayNextPlayingTeams(winCount: 1)
             case .winnerStay3:
-                setTeam3WinnerStayNextPlayingTeams(winCount: 2)
+                break
             case .winnerStay4:
-                setTeam3WinnerStayNextPlayingTeams(winCount: 3)
+                break
             case .winnerStayUnlimited:
                 break
             }
