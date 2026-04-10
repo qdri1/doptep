@@ -10,7 +10,6 @@ struct GameResultsScreen: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: GameResultsViewModel
 
-    @State private var showClearResultsConfirmation = false
     @State private var showPlayerResultSheet = false
     @State private var playerResultUiModel: PlayerResultUiModel?
     @State private var snackbarMessage: String?
@@ -100,16 +99,6 @@ struct GameResultsScreen: View {
         }
         .confirmationDialog(
             NSLocalizedString("clear_all_results_title", comment: ""),
-            isPresented: $showClearResultsConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(NSLocalizedString("yes", comment: ""), role: .destructive) {
-                viewModel.action(.onClearResultsConfirmationClicked)
-            }
-            Button(NSLocalizedString("no", comment: ""), role: .cancel) {}
-        }
-        .confirmationDialog(
-            NSLocalizedString("clear_all_results_title", comment: ""),
             isPresented: $showClearAllGamesConfirmation,
             titleVisibility: .visible
         ) {
@@ -141,9 +130,6 @@ struct GameResultsScreen: View {
         switch effect {
         case .closeScreen:
             dismiss()
-
-        case .showClearResultsConfirmationBottomSheet:
-            showClearResultsConfirmation = true
 
         case .showPlayerResultBottomSheet(let playerResult):
             playerResultUiModel = playerResult

@@ -36,8 +36,8 @@ struct PlayerUiModel: Identifiable, Equatable {
         passes: Int,
         shots: Int,
         saves: Int,
-        yellowCards: Int = 0,
-        redCards: Int = 0
+        yellowCards: Int,
+        redCards: Int
     ) {
         self.id = id
         self.teamId = teamId

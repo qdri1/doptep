@@ -277,7 +277,8 @@ final class GameViewModel: ObservableObject {
                             teamGoalsDifference: 0,
                             name: player.name,
                             goals: 0, assists: 0, dribbles: 0,
-                            passes: 0, shots: 0, saves: 0
+                            passes: 0, shots: 0, saves: 0,
+                            yellowCards: 0, redCards: 0
                         )
                         try playerRepository.updatePlayer(clearedPlayer)
                     }

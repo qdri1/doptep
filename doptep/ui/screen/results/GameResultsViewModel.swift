@@ -36,12 +36,6 @@ final class GameResultsViewModel: ObservableObject {
         case .onBackClicked:
             setEffect(.closeScreen)
 
-        case .onClearResultsClicked:
-            setEffect(.showClearResultsConfirmationBottomSheet)
-
-        case .onClearResultsConfirmationClicked:
-            onClearResultsConfirmationClicked()
-
         case .onPlayerResultClicked(let playerResultUiModel):
             effect = .showPlayerResultBottomSheet(playerResultUiModel: playerResultUiModel)
             
@@ -117,53 +111,6 @@ final class GameResultsViewModel: ObservableObject {
             )
         } catch {
             print("Error fetching game history: \(error)")
-        }
-    }
-
-    private func onClearResultsConfirmationClicked() {
-        do {
-            let teamUiModelList = try teamHistoryRepository.getTeamsHistories(gameId: gameId)
-
-            for teamUiModel in teamUiModelList {
-                let clearedTeam = TeamUiModel(
-                    id: teamUiModel.id,
-                    gameId: teamUiModel.gameId,
-                    name: teamUiModel.name,
-                    color: teamUiModel.color,
-                    games: 0,
-                    wins: 0,
-                    draws: 0,
-                    loses: 0,
-                    goals: 0,
-                    conceded: 0,
-                    points: 0
-                )
-                try teamHistoryRepository.updateTeamHistory(clearedTeam)
-
-                let playerHistories = try playerHistoryRepository.getPlayersHistories(teamId: teamUiModel.id)
-                for playerHistoryUiModel in playerHistories {
-                    let clearedPlayer = PlayerUiModel(
-                        id: playerHistoryUiModel.id,
-                        teamId: playerHistoryUiModel.teamId,
-                        teamColor: playerHistoryUiModel.teamColor,
-                        teamName: playerHistoryUiModel.teamName,
-                        teamPoints: playerHistoryUiModel.teamPoints,
-                        teamGoalsDifference: playerHistoryUiModel.teamGoalsDifference,
-                        name: playerHistoryUiModel.name,
-                        goals: 0,
-                        assists: 0,
-                        dribbles: 0,
-                        passes: 0,
-                        shots: 0,
-                        saves: 0
-                    )
-                    try playerHistoryRepository.updatePlayerHistory(clearedPlayer)
-                }
-            }
-
-            fetchGameHistory()
-        } catch {
-            print("Error clearing results: \(error)")
         }
     }
 
@@ -327,7 +274,9 @@ final class GameResultsViewModel: ObservableObject {
                         dribbles: 0,
                         passes: 0,
                         shots: 0,
-                        saves: 0
+                        saves: 0,
+                        yellowCards: 0,
+                        redCards: 0
                     )
                     try playerHistoryRepository.updatePlayerHistory(clearedPlayer)
                 }

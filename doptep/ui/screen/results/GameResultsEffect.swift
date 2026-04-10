@@ -7,7 +7,6 @@ import Foundation
 
 enum GameResultsEffect: Hashable, Identifiable, Equatable {
     case closeScreen
-    case showClearResultsConfirmationBottomSheet
     case showPlayerResultBottomSheet(playerResultUiModel: PlayerResultUiModel)
     case showSnackbar(message: String)
     case showBestPlayersBottomSheet(bestPlayers: [BestPlayerUiModel])
@@ -16,7 +15,6 @@ enum GameResultsEffect: Hashable, Identifiable, Equatable {
     var id: String {
         switch self {
         case .closeScreen: return "closeScreen"
-        case .showClearResultsConfirmationBottomSheet: return "showClearResultsConfirmationBottomSheet"
         case .showPlayerResultBottomSheet: return "showPlayerResultBottomSheet"
         case .showSnackbar(let message): return "showSnackbar_\(message)"
         case .showBestPlayersBottomSheet: return "showBestPlayersBottomSheet"
