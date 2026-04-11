@@ -10,7 +10,7 @@ enum GameSounds: String, CaseIterable {
     case startMatch = "start_match"
     case penaltyRealMadrid = "sound_penalty_real_madrid"
     case leagueChemp = "sound_league_chemp"
-    case freedFromDesire = "sound_freed_from_desire"
+    case freedFromDesire = "sound_freed_from_desire_more"
     case goalFans = "sound_goal_fans"
     case uoUoUo = "sound_uo_uo_uo"
     case stadiumAtmosphere = "sound_stadium_atmosphere"
