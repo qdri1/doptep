@@ -297,7 +297,8 @@ private struct GameHistoryEntryItemView: View {
                 Text(entry.leftTeamName)
                     .font(.labelSmall)
                     .foregroundColor(AppColor.onSurface)
-                    .multilineTextAlignment(.trailing)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .trailing)
 
                 TeamColorDotView(teamColor: entry.leftTeamColor)
@@ -312,7 +313,8 @@ private struct GameHistoryEntryItemView: View {
                 Text(entry.rightTeamName)
                     .font(.labelSmall)
                     .foregroundColor(AppColor.onSurface)
-                    .multilineTextAlignment(.leading)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
 
