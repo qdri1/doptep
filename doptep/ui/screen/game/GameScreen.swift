@@ -655,7 +655,7 @@ struct GameScreen: View {
         let uiLimited = viewModel.uiState.uiLimited
         return VStack(alignment: .leading, spacing: 8) {
             ForEach(GameFunction.allCases, id: \.self) { function in
-                let isLocked = function == .bestPlayers && uiLimited
+                let isLocked = (function == .bestPlayers || function == .history) && uiLimited
                 Button {
                     if isLocked {
                         viewModel.send(.onActivateClicked)
