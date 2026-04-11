@@ -21,6 +21,7 @@ enum GameEffect: Hashable, Identifiable, Equatable {
     case showGameInfoBottomSheet
     case openActivationScreen
     case showBestPlayersBottomSheet(bestPlayers: [BestPlayerUiModel])
+    case showGameHistorySheet(history: [GameHistoryEntryUiModel])
     case showSnackbar(message: String)
 
     var id: String {
@@ -40,6 +41,7 @@ enum GameEffect: Hashable, Identifiable, Equatable {
         case .showGameInfoBottomSheet: return "showGameInfoBottomSheet"
         case .openActivationScreen: return "openActivationScreen"
         case .showBestPlayersBottomSheet: return "showBestPlayersBottomSheet"
+        case .showGameHistorySheet: return "showGameHistorySheet"
         case .showSnackbar(let message): return "showSnackbar_\(message)"
         }
     }

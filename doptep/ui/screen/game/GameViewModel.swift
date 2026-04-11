@@ -20,6 +20,7 @@ final class GameViewModel: ObservableObject {
     private let teamHistoryRepository: TeamHistoryRepository
     private let playerRepository: PlayerRepository
     private let playerHistoryRepository: PlayerHistoryRepository
+    private let gameHistoryRepository: GameHistoryRepository
     private let audioManager: AudioManager
 
     @Published var uiState = GameUiState()
@@ -32,6 +33,17 @@ final class GameViewModel: ObservableObject {
     private var oldTeamId: UUID = UUID()
     private var backgroundDate: Date? = nil
     private var lifecycleObservers: [NSObjectProtocol] = []
+
+    private var pendingGameDurationSeconds: Int = 0
+    private var currentGameActions: [PendingGameAction] = []
+
+    private struct PendingGameAction {
+        let teamName: String
+        let teamColor: String
+        let playerName: String
+        let actionType: String
+        let elapsedSeconds: Int
+    }
 
     private var isLive: Bool {
         uiState.liveGameUiModel?.isLive ?? false
@@ -49,6 +61,7 @@ final class GameViewModel: ObservableObject {
         teamHistoryRepository: TeamHistoryRepository,
         playerRepository: PlayerRepository,
         playerHistoryRepository: PlayerHistoryRepository,
+        gameHistoryRepository: GameHistoryRepository,
         audioManager: AudioManager
     ) {
         self.gameId = gameId
@@ -58,6 +71,7 @@ final class GameViewModel: ObservableObject {
         self.teamHistoryRepository = teamHistoryRepository
         self.playerRepository = playerRepository
         self.playerHistoryRepository = playerHistoryRepository
+        self.gameHistoryRepository = gameHistoryRepository
         self.audioManager = audioManager
 
         fetchGame()
@@ -243,6 +257,7 @@ final class GameViewModel: ObservableObject {
     private func onDeleteGameConfirmationClicked() {
         Task {
             do {
+                try gameHistoryRepository.deleteGameHistory(gameId: gameId)
                 try gameRepository.deleteGame(id: gameId)
                 effect = .closeScreenWithResult
             } catch {
@@ -296,6 +311,8 @@ final class GameViewModel: ObservableObject {
                     try liveGameRepository.updateLiveGame(clearedLiveGame)
                 }
 
+                try gameHistoryRepository.deleteGameHistory(gameId: gameId)
+                currentGameActions.removeAll()
                 fetchGame()
             } catch {
                 snackbarMessage = "Error clearing results"
@@ -315,6 +332,7 @@ final class GameViewModel: ObservableObject {
 
     private func startGame(_ liveGame: LiveGameUiModel) {
         audioManager.playSound("start_match")
+        currentGameActions.removeAll()
         startTimer()
 
         Task {
@@ -331,6 +349,7 @@ final class GameViewModel: ObservableObject {
 
     private func finishGame() {
         audioManager.playSound("finish")
+        pendingGameDurationSeconds = currentElapsedSeconds()
         resetTimer()
 
         guard let gameUiModel = uiState.gameUiModel,
@@ -356,6 +375,7 @@ final class GameViewModel: ObservableObject {
     }
 
     private func finishTeam2Game(gameUiModel: GameUiModel, liveGame: LiveGameUiModel) async throws {
+        saveGameHistory(liveGame)
         guard let rule = gameUiModel.gameRule as? GameRuleTeam2 else { return }
 
         switch rule {
@@ -388,6 +408,7 @@ final class GameViewModel: ObservableObject {
     }
 
     private func finishTeam3Game(gameUiModel: GameUiModel, liveGame: LiveGameUiModel) async throws {
+        saveGameHistory(liveGame)
         guard let rule = gameUiModel.gameRule as? GameRuleTeam3 else { return }
         let ids = [liveGame.leftTeamId, liveGame.rightTeamId]
 
@@ -433,6 +454,7 @@ final class GameViewModel: ObservableObject {
     }
 
     private func finishTeam4Game(gameUiModel: GameUiModel, liveGame: LiveGameUiModel) async throws {
+        saveGameHistory(liveGame)
         guard let rule = gameUiModel.gameRule as? GameRuleTeam4 else { return }
         let ids = [liveGame.leftTeamId, liveGame.rightTeamId, oldTeamId]
 
@@ -1259,6 +1281,13 @@ final class GameViewModel: ObservableObject {
 
                 try playerRepository.updatePlayer(updatedPlayer)
                 try playerHistoryRepository.updatePlayerHistory(playerId: updatedPlayer.id, option: option, value: 1)
+                currentGameActions.append(PendingGameAction(
+                    teamName: playerUiModel.teamName,
+                    teamColor: playerUiModel.teamColor.rawValue,
+                    playerName: playerUiModel.name,
+                    actionType: option.rawValue,
+                    elapsedSeconds: currentElapsedSeconds()
+                ))
                 try await updatePlayersBlock()
             } catch {
                 snackbarMessage = "Error updating player"
@@ -1351,10 +1380,65 @@ final class GameViewModel: ObservableObject {
         }
     }
 
+    private func currentElapsedSeconds() -> Int {
+        let totalSeconds = timeInMinutes * 60
+        let remaining = timerMillis / 1000
+        return max(0, totalSeconds - remaining)
+    }
+
+    private func saveGameHistory(_ liveGame: LiveGameUiModel) {
+        let winnerTeamName: String
+        if liveGame.isLeftTeamWin {
+            winnerTeamName = liveGame.leftTeamName
+        } else if liveGame.isRightTeamWin {
+            winnerTeamName = liveGame.rightTeamName
+        } else {
+            winnerTeamName = ""
+        }
+        let entry = GameHistoryEntryModel(
+            gameId: gameId,
+            gameNumber: liveGame.gameCount + 1,
+            leftTeamName: liveGame.leftTeamName,
+            leftTeamColor: liveGame.leftTeamColor.rawValue,
+            leftTeamGoals: liveGame.leftTeamGoals,
+            rightTeamName: liveGame.rightTeamName,
+            rightTeamColor: liveGame.rightTeamColor.rawValue,
+            rightTeamGoals: liveGame.rightTeamGoals,
+            winnerTeamName: winnerTeamName,
+            durationSeconds: pendingGameDurationSeconds
+        )
+        let entryId = gameHistoryRepository.saveEntry(entry)
+        for action in currentGameActions {
+            let event = GameHistoryActionEventModel(
+                historyEntryId: entryId,
+                teamName: action.teamName,
+                teamColor: action.teamColor,
+                playerName: action.playerName,
+                actionType: action.actionType,
+                elapsedSeconds: action.elapsedSeconds
+            )
+            gameHistoryRepository.saveActionEvent(event)
+        }
+        currentGameActions.removeAll()
+    }
+
+    private func onHistoryClicked() {
+        Task {
+            do {
+                let history = try gameHistoryRepository.getGameHistory(gameId: gameId)
+                effect = .showGameHistorySheet(history: history.reversed())
+            } catch {
+                snackbarMessage = "Error loading history"
+            }
+        }
+    }
+
     private func onFunctionClicked(_ function: GameFunction) {
         switch function {
         case .bestPlayers:
             onBestPlayersClicked()
+        case .history:
+            onHistoryClicked()
         case .edit:
             onEditGameClicked()
         case .clearResults:

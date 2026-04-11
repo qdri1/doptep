@@ -159,6 +159,14 @@
 "sound_freed_from_desire" = "Freed From\nDesire";
 "sound_stadium_atmosphere" = "Stadium\nAtmosphere";
 
+// MARK: - Game History
+"function_history" = "History of games";
+"game_history_game_number" = "Game #%d";
+"game_history_winner" = "Win";
+"game_history_loser" = "Lose";
+"game_history_draw" = "Draw";
+"game_history_empty" = "Empty history";
+
 // MARK: - Game Functions
 "function_best_players" = "Best players";
 "function_edit" = "Edit game";

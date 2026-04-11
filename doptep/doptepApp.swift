@@ -25,7 +25,9 @@ struct doptepApp: App {
             PlayerModel.self,
             LiveGameModel.self,
             TeamHistoryModel.self,
-            PlayerHistoryModel.self
+            PlayerHistoryModel.self,
+            GameHistoryEntryModel.self,
+            GameHistoryActionEventModel.self
         )
         FirebaseApp.configure()
         RevenueCatManager.shared.configure()

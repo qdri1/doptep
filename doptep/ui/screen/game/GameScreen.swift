@@ -43,6 +43,8 @@ struct GameScreen: View {
     @State private var currentPlayerResult: PlayerResultUiModel?
     @State private var currentLiveGameResult: LiveGameResultUiModel?
     @State private var currentBestPlayers: [BestPlayerUiModel] = []
+    @State private var showGameHistorySheet = false
+    @State private var currentGameHistory: [GameHistoryEntryUiModel] = []
 
     var body: some View {
         VStack(spacing: 0) {
@@ -112,6 +114,10 @@ struct GameScreen: View {
         }
         .sheet(isPresented: $showBestPlayersSheet) {
             BestPlayersSheet(bestPlayers: currentBestPlayers)
+                .presentationDetents([.large])
+        }
+        .sheet(isPresented: $showGameHistorySheet) {
+            GameHistorySheet(gameHistory: currentGameHistory)
                 .presentationDetents([.large])
         }
         .sheet(isPresented: $showGameInfoSheet) {
@@ -1047,6 +1053,9 @@ struct GameScreen: View {
         case .showBestPlayersBottomSheet(let bestPlayers):
             currentBestPlayers = bestPlayers
             showBestPlayersSheet = true
+        case .showGameHistorySheet(let history):
+            currentGameHistory = history
+            showGameHistorySheet = true
         case .showSnackbar(let message):
             viewModel.snackbarMessage = message
         }

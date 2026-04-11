@@ -159,6 +159,14 @@
 "sound_freed_from_desire" = "Freed From\nDesire";
 "sound_stadium_atmosphere" = "Стадион\nАтмосферасы";
 
+// MARK: - Game History
+"function_history" = "Ойындар тарихы";
+"game_history_game_number" = "Ойын #%d";
+"game_history_winner" = "Жеңіс";
+"game_history_loser" = "Ұтылыс";
+"game_history_draw" = "Тең ойын";
+"game_history_empty" = "Тарих бос";
+
 // MARK: - Game Functions
 "function_best_players" = "Үздік ойыншылар";
 "function_edit" = "Ойынды өңдеу";

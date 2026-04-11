@@ -159,6 +159,14 @@
 "sound_freed_from_desire" = "Freed From\nDesire";
 "sound_stadium_atmosphere" = "Атмосфера\nСтадиона";
 
+// MARK: - Game History
+"function_history" = "История игр";
+"game_history_game_number" = "Игра #%d";
+"game_history_winner" = "Победа";
+"game_history_loser" = "Поражение";
+"game_history_draw" = "Ничья";
+"game_history_empty" = "История пуста";
+
 // MARK: - Game Functions
 "function_best_players" = "Лучшие игроки";
 "function_edit" = "Редактировать игру";
