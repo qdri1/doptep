@@ -497,8 +497,8 @@ struct GameScreen: View {
                                     .frame(width: 12, height: 12)
                                     .foregroundColor(leftTeam.color.color)
                                     .overlay(
-                                        leftTeam.color == .white ?
-                                        RoundedRectangle(cornerRadius: 4).stroke(AppColor.onSurfaceVariant, lineWidth: 1) : nil
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(leftTeam.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                                     )
                             } else {
                                 RoundedRectangle(cornerRadius: 4)
@@ -519,8 +519,8 @@ struct GameScreen: View {
                                     .frame(width: 12, height: 12)
                                     .foregroundColor(rightTeam.color.color)
                                     .overlay(
-                                        rightTeam.color == .white ?
-                                        RoundedRectangle(cornerRadius: 4).stroke(AppColor.onSurfaceVariant, lineWidth: 1) : nil
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .stroke(rightTeam.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                                     )
                                 Text(rightTeam.name)
                                     .font(.labelSmall)
@@ -566,6 +566,10 @@ struct GameScreen: View {
         .padding()
         .background(color.opacity(0.2))
         .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+        )
     }
 
     private var timerSection: some View {
@@ -785,6 +789,10 @@ struct GameScreen: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
                                 .frame(width: 12, height: 12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(team.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
                             
                             ZStack(alignment: .center) {
                                 Text(team.name)
@@ -914,6 +922,10 @@ struct GameScreen: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(player.teamColor.color)
                                 .frame(width: 12, height: 12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(player.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
                             
                             ZStack(alignment: .center) {
                                 Text(player.name)
@@ -1131,6 +1143,10 @@ struct BestPlayersSheet: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(bestPlayer.playerUiModel.teamColor.color)
                                 .frame(width: 12, height: 12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(bestPlayer.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
 
                             Text(bestPlayer.playerUiModel.name)
                                 .font(.bodySmall)
@@ -1357,6 +1373,10 @@ struct PlayerResultSheet: View {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(playerResult.playerUiModel.teamColor.color)
                             .frame(width: 24, height: 24)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(playerResult.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                            )
 
                         Text(playerResult.playerUiModel.name)
                             .font(.titleMedium)
@@ -1478,6 +1498,10 @@ struct LiveGameResultSheet: View {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(teamColor)
                             .frame(width: 24, height: 24)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                            )
 
                         Text(teamName)
                             .font(.titleMedium)
@@ -1624,6 +1648,10 @@ struct TeamChangeDropdown: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
                                 .frame(width: 12, height: 12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(team.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
                             Text(team.name)
                                 .font(.bodySmall)
                                 .foregroundColor(AppColor.onSurface)

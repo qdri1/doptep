@@ -262,13 +262,19 @@ private struct GameHistoryEntryItemView: View {
         if entry.winnerTeamName.isEmpty { return nil }
         if entry.winnerTeamName == entry.leftTeamName {
             return LinearGradient(
-                colors: [entry.leftTeamColor.color.opacity(0.25), AppColor.surface],
+                colors: [
+                    entry.leftTeamColor.color == .white ? AppColor.surfaceVariant.opacity(0.5) : entry.leftTeamColor.color.opacity(0.25),
+                    AppColor.surface
+                ],
                 startPoint: .leading,
                 endPoint: .trailing
             )
         } else {
             return LinearGradient(
-                colors: [AppColor.surface, entry.rightTeamColor.color.opacity(0.25)],
+                colors: [
+                    AppColor.surface,
+                    entry.rightTeamColor.color == .white ? AppColor.surfaceVariant.opacity(0.5) : entry.rightTeamColor.color.opacity(0.25)
+                ],
                 startPoint: .leading,
                 endPoint: .trailing
             )

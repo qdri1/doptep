@@ -230,6 +230,10 @@ struct TeamsResultsBlock: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
                                 .frame(width: 12, height: 12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(team.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
 
                             ZStack(alignment: .center) {
                                 Text(team.name)
@@ -321,6 +325,10 @@ struct PlayersResultsBlock: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(player.teamColor.color)
                                 .frame(width: 12, height: 12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(player.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
 
                             ZStack(alignment: .center) {
                                 Text(player.name)
@@ -536,6 +544,10 @@ struct GameResultPlayerResultSheet: View {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Color(hex: playerResultUiModel.playerUiModel.teamColor.rawValue))
                             .frame(width: 24, height: 24)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(playerResultUiModel.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                            )
 
                         Text(playerResultUiModel.playerUiModel.name)
                             .font(.titleMedium)
