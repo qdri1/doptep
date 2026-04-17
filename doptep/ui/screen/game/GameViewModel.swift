@@ -809,9 +809,20 @@ final class GameViewModel: ObservableObject {
 
     func updateBillingState() {
         let billingType = BillingManager.shared.getCurrentBillingType()
+        let teamQuantity = uiState.gameUiModel?.teamQuantity
         let gameCount = uiState.liveGameUiModel?.gameCount ?? 0
         uiState.billingType = billingType
-        uiState.uiLimited = billingType == .limited && gameCount >= 5
+        let uiLimited: Bool
+        if billingType == .limited {
+            if teamQuantity == .team2 {
+                uiLimited = gameCount >= 1
+            } else {
+                uiLimited = gameCount >= 5
+            }
+        } else {
+            uiLimited = false
+        }
+        uiState.uiLimited = uiLimited
     }
 
     private func setNextPlayingTeamsUiModelList() {

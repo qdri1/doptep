@@ -708,7 +708,9 @@ struct GameScreen: View {
                     .onTapGesture {
                         viewModel.send(.onActivateClicked)
                     }
-                Text(NSLocalizedString("activation_green_text", comment: ""))
+                Text(viewModel.uiState.gameUiModel?.teamQuantity == .team2
+                     ? NSLocalizedString("activation_green_text_team2", comment: "")
+                     : NSLocalizedString("activation_green_text", comment: ""))
                     .font(.custom("Montserrat-Medium", size: 12))
                     .foregroundColor(AppColor.onSurface)
                     .multilineTextAlignment(.center)

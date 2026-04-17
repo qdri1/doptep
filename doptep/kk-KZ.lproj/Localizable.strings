@@ -217,6 +217,7 @@
 // MARK: - Activation
 "activation_orange_text" = "Сіз қосымшаның шектеулі нұсқасын пайдаланып отырсыз. Кейбір функциялар қолжетімсіз болуы мүмкін. Толық нұсқаны алыңыз.";
 "activation_green_text" = "Шектеу 5 ойыннан кейін";
+"activation_green_text_team2" = "Шектеу 1 таймнан кейін";
 "activation_button" = "Толық нұсқа алу";
 "activation_title" = "Активация";
 "activation_text_title" = "Не кіреді?";

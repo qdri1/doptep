@@ -217,6 +217,7 @@
 // MARK: - Activation
 "activation_orange_text" = "У вас ограниченная версия приложения. Некоторые функции могут быть недоступны. Активируйте полную версию.";
 "activation_green_text" = "Ограничение после 5 сыгранных игр";
+"activation_green_text_team2" = "Ограничение после 1 сыгранного тайма";
 "activation_button" = "Активировать";
 "activation_title" = "Активация";
 "activation_text_title" = "Что включено?";
