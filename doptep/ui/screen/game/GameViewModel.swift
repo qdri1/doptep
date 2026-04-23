@@ -829,7 +829,7 @@ final class GameViewModel: ObservableObject {
         guard let gameUiModel = uiState.gameUiModel else { return }
 
         switch gameUiModel.teamQuantity {
-        case .team2, .team4:
+        case .team2:
             break
         case .team3:
             guard let rule = gameUiModel.gameRule as? GameRuleTeam3 else { return }
@@ -845,6 +845,12 @@ final class GameViewModel: ObservableObject {
             case .winnerStayUnlimited:
                 break
             }
+        case .team4:
+            guard let liveGame = uiState.liveGameUiModel else { break }
+            let restTeams = uiState.teamUiModelList.filter {
+                $0.id != liveGame.leftTeamId && $0.id != liveGame.rightTeamId
+            }
+            uiState.restTeamUiModelList = restTeams.sorted { ($0.id == oldTeamId ? 1 : 0) < ($1.id == oldTeamId ? 1 : 0) }
         }
     }
 
@@ -1041,8 +1047,8 @@ final class GameViewModel: ObservableObject {
                     rightTeamId: liveGame.rightTeamId,
                     rightTeamName: liveGame.rightTeamName,
                     rightTeamColor: liveGame.rightTeamColor,
-                    rightTeamGoals: 0,
-                    rightTeamWinCount: 0,
+                    rightTeamGoals: liveGame.rightTeamGoals,
+                    rightTeamWinCount: liveGame.rightTeamWinCount,
                     gameCount: liveGame.gameCount,
                     isLive: liveGame.isLive
                 )
@@ -1069,8 +1075,8 @@ final class GameViewModel: ObservableObject {
                     leftTeamId: liveGame.leftTeamId,
                     leftTeamName: liveGame.leftTeamName,
                     leftTeamColor: liveGame.leftTeamColor,
-                    leftTeamGoals: 0,
-                    leftTeamWinCount: 0,
+                    leftTeamGoals: liveGame.leftTeamGoals,
+                    leftTeamWinCount: liveGame.leftTeamWinCount,
                     rightTeamId: nextTeam.id,
                     rightTeamName: nextTeam.name,
                     rightTeamColor: nextTeam.color,

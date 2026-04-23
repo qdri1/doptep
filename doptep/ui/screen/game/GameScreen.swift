@@ -539,6 +539,42 @@ struct GameScreen: View {
                         }
                     }
                 }
+            } else if !viewModel.uiState.restTeamUiModelList.isEmpty {
+                VStack(spacing: 4) {
+
+                    Spacer().frame(height: 2)
+
+                    HStack(spacing: 12) {
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 1)
+                            .foregroundColor(AppColor.background)
+                        Text(NSLocalizedString("next_playing_teams", comment: ""))
+                            .font(.labelSmall)
+                            .foregroundColor(AppColor.outline)
+                            .fixedSize()
+                        Rectangle()
+                            .frame(maxWidth: .infinity, maxHeight: 1)
+                            .foregroundColor(AppColor.background)
+                    }
+
+                    Spacer().frame(height: 12)
+
+                    ForEach(viewModel.uiState.restTeamUiModelList, id: \.id) { teamUiModel in
+                        HStack(spacing: 6) {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(teamUiModel.color.color)
+                                .frame(width: 12, height: 12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(teamUiModel.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
+                            Text(teamUiModel.name)
+                                .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
+                                .lineLimit(1)
+                        }
+                    }
+                }
             }
         }
         .padding()

@@ -10,6 +10,7 @@ struct GameUiState {
     var liveGameUiModel: LiveGameUiModel? = nil
     var teamUiModelList: [TeamUiModel] = []
     var nextPlayingTeamsUiModelList: [NextPlayingTeamsUiModel] = []
+    var restTeamUiModelList: [TeamUiModel] = []
     var playerUiModelList: [PlayerUiModel] = []
     var showLeftTeamOptionsDropdown: Bool = false
     var showRightTeamOptionsDropdown: Bool = false
