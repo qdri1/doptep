@@ -12,6 +12,8 @@ struct GameResultsScreen: View {
 
     @State private var showPlayerResultSheet = false
     @State private var playerResultUiModel: PlayerResultUiModel?
+    @State private var showTeamResultSheet = false
+    @State private var teamResultUiModel: TeamUiModel?
     @State private var snackbarMessage: String?
     @State private var showBestPlayersSheet = false
     @State private var bestPlayersForSheet: [BestPlayerUiModel] = []
@@ -47,7 +49,12 @@ struct GameResultsScreen: View {
                 VStack(spacing: 16) {
                     // Teams Results Block (only show if more than 2 teams)
                     if viewModel.uiState.teamUiModelList.count > 2 {
-                        TeamsResultsBlock(teamUiModelList: viewModel.uiState.teamUiModelList)
+                        TeamsResultsBlock(
+                            teamUiModelList: viewModel.uiState.teamUiModelList,
+                            onTeamResultClicked: { team in
+                                viewModel.action(GameResultsAction.onTeamResultClicked(teamUiModel: team))
+                            }
+                        )
                     }
 
                     // Players Results Block
@@ -97,6 +104,24 @@ struct GameResultsScreen: View {
                 .presentationDetents([.medium])
             }
         }
+        .sheet(isPresented: $showTeamResultSheet) {
+            if let teamResult = teamResultUiModel {
+                GameTeamResultSheet(
+                    teamUiModel: teamResult,
+                    onSaveClicked: { team, value in
+                        viewModel.action(.onSaveTeamResultClicked(
+                            teamUiModel: team,
+                            pointsValue: value
+                        ))
+                        showTeamResultSheet = false
+                    },
+                    onDismissed: {
+                        showTeamResultSheet = false
+                    }
+                )
+                .presentationDetents([.medium])
+            }
+        }
         .confirmationDialog(
             NSLocalizedString("clear_all_results_title", comment: ""),
             isPresented: $showClearAllGamesConfirmation,
@@ -134,6 +159,10 @@ struct GameResultsScreen: View {
         case .showPlayerResultBottomSheet(let playerResult):
             playerResultUiModel = playerResult
             showPlayerResultSheet = true
+
+        case .showTeamResultBottomSheet(let teamResult):
+            teamResultUiModel = teamResult
+            showTeamResultSheet = true
 
         case .showSnackbar(let message):
             snackbarMessage = message
@@ -208,6 +237,7 @@ struct GameResultsScreen: View {
 
 struct TeamsResultsBlock: View {
     let teamUiModelList: [TeamUiModel]
+    let onTeamResultClicked: (TeamUiModel) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -281,9 +311,9 @@ struct TeamsResultsBlock: View {
                         ($0.goalsDifference > 0 ? "+\($0.goalsDifference)" : "\($0.goalsDifference)", nil)
                     }
                 )
-                resultsStatColumn(
-                    header: NSLocalizedString("points_short", comment: ""),
-                    values: teamUiModelList.map { ("\($0.points)", Font.labelLarge) }
+                resultsTeamPointsColumn(
+                    teams: teamUiModelList,
+                    onTeamResultClicked: onTeamResultClicked
                 )
             }
             .padding(12)
@@ -503,6 +533,26 @@ private func resultsPlayerStatColumn(
     }
 }
 
+private func resultsTeamPointsColumn(
+    teams: [TeamUiModel],
+    onTeamResultClicked: @escaping (TeamUiModel) -> Void
+) -> some View {
+    VStack(spacing: 8) {
+        Text(NSLocalizedString("points_short", comment: ""))
+            .font(.labelSmall)
+            .foregroundColor(AppColor.outline)
+
+        ForEach(teams, id: \.id) { team in
+            Text("\(team.points)")
+                .font(.labelLarge)
+                .foregroundColor(AppColor.onSurface)
+                .onTapGesture {
+                    onTeamResultClicked(team)
+                }
+        }
+    }
+}
+
 // MARK: - Player Result Sheet
 
 struct GameResultPlayerResultSheet: View {
@@ -589,6 +639,122 @@ struct GameResultPlayerResultSheet: View {
                     // Save Button
                     Button {
                         onSaveClicked(playerResultUiModel, value)
+                    } label: {
+                        Text(NSLocalizedString("save", comment: ""))
+                            .font(.titleMedium)
+                            .foregroundColor(AppColor.onPrimary)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(AppColor.primary)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal)
+
+                    Text(NSLocalizedString("result_correction_text", comment: ""))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.bodySmall)
+                        .foregroundColor(AppColor.error)
+                        .padding(.horizontal)
+                }
+                .padding(.top, 24)
+                .padding(.bottom, 16)
+            }
+            .background(AppColor.surface)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("edit_result", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        onDismissed()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Team Result Sheet
+
+struct GameTeamResultSheet: View {
+    let teamUiModel: TeamUiModel
+    let onSaveClicked: (TeamUiModel, Int) -> Void
+    let onDismissed: () -> Void
+
+    @State private var value: Int
+
+    init(
+        teamUiModel: TeamUiModel,
+        onSaveClicked: @escaping (TeamUiModel, Int) -> Void,
+        onDismissed: @escaping () -> Void
+    ) {
+        self.teamUiModel = teamUiModel
+        self.onSaveClicked = onSaveClicked
+        self.onDismissed = onDismissed
+        _value = State(initialValue: teamUiModel.points)
+    }
+
+    var body: some View {
+        NavigationView {
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 24) {
+                    // Team Info
+                    HStack(spacing: 12) {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(teamUiModel.color.color)
+                            .frame(width: 24, height: 24)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(teamUiModel.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                            )
+
+                        Text(teamUiModel.name)
+                            .font(.titleMedium)
+
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+
+                    // Stat Type
+                    Text(NSLocalizedString("points_short", comment: ""))
+                        .font(.titleMedium)
+                        .foregroundColor(AppColor.onSurfaceVariant)
+
+                    // Value Stepper
+                    HStack(spacing: 32) {
+                        Button {
+                            if value > 0 {
+                                value -= 1
+                            }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.custom("Montserrat-SemiBold", size: 44))
+                                .foregroundColor(AppColor.error)
+                        }
+
+                        Text("\(value)")
+                            .font(.custom("Montserrat-Bold", size: 48))
+                            .frame(minWidth: 80)
+
+                        Button {
+                            value += 1
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.custom("Montserrat-SemiBold", size: 44))
+                                .foregroundColor(AppColor.primary)
+                        }
+                    }
+
+                    // Save Button
+                    Button {
+                        onSaveClicked(teamUiModel, value)
                     } label: {
                         Text(NSLocalizedString("save", comment: ""))
                             .font(.titleMedium)

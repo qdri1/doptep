@@ -41,6 +41,8 @@ struct GameScreen: View {
 
     @State private var currentOptionPlayers: OptionPlayersUiModel?
     @State private var currentPlayerResult: PlayerResultUiModel?
+    @State private var showTeamResultSheet = false
+    @State private var currentTeamResult: TeamUiModel?
     @State private var currentLiveGameResult: LiveGameResultUiModel?
     @State private var currentBestPlayers: [BestPlayerUiModel] = []
     @State private var showGameHistorySheet = false
@@ -140,6 +142,22 @@ struct GameScreen: View {
                         showPlayerResultSheet = false
                     },
                     onDismiss: { showPlayerResultSheet = false }
+                )
+                .presentationDetents([.medium])
+            }
+        }
+        .sheet(isPresented: $showTeamResultSheet) {
+            if let teamResult = currentTeamResult {
+                GameTeamResultSheet(
+                    teamUiModel: teamResult,
+                    onSaveClicked: { team, value in
+                        viewModel.send(.onSaveTeamResultClicked(
+                            teamUiModel: team,
+                            pointsValue: value
+                        ))
+                        showTeamResultSheet = false
+                    },
+                    onDismissed: { showTeamResultSheet = false }
                 )
                 .presentationDetents([.medium])
             }
@@ -878,9 +896,8 @@ struct GameScreen: View {
                         ($0.goalsDifference > 0 ? "+\($0.goalsDifference)" : "\($0.goalsDifference)", nil)
                     }
                 )
-                statColumn(
-                    header: NSLocalizedString("points_short", comment: ""),
-                    values: viewModel.uiState.teamUiModelList.map { ("\($0.points)", Font.labelLarge) }
+                teamPointsColumn(
+                    teams: viewModel.uiState.teamUiModelList
                 )
             }
             .padding(12)
@@ -888,6 +905,23 @@ struct GameScreen: View {
             .cornerRadius(12)
         }
         .padding(.horizontal, 16)
+    }
+
+    private func teamPointsColumn(teams: [TeamUiModel]) -> some View {
+        VStack(spacing: 8) {
+            Text(NSLocalizedString("points_short", comment: ""))
+                .font(.labelSmall)
+                .foregroundColor(AppColor.outline)
+
+            ForEach(teams, id: \.id) { team in
+                Text("\(team.points)")
+                    .font(.labelLarge)
+                    .foregroundColor(AppColor.onSurface)
+                    .onTapGesture {
+                        viewModel.send(.onTeamResultClicked(teamUiModel: team))
+                    }
+            }
+        }
     }
 
     private func statColumn(header: String, values: [(String, Font?)]) -> some View {
@@ -1083,6 +1117,9 @@ struct GameScreen: View {
         case .showPlayerResultBottomSheet(let playerResult):
             currentPlayerResult = playerResult
             showPlayerResultSheet = true
+        case .showTeamResultBottomSheet(let teamResult):
+            currentTeamResult = teamResult
+            showTeamResultSheet = true
         case .showLiveGameResultBottomSheet(let liveGameResult):
             currentLiveGameResult = liveGameResult
             showLiveGameResultSheet = true

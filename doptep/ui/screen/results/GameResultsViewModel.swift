@@ -38,9 +38,15 @@ final class GameResultsViewModel: ObservableObject {
 
         case .onPlayerResultClicked(let playerResultUiModel):
             effect = .showPlayerResultBottomSheet(playerResultUiModel: playerResultUiModel)
-            
+
         case .onSavePlayerResultClicked(let playerResultUiModel, let playerResultValue):
             onSavePlayerResultClicked(playerResultUiModel: playerResultUiModel, playerResultValue: playerResultValue)
+
+        case .onTeamResultClicked(let teamUiModel):
+            effect = .showTeamResultBottomSheet(teamUiModel: teamUiModel)
+
+        case .onSaveTeamResultClicked(let teamUiModel, let pointsValue):
+            onSaveTeamResultClicked(teamUiModel: teamUiModel, pointsValue: pointsValue)
 
         case .onBestPlayersAllGamesClicked:
             onBestPlayersAllGamesClicked()
@@ -202,6 +208,29 @@ final class GameResultsViewModel: ObservableObject {
             setEffect(.showSnackbar(message: NSLocalizedString("save_success", comment: "")))
         } catch {
             print("Error saving player result: \(error)")
+        }
+    }
+
+    private func onSaveTeamResultClicked(teamUiModel: TeamUiModel, pointsValue: Int) {
+        let updatedTeam = TeamUiModel(
+            id: teamUiModel.id,
+            gameId: teamUiModel.gameId,
+            name: teamUiModel.name,
+            color: teamUiModel.color,
+            games: teamUiModel.games,
+            wins: teamUiModel.wins,
+            draws: teamUiModel.draws,
+            loses: teamUiModel.loses,
+            goals: teamUiModel.goals,
+            conceded: teamUiModel.conceded,
+            points: pointsValue
+        )
+        do {
+            try teamHistoryRepository.updateTeamHistory(updatedTeam)
+            fetchGameHistory()
+            setEffect(.showSnackbar(message: NSLocalizedString("save_success", comment: "")))
+        } catch {
+            print("Error saving team result: \(error)")
         }
     }
 

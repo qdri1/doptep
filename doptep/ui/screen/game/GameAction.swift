@@ -29,6 +29,8 @@ enum GameAction {
     case onFunctionClicked(function: GameFunction)
     case onPlayerResultClicked(playerResultUiModel: PlayerResultUiModel)
     case onSavePlayerResultClicked(playerResultUiModel: PlayerResultUiModel, playerResultValue: Int)
+    case onTeamResultClicked(teamUiModel: TeamUiModel)
+    case onSaveTeamResultClicked(teamUiModel: TeamUiModel, pointsValue: Int)
     case onLiveGameResultClicked(liveGameResultUiModel: LiveGameResultUiModel)
     case onSaveLiveGameResultClicked(liveGameResultUiModel: LiveGameResultUiModel, teamGoalsValue: Int)
     case onActivateClicked

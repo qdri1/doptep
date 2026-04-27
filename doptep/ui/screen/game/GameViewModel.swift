@@ -166,6 +166,10 @@ final class GameViewModel: ObservableObject {
             effect = .showPlayerResultBottomSheet(playerResultUiModel: playerResultUiModel)
         case .onSavePlayerResultClicked(let playerResultUiModel, let playerResultValue):
             onSavePlayerResultClicked(playerResultUiModel: playerResultUiModel, value: playerResultValue)
+        case .onTeamResultClicked(let teamUiModel):
+            effect = .showTeamResultBottomSheet(teamUiModel: teamUiModel)
+        case .onSaveTeamResultClicked(let teamUiModel, let pointsValue):
+            onSaveTeamResultClicked(teamUiModel: teamUiModel, value: pointsValue)
         case .onLiveGameResultClicked(let liveGameResultUiModel):
             if isLive {
                 effect = .showLiveGameResultBottomSheet(liveGameResultUiModel: liveGameResultUiModel)
@@ -1632,6 +1636,35 @@ final class GameViewModel: ObservableObject {
                 snackbarMessage = NSLocalizedString("save_success", comment: "")
             } catch {
                 snackbarMessage = "Error saving player result"
+            }
+        }
+    }
+
+    private func onSaveTeamResultClicked(teamUiModel: TeamUiModel, value: Int) {
+        Task {
+            do {
+                let diff = value - teamUiModel.points
+                let updated = TeamUiModel(
+                    id: teamUiModel.id,
+                    gameId: teamUiModel.gameId,
+                    name: teamUiModel.name,
+                    color: teamUiModel.color,
+                    games: teamUiModel.games,
+                    wins: teamUiModel.wins,
+                    draws: teamUiModel.draws,
+                    loses: teamUiModel.loses,
+                    goals: teamUiModel.goals,
+                    conceded: teamUiModel.conceded,
+                    points: value
+                )
+                try teamRepository.updateTeam(updated)
+                if let model = try teamHistoryRepository.getTeamHistoryEntity(teamId: updated.id) {
+                    model.points = model.points + diff
+                }
+                try await updateTeamsBlock()
+                snackbarMessage = NSLocalizedString("save_success", comment: "")
+            } catch {
+                snackbarMessage = "Error saving team result"
             }
         }
     }

@@ -12,6 +12,7 @@ enum GameEffect: Hashable, Identifiable, Equatable {
     case openGameResultsScreen(gameId: UUID)
     case showOptionPlayersBottomSheet(optionPlayersUiModel: OptionPlayersUiModel)
     case showPlayerResultBottomSheet(playerResultUiModel: PlayerResultUiModel)
+    case showTeamResultBottomSheet(teamUiModel: TeamUiModel)
     case showLiveGameResultBottomSheet(liveGameResultUiModel: LiveGameResultUiModel)
     case showStayTeamSelectionBottomSheet
     case showDeleteGameConfirmationBottomSheet
@@ -32,6 +33,7 @@ enum GameEffect: Hashable, Identifiable, Equatable {
         case .openGameResultsScreen(let gameId): return "openGameResultsScreen_\(gameId)"
         case .showOptionPlayersBottomSheet: return "showOptionPlayersBottomSheet"
         case .showPlayerResultBottomSheet: return "showPlayerResultBottomSheet"
+        case .showTeamResultBottomSheet: return "showTeamResultBottomSheet"
         case .showLiveGameResultBottomSheet: return "showLiveGameResultBottomSheet"
         case .showStayTeamSelectionBottomSheet: return "showStayTeamSelectionBottomSheet"
         case .showDeleteGameConfirmationBottomSheet: return "showDeleteGameConfirmationBottomSheet"
