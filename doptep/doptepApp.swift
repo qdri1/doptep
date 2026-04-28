@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import RevenueCat
 import FirebaseCore
+import FirebaseCrashlytics
 
 @main
 struct doptepApp: App {

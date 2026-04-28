@@ -10,6 +10,7 @@
 		AAAA00042F03B97D00CC9D10 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA00022F03B97D00CC9D10 /* RevenueCat */; };
 		AAAA00052F03B97D00CC9D10 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA00032F03B97D00CC9D10 /* RevenueCatUI */; };
 		BBBB00032F03B97D00CC9D10 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = BBBB00022F03B97D00CC9D10 /* FirebaseRemoteConfig */; };
+		CCCC00022F03B97D00CC9D10 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CCCC00012F03B97D00CC9D10 /* FirebaseCrashlytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 				AAAA00042F03B97D00CC9D10 /* RevenueCat in Frameworks */,
 				AAAA00052F03B97D00CC9D10 /* RevenueCatUI in Frameworks */,
 				BBBB00032F03B97D00CC9D10 /* FirebaseRemoteConfig in Frameworks */,
+				CCCC00022F03B97D00CC9D10 /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,6 +113,7 @@
 				FC3999862F03B97D00CC9D10 /* Sources */,
 				FC3999872F03B97D00CC9D10 /* Frameworks */,
 				FC3999882F03B97D00CC9D10 /* Resources */,
+				CCCC00032F03B97D00CC9D10 /* Upload dSYMs to Firebase Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -124,6 +127,7 @@
 				AAAA00022F03B97D00CC9D10 /* RevenueCat */,
 				AAAA00032F03B97D00CC9D10 /* RevenueCatUI */,
 				BBBB00022F03B97D00CC9D10 /* FirebaseRemoteConfig */,
+				CCCC00012F03B97D00CC9D10 /* FirebaseCrashlytics */,
 			);
 			productName = doptep;
 			productReference = FC39998A2F03B97D00CC9D10 /* doptep.app */;
@@ -248,6 +252,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CCCC00032F03B97D00CC9D10 /* Upload dSYMs to Firebase Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"$(SRCROOT)/doptep/GoogleService-Info.plist",
+			);
+			name = "Upload dSYMs to Firebase Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ \"${PLATFORM_NAME}\" == *\"simulator\"* ]]; then\n    echo \"Skipping Crashlytics dSYM upload for simulator build\"\n    exit 0\nfi\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FC3999862F03B97D00CC9D10 /* Sources */ = {
@@ -654,6 +681,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BBBB00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfig;
+		};
+		CCCC00012F03B97D00CC9D10 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BBBB00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
