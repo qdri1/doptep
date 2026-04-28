@@ -450,7 +450,9 @@ struct RoundedTextFieldStyle: TextFieldStyle {
         configuration
             .font(.bodySmall)
             .foregroundColor(AppColor.onSurface)
-            .padding()
+            .padding(.leading, 16)
+            .padding(.trailing, 56)
+            .padding(.vertical, 16)
             .background(AppColor.surface)
             .cornerRadius(16)
     }
