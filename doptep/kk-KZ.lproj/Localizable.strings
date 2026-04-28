@@ -263,6 +263,8 @@
 "auto_goal" = "Автогол";
 "best_players" = "Үздік ойыншылар";
 "game_info" = "Ойын туралы";
+"keyboard_next" = "Келесі";
+"keyboard_done" = "Дайын";
 
 "value" = "нәтиже";
 "goals" = "голдар";

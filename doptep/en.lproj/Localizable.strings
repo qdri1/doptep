@@ -263,6 +263,8 @@
 "auto_goal" = "Own Goal";
 "best_players" = "Best Players";
 "game_info" = "Game Info";
+"keyboard_next" = "Next";
+"keyboard_done" = "Done";
 
 "value" = "result";
 "goals" = "goals";

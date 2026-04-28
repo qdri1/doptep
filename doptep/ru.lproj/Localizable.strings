@@ -263,6 +263,8 @@
 "auto_goal" = "Автогол";
 "best_players" = "Лучшие игроки";
 "game_info" = "Информация";
+"keyboard_next" = "Далее";
+"keyboard_done" = "Готово";
 
 "value" = "результат";
 "goals" = "голы";

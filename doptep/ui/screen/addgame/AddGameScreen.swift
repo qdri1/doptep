@@ -14,6 +14,21 @@ struct AddGameScreen: View {
     }
 
     @State private var showColorsSheet = false
+    @FocusState private var focusedField: Field?
+
+    private enum Field: Hashable {
+        case gameName, gameTime, teamName, player(Int)
+    }
+
+    private var nextField: Field? {
+        switch focusedField {
+        case .gameName: return .gameTime
+        case .gameTime: return .teamName
+        case .teamName: return playerFieldsCount > 0 ? .player(0) : nil
+        case .player(let index): return index < playerFieldsCount - 1 ? .player(index + 1) : nil
+        case nil: return nil
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -30,6 +45,21 @@ struct AddGameScreen: View {
                     }
 
                     teamsTabView
+                }
+            }
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                if let next = nextField {
+                    Button(NSLocalizedString("keyboard_next", comment: "")) {
+                        focusedField = next
+                    }
+                }
+                if let field = focusedField, field == .gameTime {
+                    Button(NSLocalizedString("keyboard_done", comment: "")) {
+                        focusedField = nil
+                    }
                 }
             }
         }
@@ -79,6 +109,8 @@ struct AddGameScreen: View {
             set: { viewModel.send(.onGameTextValueChanged(value: $0)) }
         ), prompt: Text(NSLocalizedString("game_name", comment: "")).foregroundColor(AppColor.outline))
         .textFieldStyle(RoundedTextFieldStyle())
+        .focused($focusedField, equals: .gameName)
+        .submitLabel(.done)
         .overlay(alignment: .trailing) {
             if !viewModel.gameNameFieldState.isEmpty {
                 Button { viewModel.send(.onGameTextValueChanged(value: "")) } label: {
@@ -98,6 +130,8 @@ struct AddGameScreen: View {
         ), prompt: Text(NSLocalizedString("game_time", comment: "")).foregroundColor(AppColor.outline))
         .keyboardType(.numberPad)
         .textFieldStyle(RoundedTextFieldStyle())
+        .focused($focusedField, equals: .gameTime)
+        .submitLabel(.done)
         .overlay(alignment: .trailing) {
             if !viewModel.timeInMinuteFieldState.isEmpty {
                 Button { viewModel.send(.onTimeTextValueChanged(value: "")) } label: {
@@ -299,6 +333,8 @@ struct AddGameScreen: View {
 
         return TextField("", text: binding, prompt: Text(NSLocalizedString("team_name", comment: "")).foregroundColor(AppColor.outline))
             .textFieldStyle(RoundedTextFieldStyle())
+            .focused($focusedField, equals: .teamName)
+            .submitLabel(.done)
             .overlay(alignment: .trailing) {
                 if !binding.wrappedValue.isEmpty {
                     Button { binding.wrappedValue = "" } label: {
@@ -329,6 +365,8 @@ struct AddGameScreen: View {
             prompt: Text(String(format: NSLocalizedString("player_number", comment: ""), "\(fieldIndex + 1)")).foregroundColor(AppColor.outline)
         )
         .textFieldStyle(RoundedTextFieldStyle())
+        .focused($focusedField, equals: .player(fieldIndex))
+        .submitLabel(.done)
         .overlay(alignment: .trailing) {
             if !binding.wrappedValue.isEmpty {
                 Button { binding.wrappedValue = "" } label: {
