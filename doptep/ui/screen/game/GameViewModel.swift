@@ -110,6 +110,7 @@ final class GameViewModel: ObservableObject {
                     self.timerMillis = max(0, self.timerMillis - elapsed)
                     self.timerValue = self.formatTime(self.timerMillis)
                     self.backgroundDate = nil
+//                    self.audioManager.cancelTimerMilestoneSounds()
                     self.resumeTimer()
                 }
             }
@@ -947,6 +948,12 @@ final class GameViewModel: ObservableObject {
 
     private func resumeTimer() {
         guard timer == nil else { return }
+//        if !uiState.uiLimited {
+//            let minutaDelay = Double(max(0, timerMillis - 60000)) / 1000.0
+//            let doAutaDelay = Double(max(0, timerMillis - 10000)) / 1000.0
+//            audioManager.scheduleTimerMilestoneSound(soundName: "minuta_caf", afterSeconds: minutaDelay, identifier: "timer_minuta")
+//            audioManager.scheduleTimerMilestoneSound(soundName: "do_auta_caf", afterSeconds: doAutaDelay, identifier: "timer_do_auta")
+//        }
         let t = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self = self else { return }
@@ -975,6 +982,7 @@ final class GameViewModel: ObservableObject {
         uiState.isTimerPlay = false
         timer?.invalidate()
         timer = nil
+//        audioManager.cancelTimerMilestoneSounds()
     }
 
     private func resetTimer() {

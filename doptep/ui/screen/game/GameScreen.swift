@@ -258,12 +258,13 @@ struct GameScreen: View {
                 .presentationDetents([.medium])
             }
         }
-        .fullScreenCover(isPresented: $showAddGameScreen, onDismiss: {
-            viewModel.refreshData()
-        }) {
+        .navigationDestination(isPresented: $showAddGameScreen) {
             if let gameId = updateGameId {
                 AddGameScreen(viewModel: viewModel.createAddGameViewModel(gameId: gameId))
             }
+        }
+        .onChange(of: showAddGameScreen) { _, newValue in
+            if !newValue { viewModel.refreshData() }
         }
         .fullScreenCover(isPresented: $showGameResultsScreen) {
             if let gameId = gameResultsGameId {

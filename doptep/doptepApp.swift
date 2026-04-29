@@ -31,6 +31,7 @@ struct doptepApp: App {
             GameHistoryActionEventModel.self
         )
         FirebaseApp.configure()
+//        AudioManager.shared.requestNotificationPermission()
         RevenueCatManager.shared.configure()
         RemoteConfigManager.shared.configureAndActivate()
     }

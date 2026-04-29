@@ -5,6 +5,7 @@
 
 import Foundation
 import AVFoundation
+import UserNotifications
 
 final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
 
@@ -99,5 +100,23 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
     func stopAll() {
         stopAudio()
         stopSpeaking()
+    }
+
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert]) { _, _ in }
+    }
+
+    func scheduleTimerMilestoneSound(soundName: String, afterSeconds: TimeInterval, identifier: String) {
+        guard afterSeconds > 0 else { return }
+        let content = UNMutableNotificationContent()
+        content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(soundName).caf"))
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: afterSeconds, repeats: false)
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+    }
+
+    func cancelTimerMilestoneSounds() {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: ["timer_minuta", "timer_do_auta"])
     }
 }
