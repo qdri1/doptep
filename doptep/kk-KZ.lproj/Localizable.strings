@@ -265,6 +265,8 @@
 "game_info" = "Ойын туралы";
 "keyboard_next" = "Келесі";
 "keyboard_done" = "Дайын";
+"notification_title_minuta" = "Бір минут қалды";
+"notification_title_do_auta" = "Аутқа дейін ойнаймыз";
 
 "value" = "нәтиже";
 "goals" = "голдар";

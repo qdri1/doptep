@@ -265,6 +265,8 @@
 "game_info" = "Game Info";
 "keyboard_next" = "Next";
 "keyboard_done" = "Done";
+"notification_title_minuta" = "One minute remaining";
+"notification_title_do_auta" = "Play until the ball is out";
 
 "value" = "result";
 "goals" = "goals";

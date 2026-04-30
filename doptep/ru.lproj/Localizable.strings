@@ -265,6 +265,8 @@
 "game_info" = "Информация";
 "keyboard_next" = "Далее";
 "keyboard_done" = "Готово";
+"notification_title_minuta" = "Осталась одна минута";
+"notification_title_do_auta" = "Играем до аута";
 
 "value" = "результат";
 "goals" = "голы";

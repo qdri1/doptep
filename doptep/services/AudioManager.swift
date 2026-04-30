@@ -106,9 +106,10 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
         UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert]) { _, _ in }
     }
 
-    func scheduleTimerMilestoneSound(soundName: String, afterSeconds: TimeInterval, identifier: String) {
+    func scheduleTimerMilestoneSound(soundName: String, afterSeconds: TimeInterval, identifier: String, title: String) {
         guard afterSeconds > 0 else { return }
         let content = UNMutableNotificationContent()
+        content.title = title
         content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(soundName).caf"))
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: afterSeconds, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
