@@ -74,6 +74,7 @@ struct GameScreen: View {
         }
         .background(AppColor.background)
         .navigationBarHidden(true)
+        .enableSwipeBack()
         .snackbar(message: $viewModel.snackbarMessage)
         .onChange(of: viewModel.effect) { _, effect in
             handleEffect(effect)
@@ -266,7 +267,7 @@ struct GameScreen: View {
         .onChange(of: showAddGameScreen) { _, newValue in
             if !newValue { viewModel.refreshData() }
         }
-        .fullScreenCover(isPresented: $showGameResultsScreen) {
+        .navigationDestination(isPresented: $showGameResultsScreen) {
             if let gameId = gameResultsGameId {
                 GameResultsScreen(viewModel: viewModel.createGameResultsViewModel(gameId: gameId, modelContext: modelContext))
             }

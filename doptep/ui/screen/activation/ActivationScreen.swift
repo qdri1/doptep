@@ -33,6 +33,7 @@ struct ActivationScreen: View {
         }
         .background(AppColor.surface)
         .navigationBarHidden(true)
+        .enableSwipeBack()
         .onChange(of: viewModel.effect) { _, effect in
             guard let effect = effect else { return }
             handleEffect(effect)
