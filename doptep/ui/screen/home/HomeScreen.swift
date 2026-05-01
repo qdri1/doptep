@@ -121,10 +121,12 @@ private extension HomeScreen {
                 }
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
             }
         }
         .scrollIndicators(.hidden)
         .listStyle(.plain)
+        .contentMargins(.top, 8)
         .contentMargins(.bottom, 96)
         .refreshable {
             viewModel.send(.onRefreshed)
