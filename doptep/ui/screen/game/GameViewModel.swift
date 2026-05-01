@@ -844,11 +844,11 @@ final class GameViewModel: ObservableObject {
             case .winnerStay2:
                 setTeam3WinnerStayNextPlayingTeams(winCount: 1)
             case .winnerStay3:
-                break
+                uiState.nextPlayingTeamsUiModelList = []
             case .winnerStay4:
-                break
+                uiState.nextPlayingTeamsUiModelList = []
             case .winnerStayUnlimited:
-                break
+                uiState.nextPlayingTeamsUiModelList = []
             }
         case .team4:
             guard let liveGame = uiState.liveGameUiModel else { break }

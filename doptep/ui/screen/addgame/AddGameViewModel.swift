@@ -142,9 +142,12 @@ final class AddGameViewModel: ObservableObject {
 
     private func onGameFormatSelected(_ format: GameFormat) {
         gameFormatState = format
-        let quantity = teamQuantityState.rawValue
-        playersTextFields = (0..<quantity).map { _ in
-            Array(repeating: "", count: format.playerQuantity)
+        
+        if screenStateType == .add {
+            let quantity = teamQuantityState.rawValue
+            playersTextFields = (0..<quantity).map { _ in
+                Array(repeating: "", count: format.playerQuantity)
+            }
         }
     }
 
@@ -285,9 +288,9 @@ final class AddGameViewModel: ObservableObject {
             let updatedGame = GameUiModel(
                 id: gameUiModel.id,
                 name: gameNameFieldState.trimmingCharacters(in: .whitespaces),
-                gameFormat: gameUiModel.gameFormat,
+                gameFormat: gameFormatState,
                 teamQuantity: gameUiModel.teamQuantity,
-                gameRule: gameUiModel.gameRule,
+                gameRule: gameRuleState,
                 timeInMinutes: Int(timeInMinuteFieldState) ?? defaultTimeInMinutes,
                 modifiedTime: gameUiModel.modifiedTime
             )

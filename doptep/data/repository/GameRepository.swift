@@ -41,7 +41,22 @@ final class GameRepository {
     // UPDATE
     func updateGame(_ uiModel: GameUiModel) throws {
         guard let model = try getGameEntity(id: uiModel.id) else { return }
+        
+        let ruleName: String
+        switch uiModel.gameRule {
+        case let rule as GameRuleTeam2:
+            ruleName = rule.rawValue
+        case let rule as GameRuleTeam3:
+            ruleName = rule.rawValue
+        case let rule as GameRuleTeam4:
+            ruleName = rule.rawValue
+        default:
+            ruleName = ""
+        }
+        
         model.name = uiModel.name
+        model.format = uiModel.gameFormat.rawValue
+        model.rule = ruleName
         model.timeInMinutes = uiModel.timeInMinutes
     }
 

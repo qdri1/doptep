@@ -38,11 +38,11 @@ struct AddGameScreen: View {
                     gameNameField
                     timeField
 
+                    gameFormatSection
                     if viewModel.screenStateType == .add {
-                        gameFormatSection
                         teamQuantitySection
-                        gameRulesSection
                     }
+                    gameRulesSection
 
                     teamsTabView
                 }
