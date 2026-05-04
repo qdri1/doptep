@@ -238,6 +238,7 @@
 "activation_plan_select_error_text" = "Choose plan";
 "activation_plan_activated_text" = "You have the full version";
 "activation_plan_activated_button" = "Manage subscription";
+"activation_lifetime_description" = "Lifetime access";
 "activation_oneday_time_remaining" = "Time remaining";
 "activation_oneday_hours_abbr" = "h";
 "activation_oneday_minutes_abbr" = "min";

@@ -238,6 +238,7 @@
 "activation_plan_select_error_text" = "Выберите план";
 "activation_plan_activated_text" = "У вас полная версия";
 "activation_plan_activated_button" = "Управление подпиской";
+"activation_lifetime_description" = "Пожизненный доступ";
 "activation_oneday_time_remaining" = "Оставшееся время";
 "activation_oneday_hours_abbr" = "ч";
 "activation_oneday_minutes_abbr" = "мин";

@@ -111,6 +111,15 @@ struct ActivatedContent: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
 
+                if uiState.billingType == .lifetime {
+                    Text(NSLocalizedString("activation_lifetime_description", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurfaceVariant)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+                }
+
                 if uiState.billingType == .oneday {
                     OnedayRemainingView(expirationDate: uiState.onedayExpirationDate)
                         .padding(.top, 8)
