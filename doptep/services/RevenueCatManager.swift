@@ -31,20 +31,35 @@ final class RevenueCatManager: NSObject {
     }
 
     @MainActor func updateBillingType(from customerInfo: CustomerInfo) -> Bool {
-        guard let entitlement = customerInfo.entitlements.active[entitlementId] else {
-            if !BillingManager.shared.isSecretActivated() {
-                BillingManager.shared.setBillingType(.limited)
+        if let entitlement = customerInfo.entitlements.active[entitlementId] {
+            let productId = entitlement.productIdentifier
+            if productId == ActivationPlan.unlimited.productId {
+                BillingManager.shared.setBillingType(.lifetime)
+            } else {
+                BillingManager.shared.setBillingType(.subscribe)
             }
-            return false
+            return true
         }
 
-        let productId = entitlement.productIdentifier
-        if productId == ActivationPlan.unlimited.productId {
-            BillingManager.shared.setBillingType(.lifetime)
-        } else {
-            BillingManager.shared.setBillingType(.subscribe)
+        // Consumables don't create persistent entitlements. Detect a fresh oneday purchase
+        // by checking for a nonSubscription transaction within the last 5 minutes.
+        let fiveMinutesAgo = Date().addingTimeInterval(-5 * 60)
+        let hasFreshOnedayPurchase = customerInfo.nonSubscriptions.contains {
+            $0.productIdentifier == ActivationPlan.oneday.productId && $0.purchaseDate > fiveMinutesAgo
         }
-        return true
+
+        if hasFreshOnedayPurchase {
+            if !BillingManager.shared.hasValidOnedayAccess() {
+                BillingManager.shared.setOnedayExpirationDate()
+            }
+            BillingManager.shared.setBillingType(.oneday)
+            return true
+        }
+
+        if !BillingManager.shared.isSecretActivated() && !BillingManager.shared.hasValidOnedayAccess() {
+            BillingManager.shared.setBillingType(.limited)
+        }
+        return false
     }
 }
 

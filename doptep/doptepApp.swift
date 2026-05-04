@@ -18,6 +18,7 @@ struct doptepApp: App {
     @StateObject private var languageManager = LanguageManager()
     @State private var showLanguagePicker = UserDefaults.standard.string(forKey: "app_language") == nil
     @State private var showUpdateDialog = false
+    @Environment(\.scenePhase) private var scenePhase
 
     init() {
         container = try! ModelContainer(
@@ -64,6 +65,11 @@ struct doptepApp: App {
                     let currentBuild = Int(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1") ?? 1
                     showUpdateDialog = !showLanguagePicker && RemoteConfigManager.shared.isAppUpdateRequired
                         && RemoteConfigManager.shared.appVersionCode > currentBuild
+                }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .active {
+                        BillingManager.shared.checkAndUpdateOnedayExpiration()
+                    }
                 }
         }
         .modelContainer(container)

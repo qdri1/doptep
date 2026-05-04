@@ -36,6 +36,7 @@ final class ActivationViewModel: ObservableObject {
         let billingType = billingManager.getCurrentBillingType()
         uiState = ActivationUiState(
             billingType: billingType,
+            onedayExpirationDate: billingType == .oneday ? billingManager.onedayExpirationDate : nil
         )
     }
 
