@@ -242,7 +242,7 @@
 "activation_oneday_time_remaining" = "Оставшееся время";
 "activation_oneday_hours_abbr" = "ч";
 "activation_oneday_minutes_abbr" = "мин";
-"activation_oneday_not_subscription" = "Это разовая покупка, а не подписка. Доступ истечёт автоматически.";
+"activation_oneday_not_subscription" = "Это разовая покупка, а не подписка. Доступ истечёт автоматически без дополнительных платежей.";
 "restore_purchases" = "Восстановить покупки";
 "purchase_success" = "Покупка успешна!";
 "purchase_failed" = "Покупка не удалась. Попробуйте снова.";

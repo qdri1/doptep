@@ -76,7 +76,7 @@ private struct OnedayRemainingView: View {
                 .font(.bodyMedium)
                 .foregroundColor(AppColor.onSurfaceVariant)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 16)
                 .padding(.top, 4)
         }
         .onReceive(ticker) { _ in

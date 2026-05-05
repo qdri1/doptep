@@ -242,7 +242,7 @@
 "activation_oneday_time_remaining" = "Time remaining";
 "activation_oneday_hours_abbr" = "h";
 "activation_oneday_minutes_abbr" = "min";
-"activation_oneday_not_subscription" = "This is a one-time purchase, not a subscription. Access expires automatically.";
+"activation_oneday_not_subscription" = "This is a one-time purchase, not a subscription. Access expires automatically without additional payments.";
 "restore_purchases" = "Restore Purchases";
 "purchase_success" = "Purchase successful!";
 "purchase_failed" = "Purchase failed. Please try again.";

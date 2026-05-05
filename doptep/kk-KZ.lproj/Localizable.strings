@@ -238,11 +238,11 @@
 "activation_plan_select_error_text" = "Тарифті таңдаңыз";
 "activation_plan_activated_text" = "Сізде толық нұсқа";
 "activation_plan_activated_button" = "Жазылымды басқару";
-"activation_lifetime_description" = "Өмір бойы қол жетімділік";
+"activation_lifetime_description" = "Өмір бойы қолжетімділік";
 "activation_oneday_time_remaining" = "Қалған уақыт";
 "activation_oneday_hours_abbr" = "сағ";
 "activation_oneday_minutes_abbr" = "мин";
-"activation_oneday_not_subscription" = "Бұл бір реттік сатып алу, жазылым емес. Қол жетімділік автоматты аяқталады.";
+"activation_oneday_not_subscription" = "Бұл бір реттік сатып алу, жазылым емес. Қолжетімділік қосымша төлемдерсіз автоматты түрде аяқталады.";
 "restore_purchases" = "Сатып алуларды қалпына келтіру";
 "purchase_success" = "Сатып алу сәтті өтті!";
 "purchase_failed" = "Сатып алу сәтсіз аяқталды. Қайталап көріңіз.";
