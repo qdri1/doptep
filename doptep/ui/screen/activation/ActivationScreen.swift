@@ -116,8 +116,7 @@ struct ActivatedContent: View {
                         .font(.bodyMedium)
                         .foregroundColor(AppColor.onSurfaceVariant)
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal, 16)
-                        .padding(.top, 8)
+                        .padding(.horizontal, 8)
                 }
 
                 if uiState.billingType == .oneday {
