@@ -274,6 +274,8 @@ final class AddGameViewModel: ObservableObject {
             )
             let _ = liveGameRepository.saveLiveGame(liveGameModel)
 
+            try gameRepository.saveContext()
+
             effect = .openGameScreen(gameId: newGameId)
         } catch {
             snackbarMessage = "Error creating game"

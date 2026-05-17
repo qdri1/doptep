@@ -75,6 +75,10 @@ final class GameRepository {
         }
     }
 
+    func saveContext() throws {
+        try context.save()
+    }
+
     private func getGameEntity(id: UUID) throws -> GameModel? {
         let descriptor = FetchDescriptor<GameModel>(
             predicate: #Predicate { $0.id == id }
