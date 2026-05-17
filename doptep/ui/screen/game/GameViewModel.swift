@@ -1352,11 +1352,29 @@ final class GameViewModel: ObservableObject {
                 var updated = liveGame
                 if teamId == liveGame.leftTeamId {
                     updated = liveGame.updating(leftTeamGoals: liveGame.leftTeamGoals + 1)
+                    
+                    currentGameActions.append(PendingGameAction(
+                        teamName: liveGame.leftTeamName,
+                        teamColor: liveGame.leftTeamColor.rawValue,
+                        playerName: NSLocalizedString("auto_goal", comment: ""),
+                        actionType: TeamOption.goal.rawValue,
+                        elapsedSeconds: currentElapsedSeconds()
+                    ))
                 } else if teamId == liveGame.rightTeamId {
                     updated = liveGame.updating(rightTeamGoals: liveGame.rightTeamGoals + 1)
+                    
+                    currentGameActions.append(PendingGameAction(
+                        teamName: liveGame.rightTeamName,
+                        teamColor: liveGame.rightTeamColor.rawValue,
+                        playerName: NSLocalizedString("auto_goal", comment: ""),
+                        actionType: TeamOption.goal.rawValue,
+                        elapsedSeconds: currentElapsedSeconds()
+                    ))
                 }
                 try liveGameRepository.updateLiveGame(updated)
                 uiState.liveGameUiModel = updated
+                
+                
                 
                 if !uiState.uiLimited {
                     audioManager.speak(
