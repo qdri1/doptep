@@ -71,9 +71,9 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func speak(text: String, completion: (() -> Void)? = nil) {
-        self.completion = completion
-        
+        self.completion = nil
         speechSynthesizer.stopSpeaking(at: .immediate)
+        self.completion = completion
 
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = bestVoice(for: currentLanguageCode)

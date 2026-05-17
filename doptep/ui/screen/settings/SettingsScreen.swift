@@ -16,6 +16,7 @@ struct SettingsScreen: View {
     @State private var showShareSheet = false
     @State private var navigateToActivation = false
     @State private var showPaywall = false
+    @State private var pendingNavigationAfterPaywall = false
     @State private var showNoEntitlementAlert = false
     @State private var restoreFailureMessage: String?
     @State private var showActivationCodeDialog = false
@@ -82,13 +83,18 @@ struct SettingsScreen: View {
             ActivationScreen()
                 .toolbar(.hidden, for: .tabBar)
         }
-        .sheet(isPresented: $showPaywall) {
+        .sheet(isPresented: $showPaywall, onDismiss: {
+            if pendingNavigationAfterPaywall {
+                pendingNavigationAfterPaywall = false
+                navigateToActivation = true
+            }
+        }) {
             RevenueCatUI.PaywallView()
                 .onPurchaseCompleted { customerInfo in
                     let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
                     if success {
+                        pendingNavigationAfterPaywall = true
                         showPaywall = false
-                        navigateToActivation = true
                     } else {
                         showNoEntitlementAlert = true
                     }
@@ -96,8 +102,8 @@ struct SettingsScreen: View {
                 .onRestoreCompleted { customerInfo in
                     let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
                     if success {
+                        pendingNavigationAfterPaywall = true
                         showPaywall = false
-                        navigateToActivation = true
                     } else {
                         showNoEntitlementAlert = true
                     }

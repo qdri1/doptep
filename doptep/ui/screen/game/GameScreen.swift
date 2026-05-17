@@ -31,6 +31,7 @@ struct GameScreen: View {
     @State private var showGameResultsScreen = false
     @State private var showActivationScreen = false
     @State private var showPaywall = false
+    @State private var pendingActivationAfterPaywall = false
     @State private var showNoEntitlementAlert = false
     @State private var gameResultsGameId: UUID?
     @State private var showLeftTeamOptionsDropdown = false
@@ -275,13 +276,18 @@ struct GameScreen: View {
         .fullScreenCover(isPresented: $showActivationScreen, onDismiss: { viewModel.updateBillingState() }) {
             ActivationScreen()
         }
-        .sheet(isPresented: $showPaywall) {
+        .sheet(isPresented: $showPaywall, onDismiss: {
+            if pendingActivationAfterPaywall {
+                pendingActivationAfterPaywall = false
+                showActivationScreen = true
+            }
+        }) {
             RevenueCatUI.PaywallView()
                 .onPurchaseCompleted { customerInfo in
                     let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
                     if success {
+                        pendingActivationAfterPaywall = true
                         showPaywall = false
-                        showActivationScreen = true
                     } else {
                         showNoEntitlementAlert = true
                     }
@@ -289,8 +295,8 @@ struct GameScreen: View {
                 .onRestoreCompleted { customerInfo in
                     let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
                     if success {
+                        pendingActivationAfterPaywall = true
                         showPaywall = false
-                        showActivationScreen = true
                     } else {
                         showNoEntitlementAlert = true
                     }
@@ -1115,7 +1121,9 @@ struct GameScreen: View {
             showGameResultsScreen = true
         case .showOptionPlayersBottomSheet(let optionPlayers):
             currentOptionPlayers = optionPlayers
-            showOptionPlayersSheet = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                showOptionPlayersSheet = true
+            }
         case .showPlayerResultBottomSheet(let playerResult):
             currentPlayerResult = playerResult
             showPlayerResultSheet = true
@@ -1686,9 +1694,18 @@ struct TeamOptionsDropdown: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text(teamName)
-                        .font(.bodyMedium)
-                        .foregroundColor(AppColor.onSurface)
+                    HStack(spacing: 8) {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(teamColor)
+                            .frame(width: 20, height: 20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                            )
+                        Text(teamName)
+                            .font(.bodyMedium)
+                            .foregroundColor(AppColor.onSurface)
+                    }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
