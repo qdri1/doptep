@@ -345,18 +345,62 @@ struct GameScreen: View {
             Text(NSLocalizedString("go_back_confirmation", comment: ""))
                 .font(.bodySmall)
         }
-        .confirmationDialog("", isPresented: $showStayTeamSheet) {
+        .sheet(isPresented: $showStayTeamSheet) {
             if let liveGame = viewModel.uiState.liveGameUiModel {
-                Button(liveGame.leftTeamName) {
-                    viewModel.send(.onLeftTeamStayClicked)
+                VStack(spacing: 0) {
+                    Text(NSLocalizedString("choose_staying_team", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                        .padding(.vertical, 20)
+
+                    Divider()
+
+                    Button {
+                        showStayTeamSheet = false
+                        viewModel.send(.onLeftTeamStayClicked)
+                    } label: {
+                        HStack(spacing: 8) {
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(liveGame.leftTeamColor.color)
+                                .frame(width: 20, height: 20)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .stroke(liveGame.leftTeamColor.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
+                            Text(liveGame.leftTeamName)
+                                .font(.bodySmall)
+                                .foregroundColor(AppColor.onSurface)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                    }
+
+                    Divider()
+
+                    Button {
+                        showStayTeamSheet = false
+                        viewModel.send(.onRightTeamStayClicked)
+                    } label: {
+                        HStack(spacing: 8) {
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(liveGame.rightTeamColor.color)
+                                .frame(width: 20, height: 20)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .stroke(liveGame.rightTeamColor.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                )
+                            Text(liveGame.rightTeamName)
+                                .font(.bodySmall)
+                                .foregroundColor(AppColor.onSurface)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                    }
                 }
-                Button(liveGame.rightTeamName) {
-                    viewModel.send(.onRightTeamStayClicked)
-                }
+                .background(AppColor.surface)
+                .interactiveDismissDisabled(true)
+                .presentationDetents([.height(180)])
             }
-        } message: {
-            Text(NSLocalizedString("choose_staying_team", comment: ""))
-                .font(.bodySmall)
         }
     }
 
