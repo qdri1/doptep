@@ -361,14 +361,15 @@ struct PlayersResultsBlock: View {
                                         .stroke(player.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                                 )
 
+                            let displayName = player.number.map { "№\($0) \(player.name)" } ?? player.name
                             ZStack(alignment: .center) {
-                                Text(player.name)
+                                Text(displayName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(.clear)
                                     .lineLimit(1)
 
-                                Text(player.name)
+                                Text(displayName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(AppColor.onSurface)
@@ -600,7 +601,7 @@ struct GameResultPlayerResultSheet: View {
                                     .stroke(playerResultUiModel.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                             )
 
-                        Text(playerResultUiModel.playerUiModel.name)
+                        Text(playerResultUiModel.playerUiModel.number.map { "№\($0) \(playerResultUiModel.playerUiModel.name)" } ?? playerResultUiModel.playerUiModel.name)
                             .font(.titleMedium)
 
                         Spacer()

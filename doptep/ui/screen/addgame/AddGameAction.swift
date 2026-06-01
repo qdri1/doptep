@@ -17,6 +17,7 @@ enum AddGameAction {
     case onTeamColorSelected(color: TeamColor)
     case onTeamNameValueChanged(tabIndex: Int, value: String)
     case onPlayerNameValueChanged(tabIndex: Int, fieldIndex: Int, value: String)
+    case onPlayerNumberValueChanged(tabIndex: Int, fieldIndex: Int, value: String)
     case onAddPlayerClicked(tabIndex: Int)
     case onFinishClicked
 }

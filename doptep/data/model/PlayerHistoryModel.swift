@@ -20,6 +20,7 @@ final class PlayerHistoryModel {
     var saves: Int
     var yellowCards: Int?
     var redCards: Int?
+    var number: Int?
 
     init(
         originalId: UUID,
@@ -32,7 +33,8 @@ final class PlayerHistoryModel {
         shots: Int = 0,
         saves: Int = 0,
         yellowCards: Int = 0,
-        redCards: Int = 0
+        redCards: Int = 0,
+        number: Int? = nil
     ) {
         self.id = UUID()
         self.originalId = originalId
@@ -46,5 +48,6 @@ final class PlayerHistoryModel {
         self.saves = saves
         self.yellowCards = yellowCards
         self.redCards = redCards
+        self.number = number
     }
 }

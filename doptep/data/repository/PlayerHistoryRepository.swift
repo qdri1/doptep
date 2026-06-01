@@ -39,7 +39,8 @@ final class PlayerHistoryRepository {
                 shots: model.shots,
                 saves: model.saves,
                 yellowCards: model.yellowCards ?? 0,
-                redCards: model.redCards ?? 0
+                redCards: model.redCards ?? 0,
+                number: model.number
             )
         }
     }
@@ -66,7 +67,8 @@ final class PlayerHistoryRepository {
             shots: model.shots,
             saves: model.saves,
             yellowCards: model.yellowCards ?? 0,
-            redCards: model.redCards ?? 0
+            redCards: model.redCards ?? 0,
+            number: model.number
         )
     }
 
@@ -92,7 +94,8 @@ final class PlayerHistoryRepository {
             shots: model.shots,
             saves: model.saves,
             yellowCards: model.yellowCards ?? 0,
-            redCards: model.redCards ?? 0
+            redCards: model.redCards ?? 0,
+            number: model.number
         )
     }
 
@@ -111,6 +114,7 @@ final class PlayerHistoryRepository {
         model.saves = uiModel.saves
         model.yellowCards = uiModel.yellowCards
         model.redCards = uiModel.redCards
+        model.number = uiModel.number
     }
 
     func updatePlayerHistory(playerId: UUID, option: TeamOption, value: Int) throws {

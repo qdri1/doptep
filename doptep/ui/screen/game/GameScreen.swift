@@ -1050,15 +1050,16 @@ struct GameScreen: View {
                                     RoundedRectangle(cornerRadius: 4)
                                         .stroke(player.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                                 )
-                            
+
+                            let displayName = player.number.map { "№\($0) \(player.name)" } ?? player.name
                             ZStack(alignment: .center) {
-                                Text(player.name)
+                                Text(displayName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(.clear)
                                     .lineLimit(1)
-                                
-                                Text(player.name)
+
+                                Text(displayName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(AppColor.onSurface)
@@ -1216,7 +1217,7 @@ struct OptionPlayersSheet: View {
                     Button {
                         onPlayerSelected(player)
                     } label: {
-                        Text(player.name)
+                        Text(player.number.map { "№\($0) \(player.name)" } ?? player.name)
                             .font(.bodySmall)
                             .foregroundColor(AppColor.onSurface)
                     }
@@ -1277,7 +1278,7 @@ struct BestPlayersSheet: View {
                                         .stroke(bestPlayer.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                                 )
 
-                            Text(bestPlayer.playerUiModel.name)
+                            Text(bestPlayer.playerUiModel.number.map { "№\($0) \(bestPlayer.playerUiModel.name)" } ?? bestPlayer.playerUiModel.name)
                                 .font(.bodySmall)
                                 .foregroundColor(AppColor.onSurface)
 
@@ -1507,7 +1508,7 @@ struct PlayerResultSheet: View {
                                     .stroke(playerResult.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                             )
 
-                        Text(playerResult.playerUiModel.name)
+                        Text(playerResult.playerUiModel.number.map { "№\($0) \(playerResult.playerUiModel.name)" } ?? playerResult.playerUiModel.name)
                             .font(.titleMedium)
 
                         Spacer()

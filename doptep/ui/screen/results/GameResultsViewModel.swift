@@ -135,7 +135,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: playerResultValue, assists: player.assists, dribbles: player.dribbles,
                 passes: player.passes, shots: player.shots, saves: player.saves,
-                yellowCards: player.yellowCards, redCards: player.redCards
+                yellowCards: player.yellowCards, redCards: player.redCards,
+                number: player.number
             )
         case .assist:
             updatedPlayer = PlayerUiModel(
@@ -144,7 +145,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: player.goals, assists: playerResultValue, dribbles: player.dribbles,
                 passes: player.passes, shots: player.shots, saves: player.saves,
-                yellowCards: player.yellowCards, redCards: player.redCards
+                yellowCards: player.yellowCards, redCards: player.redCards,
+                number: player.number
             )
         case .save:
             updatedPlayer = PlayerUiModel(
@@ -153,7 +155,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                 passes: player.passes, shots: player.shots, saves: playerResultValue,
-                yellowCards: player.yellowCards, redCards: player.redCards
+                yellowCards: player.yellowCards, redCards: player.redCards,
+                number: player.number
             )
         case .dribble:
             updatedPlayer = PlayerUiModel(
@@ -162,7 +165,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: player.goals, assists: player.assists, dribbles: playerResultValue,
                 passes: player.passes, shots: player.shots, saves: player.saves,
-                yellowCards: player.yellowCards, redCards: player.redCards
+                yellowCards: player.yellowCards, redCards: player.redCards,
+                number: player.number
             )
         case .shot:
             updatedPlayer = PlayerUiModel(
@@ -171,7 +175,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                 passes: player.passes, shots: playerResultValue, saves: player.saves,
-                yellowCards: player.yellowCards, redCards: player.redCards
+                yellowCards: player.yellowCards, redCards: player.redCards,
+                number: player.number
             )
         case .pass:
             updatedPlayer = PlayerUiModel(
@@ -180,7 +185,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                 passes: playerResultValue, shots: player.shots, saves: player.saves,
-                yellowCards: player.yellowCards, redCards: player.redCards
+                yellowCards: player.yellowCards, redCards: player.redCards,
+                number: player.number
             )
         case .yellowCard:
             updatedPlayer = PlayerUiModel(
@@ -189,7 +195,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                 passes: player.passes, shots: player.shots, saves: player.saves,
-                yellowCards: playerResultValue, redCards: player.redCards
+                yellowCards: playerResultValue, redCards: player.redCards,
+                number: player.number
             )
         case .redCard:
             updatedPlayer = PlayerUiModel(
@@ -198,7 +205,8 @@ final class GameResultsViewModel: ObservableObject {
                 teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                 goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                 passes: player.passes, shots: player.shots, saves: player.saves,
-                yellowCards: player.yellowCards, redCards: playerResultValue
+                yellowCards: player.yellowCards, redCards: playerResultValue,
+                number: player.number
             )
         }
 
@@ -305,7 +313,8 @@ final class GameResultsViewModel: ObservableObject {
                         shots: 0,
                         saves: 0,
                         yellowCards: 0,
-                        redCards: 0
+                        redCards: 0,
+                        number: player.number
                     )
                     try playerHistoryRepository.updatePlayerHistory(clearedPlayer)
                 }

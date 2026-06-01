@@ -39,7 +39,8 @@ final class PlayerRepository {
                 shots: model.shots,
                 saves: model.saves,
                 yellowCards: model.yellowCards ?? 0,
-                redCards: model.redCards ?? 0
+                redCards: model.redCards ?? 0,
+                number: model.number
             )
         }
     }
@@ -66,7 +67,8 @@ final class PlayerRepository {
             shots: model.shots,
             saves: model.saves,
             yellowCards: model.yellowCards ?? 0,
-            redCards: model.redCards ?? 0
+            redCards: model.redCards ?? 0,
+            number: model.number
         )
     }
 
@@ -86,6 +88,7 @@ final class PlayerRepository {
         model.saves = uiModel.saves
         model.yellowCards = uiModel.yellowCards
         model.redCards = uiModel.redCards
+        model.number = uiModel.number
     }
 
     func deletePlayer(_ model: PlayerModel) {

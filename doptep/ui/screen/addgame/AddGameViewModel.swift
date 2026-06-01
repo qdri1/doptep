@@ -36,6 +36,7 @@ final class AddGameViewModel: ObservableObject {
     @Published var teamColors: [TeamColor] = []
     @Published var teamNameFields: [String] = []
     @Published var playersTextFields: [[String]] = []
+    @Published var playersNumberFields: [[String]] = []
 
     @Published var effect: AddGameEffect? = nil
     @Published var snackbarMessage: String? = nil
@@ -73,6 +74,9 @@ final class AddGameViewModel: ObservableObject {
         playersTextFields = (0..<quantity).map { _ in
             Array(repeating: "", count: gameFormatState.playerQuantity)
         }
+        playersNumberFields = (0..<quantity).map { _ in
+            Array(repeating: "", count: gameFormatState.playerQuantity)
+        }
     }
 
     func send(_ action: AddGameAction) {
@@ -99,6 +103,8 @@ final class AddGameViewModel: ObservableObject {
             onTeamNameValueChanged(tabIndex: tabIndex, value: value)
         case .onPlayerNameValueChanged(let tabIndex, let fieldIndex, let value):
             onPlayerNameValueChanged(tabIndex: tabIndex, fieldIndex: fieldIndex, value: value)
+        case .onPlayerNumberValueChanged(let tabIndex, let fieldIndex, let value):
+            onPlayerNumberValueChanged(tabIndex: tabIndex, fieldIndex: fieldIndex, value: value)
         case .onAddPlayerClicked(let tabIndex):
             addPlayerFieldToTab(tabIndex: tabIndex)
         case .onFinishClicked:
@@ -126,13 +132,16 @@ final class AddGameViewModel: ObservableObject {
 
                     var allPlayers: [[PlayerUiModel]] = []
                     var allPlayerNames: [[String]] = []
+                    var allPlayerNumbers: [[String]] = []
                     for team in teams {
                         let players = try playerRepository.getPlayers(teamId: team.id).sorted { $0.name < $1.name }
                         allPlayers.append(players)
                         allPlayerNames.append(players.map { $0.name })
+                        allPlayerNumbers.append(players.map { $0.number.map { "\($0)" } ?? "" })
                     }
                     self.playerUiModelList = allPlayers
                     self.playersTextFields = allPlayerNames
+                    self.playersNumberFields = allPlayerNumbers
                 }
             } catch {
                 snackbarMessage = "Error loading game"
@@ -142,10 +151,13 @@ final class AddGameViewModel: ObservableObject {
 
     private func onGameFormatSelected(_ format: GameFormat) {
         gameFormatState = format
-        
+
         if screenStateType == .add {
             let quantity = teamQuantityState.rawValue
             playersTextFields = (0..<quantity).map { _ in
+                Array(repeating: "", count: format.playerQuantity)
+            }
+            playersNumberFields = (0..<quantity).map { _ in
                 Array(repeating: "", count: format.playerQuantity)
             }
         }
@@ -172,6 +184,9 @@ final class AddGameViewModel: ObservableObject {
         playersTextFields = (0..<quantity).map { _ in
             Array(repeating: "", count: gameFormatState.playerQuantity)
         }
+        playersNumberFields = (0..<quantity).map { _ in
+            Array(repeating: "", count: gameFormatState.playerQuantity)
+        }
     }
 
     private func onTeamColorSelected(_ color: TeamColor) {
@@ -190,9 +205,18 @@ final class AddGameViewModel: ObservableObject {
         playersTextFields[tabIndex][fieldIndex] = value
     }
 
+    private func onPlayerNumberValueChanged(tabIndex: Int, fieldIndex: Int, value: String) {
+        guard tabIndex < playersNumberFields.count,
+              fieldIndex < playersNumberFields[tabIndex].count else { return }
+        playersNumberFields[tabIndex][fieldIndex] = value
+    }
+
     private func addPlayerFieldToTab(tabIndex: Int) {
         guard tabIndex < playersTextFields.count else { return }
         playersTextFields[tabIndex].append("")
+        if tabIndex < playersNumberFields.count {
+            playersNumberFields[tabIndex].append("")
+        }
     }
 
     private func onFinishClicked() {
@@ -247,10 +271,13 @@ final class AddGameViewModel: ObservableObject {
                 teamHistoryRepository.saveTeamHistory(teamHistory)
 
                 if let players = playersTextFields[safe: index] {
-                    for playerName in players where !playerName.isEmpty {
+                    let numbers = playersNumberFields[safe: index] ?? []
+                    for (playerIndex, playerName) in players.enumerated() where !playerName.isEmpty {
+                        let numberStr = numbers[safe: playerIndex] ?? ""
                         let playerModel = PlayerModel(
                             teamId: teamId,
-                            name: playerName.trimmingCharacters(in: .whitespaces)
+                            name: playerName.trimmingCharacters(in: .whitespaces),
+                            number: Int(numberStr)
                         )
                         let _ = playerRepository.savePlayer(playerModel)
                         let playerHistory = playerModel.toPlayerHistoryModel()
@@ -337,19 +364,21 @@ final class AddGameViewModel: ObservableObject {
                 // Update existing players
                 let existingPlayers = playerUiModelList[safe: teamIndex] ?? []
                 let newPlayerNames = playersTextFields[safe: teamIndex] ?? []
+                let newPlayerNumbers = playersNumberFields[safe: teamIndex] ?? []
 
                 for (playerIndex, playerName) in newPlayerNames.enumerated() {
                     let trimmedName = playerName.trimmingCharacters(in: .whitespaces)
+                    let newNumber = Int(newPlayerNumbers[safe: playerIndex] ?? "")
 
                     if let existingPlayer = existingPlayers[safe: playerIndex] {
                         // Update existing player
-                        
+
                         if trimmedName.isEmpty {
                             try playerRepository.deletePlayer(id: existingPlayer.id)
                         } else {
                             if trimmedName != existingPlayer.name {
                                 try playerRepository.deletePlayer(id: existingPlayer.id)
-                                
+
                                 let newPlayer = PlayerModel(
                                     teamId: teamUiModel.id,
                                     name: trimmedName,
@@ -360,13 +389,14 @@ final class AddGameViewModel: ObservableObject {
                                     shots: existingPlayer.shots,
                                     saves: existingPlayer.saves,
                                     yellowCards: existingPlayer.yellowCards,
-                                    redCards: existingPlayer.redCards
+                                    redCards: existingPlayer.redCards,
+                                    number: newNumber
                                 )
                                 let _ = playerRepository.savePlayer(newPlayer)
-                                
+
                                 if let historyPlayer = try playerHistoryRepository.getPlayerHistory(teamId: newPlayer.teamId, playerName: newPlayer.name) {
                                     try playerHistoryRepository.deletePlayerHistory(playerId: historyPlayer.id)
-                                    
+
                                     let newPlayerHistory = PlayerModel(
                                         id: newPlayer.id,
                                         teamId: newPlayer.teamId,
@@ -378,16 +408,59 @@ final class AddGameViewModel: ObservableObject {
                                         shots: historyPlayer.shots,
                                         saves: historyPlayer.saves,
                                         yellowCards: historyPlayer.yellowCards,
-                                        redCards: historyPlayer.redCards
+                                        redCards: historyPlayer.redCards,
+                                        number: newNumber
                                     )
                                     playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
                                 } else {
                                     let newPlayerHistory = PlayerModel(
                                         id: newPlayer.id,
                                         teamId: newPlayer.teamId,
-                                        name: newPlayer.name
+                                        name: newPlayer.name,
+                                        number: newNumber
                                     )
                                     playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
+                                }
+                            } else if newNumber != existingPlayer.number {
+                                let updatedPlayer = PlayerUiModel(
+                                    id: existingPlayer.id,
+                                    teamId: existingPlayer.teamId,
+                                    teamColor: existingPlayer.teamColor,
+                                    teamName: existingPlayer.teamName,
+                                    teamPoints: existingPlayer.teamPoints,
+                                    teamGoalsDifference: existingPlayer.teamGoalsDifference,
+                                    name: existingPlayer.name,
+                                    goals: existingPlayer.goals,
+                                    assists: existingPlayer.assists,
+                                    dribbles: existingPlayer.dribbles,
+                                    passes: existingPlayer.passes,
+                                    shots: existingPlayer.shots,
+                                    saves: existingPlayer.saves,
+                                    yellowCards: existingPlayer.yellowCards,
+                                    redCards: existingPlayer.redCards,
+                                    number: newNumber
+                                )
+                                try playerRepository.updatePlayer(updatedPlayer)
+                                if let historyPlayer = try playerHistoryRepository.getPlayerHistory(playerId: existingPlayer.id) {
+                                    let updatedHistory = PlayerUiModel(
+                                        id: historyPlayer.id,
+                                        teamId: historyPlayer.teamId,
+                                        teamColor: historyPlayer.teamColor,
+                                        teamName: historyPlayer.teamName,
+                                        teamPoints: historyPlayer.teamPoints,
+                                        teamGoalsDifference: historyPlayer.teamGoalsDifference,
+                                        name: historyPlayer.name,
+                                        goals: historyPlayer.goals,
+                                        assists: historyPlayer.assists,
+                                        dribbles: historyPlayer.dribbles,
+                                        passes: historyPlayer.passes,
+                                        shots: historyPlayer.shots,
+                                        saves: historyPlayer.saves,
+                                        yellowCards: historyPlayer.yellowCards,
+                                        redCards: historyPlayer.redCards,
+                                        number: newNumber
+                                    )
+                                    try playerHistoryRepository.updatePlayerHistory(updatedHistory)
                                 }
                             }
                         }
@@ -395,7 +468,8 @@ final class AddGameViewModel: ObservableObject {
                         // Add new player
                         let newPlayer = PlayerModel(
                             teamId: teamUiModel.id,
-                            name: trimmedName
+                            name: trimmedName,
+                            number: newNumber
                         )
                         let _ = playerRepository.savePlayer(newPlayer)
 
@@ -413,7 +487,8 @@ final class AddGameViewModel: ObservableObject {
                                 shots: historyPlayer.shots,
                                 saves: historyPlayer.saves,
                                 yellowCards: historyPlayer.yellowCards,
-                                redCards: historyPlayer.redCards
+                                redCards: historyPlayer.redCards,
+                                number: newNumber
                             )
                             playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
                         } else {
@@ -426,7 +501,8 @@ final class AddGameViewModel: ObservableObject {
                                 dribbles: 0,
                                 passes: 0,
                                 shots: 0,
-                                saves: 0
+                                saves: 0,
+                                number: newNumber
                             )
                             playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())
                         }

@@ -17,15 +17,16 @@ struct AddGameScreen: View {
     @FocusState private var focusedField: Field?
 
     private enum Field: Hashable {
-        case gameName, gameTime, teamName, player(Int)
+        case gameName, gameTime, teamName, playerNumber(Int), player(Int)
     }
 
     private var nextField: Field? {
         switch focusedField {
         case .gameName: return .gameTime
         case .gameTime: return .teamName
-        case .teamName: return playerFieldsCount > 0 ? .player(0) : nil
-        case .player(let index): return index < playerFieldsCount - 1 ? .player(index + 1) : nil
+        case .teamName: return playerFieldsCount > 0 ? .playerNumber(0) : nil
+        case .playerNumber(let index): return .player(index)
+        case .player(let index): return index < playerFieldsCount - 1 ? .playerNumber(index + 1) : nil
         case nil: return nil
         }
     }
@@ -349,7 +350,7 @@ struct AddGameScreen: View {
 
     private func playerField(at fieldIndex: Int) -> some View {
         let tabIndex = viewModel.selectedTeamTabIndex
-        let binding = Binding<String>(
+        let nameBinding = Binding<String>(
             get: {
                 guard tabIndex < viewModel.playersTextFields.count,
                       fieldIndex < viewModel.playersTextFields[tabIndex].count else { return "" }
@@ -359,22 +360,41 @@ struct AddGameScreen: View {
                 viewModel.send(.onPlayerNameValueChanged(tabIndex: tabIndex, fieldIndex: fieldIndex, value: newValue))
             }
         )
-
-        return TextField(
-            "",
-            text: binding,
-            prompt: Text(String(format: NSLocalizedString("player_number", comment: ""), "\(fieldIndex + 1)")).foregroundColor(AppColor.outline)
-        )
-        .textFieldStyle(RoundedTextFieldStyle())
-        .focused($focusedField, equals: .player(fieldIndex))
-        .submitLabel(.done)
-        .overlay(alignment: .trailing) {
-            if !binding.wrappedValue.isEmpty {
-                Button { binding.wrappedValue = "" } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(AppColor.onSurfaceVariant)
+        let numberBinding = Binding<String>(
+            get: {
+                guard tabIndex < viewModel.playersNumberFields.count,
+                      fieldIndex < viewModel.playersNumberFields[tabIndex].count else { return "" }
+                return viewModel.playersNumberFields[tabIndex][fieldIndex]
+            },
+            set: { newValue in
+                if newValue.count <= 2 {
+                    viewModel.send(.onPlayerNumberValueChanged(tabIndex: tabIndex, fieldIndex: fieldIndex, value: newValue))
                 }
-                .padding(.trailing, 16)
+            }
+        )
+
+        return HStack(spacing: 8) {
+            TextField("", text: numberBinding, prompt: Text("№").foregroundColor(AppColor.outline))
+                .keyboardType(.numberPad)
+                .textFieldStyle(RoundedNumberFieldStyle())
+                .focused($focusedField, equals: .playerNumber(fieldIndex))
+
+            TextField(
+                "",
+                text: nameBinding,
+                prompt: Text(String(format: NSLocalizedString("player_number", comment: ""), "\(fieldIndex + 1)")).foregroundColor(AppColor.outline)
+            )
+            .textFieldStyle(RoundedTextFieldStyle())
+            .focused($focusedField, equals: .player(fieldIndex))
+            .submitLabel(.done)
+            .overlay(alignment: .trailing) {
+                if !nameBinding.wrappedValue.isEmpty {
+                    Button { nameBinding.wrappedValue = "" } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(AppColor.onSurfaceVariant)
+                    }
+                    .padding(.trailing, 16)
+                }
             }
         }
     }
@@ -443,6 +463,19 @@ struct AddGameScreen: View {
         case .closeScreenWithResult:
             dismiss()
         }
+    }
+}
+
+struct RoundedNumberFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .font(.bodySmall)
+            .foregroundColor(AppColor.onSurface)
+            .multilineTextAlignment(.center)
+            .padding(.vertical, 16)
+            .frame(width: 56)
+            .background(AppColor.surface)
+            .cornerRadius(16)
     }
 }
 

@@ -19,6 +19,7 @@ final class PlayerModel {
     var saves: Int
     var yellowCards: Int?
     var redCards: Int?
+    var number: Int?
 
     init(
         id: UUID = UUID(),
@@ -31,7 +32,8 @@ final class PlayerModel {
         shots: Int = 0,
         saves: Int = 0,
         yellowCards: Int = 0,
-        redCards: Int = 0
+        redCards: Int = 0,
+        number: Int? = nil
     ) {
         self.id = id
         self.teamId = teamId
@@ -44,6 +46,7 @@ final class PlayerModel {
         self.saves = saves
         self.yellowCards = yellowCards
         self.redCards = redCards
+        self.number = number
     }
 }
 
@@ -61,7 +64,8 @@ extension PlayerModel {
             shots: shots,
             saves: saves,
             yellowCards: yellowCards ?? 0,
-            redCards: redCards ?? 0
+            redCards: redCards ?? 0,
+            number: number
         )
     }
 }
