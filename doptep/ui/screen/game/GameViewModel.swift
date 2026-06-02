@@ -41,6 +41,7 @@ final class GameViewModel: ObservableObject {
         let teamName: String
         let teamColor: String
         let playerName: String
+        let playerNumber: Int?
         let actionType: String
         let elapsedSeconds: Int
     }
@@ -1342,7 +1343,8 @@ final class GameViewModel: ObservableObject {
                 currentGameActions.append(PendingGameAction(
                     teamName: playerUiModel.teamName,
                     teamColor: playerUiModel.teamColor.rawValue,
-                    playerName: playerUiModel.number.map { "№\($0) \(playerUiModel.name)" } ?? playerUiModel.name,
+                    playerName: playerUiModel.name,
+                    playerNumber: playerUiModel.number,
                     actionType: option.rawValue,
                     elapsedSeconds: currentElapsedSeconds()
                 ))
@@ -1366,6 +1368,7 @@ final class GameViewModel: ObservableObject {
                         teamName: liveGame.leftTeamName,
                         teamColor: liveGame.leftTeamColor.rawValue,
                         playerName: NSLocalizedString("auto_goal", comment: ""),
+                        playerNumber: nil,
                         actionType: TeamOption.goal.rawValue,
                         elapsedSeconds: currentElapsedSeconds()
                     ))
@@ -1376,6 +1379,7 @@ final class GameViewModel: ObservableObject {
                         teamName: liveGame.rightTeamName,
                         teamColor: liveGame.rightTeamColor.rawValue,
                         playerName: NSLocalizedString("auto_goal", comment: ""),
+                        playerNumber: nil,
                         actionType: TeamOption.goal.rawValue,
                         elapsedSeconds: currentElapsedSeconds()
                     ))
@@ -1490,6 +1494,7 @@ final class GameViewModel: ObservableObject {
                 teamName: action.teamName,
                 teamColor: action.teamColor,
                 playerName: action.playerName,
+                playerNumber: action.playerNumber,
                 actionType: action.actionType,
                 elapsedSeconds: action.elapsedSeconds
             )

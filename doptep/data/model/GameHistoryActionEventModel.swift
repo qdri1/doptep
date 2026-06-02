@@ -8,6 +8,7 @@ final class GameHistoryActionEventModel {
     var teamName: String
     var teamColor: String
     var playerName: String
+    var playerNumber: Int?
     var actionType: String
     var elapsedSeconds: Int
 
@@ -16,6 +17,7 @@ final class GameHistoryActionEventModel {
         teamName: String,
         teamColor: String,
         playerName: String,
+        playerNumber: Int?,
         actionType: String,
         elapsedSeconds: Int
     ) {
@@ -24,6 +26,7 @@ final class GameHistoryActionEventModel {
         self.teamName = teamName
         self.teamColor = teamColor
         self.playerName = playerName
+        self.playerNumber = playerNumber
         self.actionType = actionType
         self.elapsedSeconds = elapsedSeconds
     }
