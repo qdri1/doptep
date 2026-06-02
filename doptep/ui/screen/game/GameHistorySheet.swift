@@ -383,7 +383,7 @@ private struct ActionEventRowView: View {
                 .font(.labelSmall)
                 .foregroundColor(AppColor.outline)
 
-            PlayerColorDotView(teamColor: event.teamColor)
+            PlayerTeamBadge(teamColor: event.teamColor, number: event.playerNumber)
 
             Text(event.playerName)
                 .font(.labelSmall)
@@ -422,20 +422,6 @@ private struct TeamColorDotView: View {
         RoundedRectangle(cornerRadius: 4)
             .fill(teamColor.color)
             .frame(width: 16, height: 16)
-            .overlay(
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-            )
-    }
-}
-
-private struct PlayerColorDotView: View {
-    let teamColor: TeamColor
-
-    var body: some View {
-        RoundedRectangle(cornerRadius: 4)
-            .fill(teamColor.color)
-            .frame(width: 12, height: 12)
             .overlay(
                 RoundedRectangle(cornerRadius: 4)
                     .stroke(teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)

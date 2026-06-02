@@ -1057,23 +1057,16 @@ struct GameScreen: View {
 
                     ForEach(viewModel.uiState.playerUiModelList, id: \.id) { player in
                         HStack(spacing: 6) {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(player.teamColor.color)
-                                .frame(width: 12, height: 12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .stroke(player.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                )
+                            PlayerTeamBadge(teamColor: player.teamColor, number: player.number)
 
-                            let displayName = player.number.map { "№\($0) \(player.name)" } ?? player.name
                             ZStack(alignment: .center) {
-                                Text(displayName)
+                                Text(player.name)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(.clear)
                                     .lineLimit(1)
 
-                                Text(displayName)
+                                Text(player.name)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(AppColor.onSurface)
@@ -1253,9 +1246,12 @@ struct OptionPlayersSheet: View {
                     Button {
                         onPlayerSelected(player)
                     } label: {
-                        Text(player.number.map { "№\($0) \(player.name)" } ?? player.name)
-                            .font(.bodySmall)
-                            .foregroundColor(AppColor.onSurface)
+                        HStack(spacing: 8) {
+                            PlayerTeamBadge(teamColor: player.teamColor, number: player.number)
+                            Text(player.name)
+                                .font(.bodySmall)
+                                .foregroundColor(AppColor.onSurface)
+                        }
                     }
                 }
 
@@ -1306,15 +1302,9 @@ struct BestPlayersSheet: View {
                             .foregroundColor(AppColor.outline)
 
                         HStack {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(bestPlayer.playerUiModel.teamColor.color)
-                                .frame(width: 12, height: 12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .stroke(bestPlayer.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                )
+                            PlayerTeamBadge(teamColor: bestPlayer.playerUiModel.teamColor, number: bestPlayer.playerUiModel.number)
 
-                            Text(bestPlayer.playerUiModel.number.map { "№\($0) \(bestPlayer.playerUiModel.name)" } ?? bestPlayer.playerUiModel.name)
+                            Text(bestPlayer.playerUiModel.name)
                                 .font(.bodySmall)
                                 .foregroundColor(AppColor.onSurface)
 
@@ -1536,15 +1526,9 @@ struct PlayerResultSheet: View {
                 VStack(spacing: 24) {
                     // Player Info
                     HStack(spacing: 12) {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(playerResult.playerUiModel.teamColor.color)
-                            .frame(width: 24, height: 24)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(playerResult.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                            )
+                        PlayerTeamBadge(teamColor: playerResult.playerUiModel.teamColor, number: playerResult.playerUiModel.number, size: 24)
 
-                        Text(playerResult.playerUiModel.number.map { "№\($0) \(playerResult.playerUiModel.name)" } ?? playerResult.playerUiModel.name)
+                        Text(playerResult.playerUiModel.name)
                             .font(.titleMedium)
 
                         Spacer()

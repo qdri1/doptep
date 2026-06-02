@@ -23,10 +23,12 @@ final class GameHistoryRepository {
                 sortBy: [SortDescriptor(\.elapsedSeconds)]
             )
             let events = try context.fetch(eventDescriptor).map { event in
-                GameHistoryActionEventUiModel(
+                let (parsedName, parsedNumber) = Self.parsePlayerName(event.playerName)
+                return GameHistoryActionEventUiModel(
                     teamName: event.teamName,
                     teamColor: TeamColor.from(event.teamColor),
-                    playerName: event.playerName,
+                    playerName: parsedName,
+                    playerNumber: parsedNumber,
                     actionType: event.actionType,
                     elapsedSeconds: event.elapsedSeconds
                 )
@@ -44,6 +46,14 @@ final class GameHistoryRepository {
                 actionEvents: events
             )
         }
+    }
+
+    private static func parsePlayerName(_ stored: String) -> (name: String, number: Int?) {
+        guard stored.hasPrefix("№") else { return (stored, nil) }
+        let withoutPrefix = stored.dropFirst()
+        let parts = withoutPrefix.split(separator: " ", maxSplits: 1)
+        guard parts.count == 2, let number = Int(parts[0]) else { return (stored, nil) }
+        return (String(parts[1]), number)
     }
 
     func saveEntry(_ entry: GameHistoryEntryModel) -> UUID {

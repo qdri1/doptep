@@ -359,23 +359,16 @@ struct PlayersResultsBlock: View {
 
                     ForEach(playerUiModelList, id: \.id) { player in
                         HStack(spacing: 6) {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(player.teamColor.color)
-                                .frame(width: 12, height: 12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .stroke(player.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                )
+                            PlayerTeamBadge(teamColor: player.teamColor, number: player.number)
 
-                            let displayName = player.number.map { "№\($0) \(player.name)" } ?? player.name
                             ZStack(alignment: .center) {
-                                Text(displayName)
+                                Text(player.name)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(.clear)
                                     .lineLimit(1)
 
-                                Text(displayName)
+                                Text(player.name)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.labelSmall)
                                     .foregroundColor(AppColor.onSurface)
@@ -611,15 +604,9 @@ struct GameResultPlayerResultSheet: View {
                 VStack(spacing: 24) {
                     // Player Info
                     HStack(spacing: 12) {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color(hex: playerResultUiModel.playerUiModel.teamColor.rawValue))
-                            .frame(width: 24, height: 24)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(playerResultUiModel.playerUiModel.teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                            )
+                        PlayerTeamBadge(teamColor: playerResultUiModel.playerUiModel.teamColor, number: playerResultUiModel.playerUiModel.number, size: 24)
 
-                        Text(playerResultUiModel.playerUiModel.number.map { "№\($0) \(playerResultUiModel.playerUiModel.name)" } ?? playerResultUiModel.playerUiModel.name)
+                        Text(playerResultUiModel.playerUiModel.name)
                             .font(.titleMedium)
 
                         Spacer()

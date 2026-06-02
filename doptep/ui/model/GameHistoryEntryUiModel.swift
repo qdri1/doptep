@@ -26,6 +26,7 @@ struct GameHistoryActionEventUiModel: Identifiable {
     let teamName: String
     let teamColor: TeamColor
     let playerName: String
+    let playerNumber: Int?
     let actionType: String
     let elapsedSeconds: Int
 
