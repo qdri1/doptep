@@ -910,7 +910,7 @@ struct GameScreen: View {
                         HStack(spacing: 6) {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
-                                .frame(width: 12, height: 12)
+                                .frame(width: 16, height: 16)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 4)
                                         .stroke(team.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
@@ -1864,7 +1864,7 @@ struct CustomizeColumnsSheet: View {
                     ForEach(toggleableOptions, id: \.self) { option in
                         HStack {
                             Text(NSLocalizedString(option.localizationKey, comment: ""))
-                                .font(.labelSmall)
+                                .font(.bodySmall)
                                 .foregroundColor(AppColor.onSurface)
                             Spacer()
                             Image(systemName: hiddenOptions.contains(option) ? "checkmark.circle" : "checkmark.circle.fill")
