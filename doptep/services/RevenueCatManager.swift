@@ -49,9 +49,7 @@ final class RevenueCatManager: NSObject {
         }
 
         if hasFreshOnedayPurchase {
-            if !BillingManager.shared.hasValidOnedayAccess() {
-                BillingManager.shared.setOnedayExpirationDate()
-            }
+            BillingManager.shared.setOnedayExpirationDate()
             BillingManager.shared.setBillingType(.oneday)
             return true
         }
