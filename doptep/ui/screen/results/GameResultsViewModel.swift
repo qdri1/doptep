@@ -9,7 +9,7 @@ import SwiftData
 @MainActor
 final class GameResultsViewModel: ObservableObject {
 
-    private let gameId: UUID
+    let gameId: UUID
     private let modelContext: ModelContext
     private let teamHistoryRepository: TeamHistoryRepository
     private let playerHistoryRepository: PlayerHistoryRepository

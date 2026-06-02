@@ -20,6 +20,7 @@ struct GameResultsScreen: View {
     @State private var showClearAllGamesConfirmation = false
     @State private var showRemovePlayerConfirmation = false
     @State private var playerToRemove: PlayerUiModel?
+    @State private var hiddenStatOptions: Set<TeamOption> = []
 
     var body: some View {
         VStack(spacing: 0) {
@@ -63,6 +64,7 @@ struct GameResultsScreen: View {
                             playerUiModelList: viewModel.uiState.playerUiModelList,
                             deletedPlayerIds: viewModel.uiState.deletedPlayerIds,
                             uiLimited: viewModel.uiState.uiLimited,
+                            hiddenOptions: hiddenStatOptions,
                             onPlayerResultClicked: { playerResult in
                                 viewModel.action(GameResultsAction.onPlayerResultClicked(playerResultUiModel: playerResult))
                             },
@@ -82,6 +84,9 @@ struct GameResultsScreen: View {
         .background(AppColor.background)
         .navigationBarHidden(true)
         .enableSwipeBack()
+        .onAppear {
+            hiddenStatOptions = HiddenColumnsStorage.load(gameId: viewModel.gameId)
+        }
         .onChange(of: viewModel.effect) { _, effect in
             guard let effect = effect else { return }
             handleEffect(effect)
@@ -331,6 +336,7 @@ struct PlayersResultsBlock: View {
     let playerUiModelList: [PlayerUiModel]
     let deletedPlayerIds: Set<UUID>
     let uiLimited: Bool
+    let hiddenOptions: Set<TeamOption>
     let onPlayerResultClicked: (PlayerResultUiModel) -> Void
     let onRemovePlayerClicked: (PlayerUiModel) -> Void
     let onActivateClicked: () -> Void
@@ -408,54 +414,66 @@ struct PlayersResultsBlock: View {
                     uiLimited: uiLimited,
                     onPlayerResultClicked: onPlayerResultClicked
                 )
-                resultsPlayerStatColumn(
-                    header: NSLocalizedString("saves_icon", comment: ""),
-                    players: playerUiModelList,
-                    valuePath: \.saves,
-                    option: .save,
-                    uiLimited: uiLimited,
-                    onPlayerResultClicked: onPlayerResultClicked
-                )
-                resultsPlayerStatColumn(
-                    header: NSLocalizedString("dribbles_icon", comment: ""),
-                    players: playerUiModelList,
-                    valuePath: \.dribbles,
-                    option: .dribble,
-                    uiLimited: uiLimited,
-                    onPlayerResultClicked: onPlayerResultClicked
-                )
-                resultsPlayerStatColumn(
-                    header: NSLocalizedString("shots_icon", comment: ""),
-                    players: playerUiModelList,
-                    valuePath: \.shots,
-                    option: .shot,
-                    uiLimited: uiLimited,
-                    onPlayerResultClicked: onPlayerResultClicked
-                )
-                resultsPlayerStatColumn(
-                    header: NSLocalizedString("passes_icon", comment: ""),
-                    players: playerUiModelList,
-                    valuePath: \.passes,
-                    option: .pass,
-                    uiLimited: uiLimited,
-                    onPlayerResultClicked: onPlayerResultClicked
-                )
-                resultsPlayerStatColumn(
-                    header: NSLocalizedString("player_result_yellow_card", comment: ""),
-                    players: playerUiModelList,
-                    valuePath: \.yellowCards,
-                    option: .yellowCard,
-                    uiLimited: uiLimited,
-                    onPlayerResultClicked: onPlayerResultClicked
-                )
-                resultsPlayerStatColumn(
-                    header: NSLocalizedString("player_result_red_card", comment: ""),
-                    players: playerUiModelList,
-                    valuePath: \.redCards,
-                    option: .redCard,
-                    uiLimited: uiLimited,
-                    onPlayerResultClicked: onPlayerResultClicked
-                )
+                if !hiddenOptions.contains(.save) {
+                    resultsPlayerStatColumn(
+                        header: NSLocalizedString("saves_icon", comment: ""),
+                        players: playerUiModelList,
+                        valuePath: \.saves,
+                        option: .save,
+                        uiLimited: uiLimited,
+                        onPlayerResultClicked: onPlayerResultClicked
+                    )
+                }
+                if !hiddenOptions.contains(.dribble) {
+                    resultsPlayerStatColumn(
+                        header: NSLocalizedString("dribbles_icon", comment: ""),
+                        players: playerUiModelList,
+                        valuePath: \.dribbles,
+                        option: .dribble,
+                        uiLimited: uiLimited,
+                        onPlayerResultClicked: onPlayerResultClicked
+                    )
+                }
+                if !hiddenOptions.contains(.shot) {
+                    resultsPlayerStatColumn(
+                        header: NSLocalizedString("shots_icon", comment: ""),
+                        players: playerUiModelList,
+                        valuePath: \.shots,
+                        option: .shot,
+                        uiLimited: uiLimited,
+                        onPlayerResultClicked: onPlayerResultClicked
+                    )
+                }
+                if !hiddenOptions.contains(.pass) {
+                    resultsPlayerStatColumn(
+                        header: NSLocalizedString("passes_icon", comment: ""),
+                        players: playerUiModelList,
+                        valuePath: \.passes,
+                        option: .pass,
+                        uiLimited: uiLimited,
+                        onPlayerResultClicked: onPlayerResultClicked
+                    )
+                }
+                if !hiddenOptions.contains(.yellowCard) {
+                    resultsPlayerStatColumn(
+                        header: NSLocalizedString("player_result_yellow_card", comment: ""),
+                        players: playerUiModelList,
+                        valuePath: \.yellowCards,
+                        option: .yellowCard,
+                        uiLimited: uiLimited,
+                        onPlayerResultClicked: onPlayerResultClicked
+                    )
+                }
+                if !hiddenOptions.contains(.redCard) {
+                    resultsPlayerStatColumn(
+                        header: NSLocalizedString("player_result_red_card", comment: ""),
+                        players: playerUiModelList,
+                        valuePath: \.redCards,
+                        option: .redCard,
+                        uiLimited: uiLimited,
+                        onPlayerResultClicked: onPlayerResultClicked
+                    )
+                }
             }
             .padding(12)
             .background(AppColor.surface)
