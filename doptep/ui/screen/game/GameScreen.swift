@@ -48,6 +48,8 @@ struct GameScreen: View {
     @State private var currentBestPlayers: [BestPlayerUiModel] = []
     @State private var showGameHistorySheet = false
     @State private var currentGameHistory: [GameHistoryEntryUiModel] = []
+    @State private var showCustomizeColumnsSheet = false
+    @State private var hiddenStatOptions: Set<TeamOption> = []
 
     var body: some View {
         VStack(spacing: 0) {
@@ -92,6 +94,12 @@ struct GameScreen: View {
         .onChange(of: viewModel.uiState.showRightTeamChangeDropdown) { _, newValue in
             showRightTeamChangeDropdown = newValue
         }
+        .onAppear {
+            hiddenStatOptions = HiddenColumnsStorage.load(gameId: viewModel.gameId)
+        }
+        .onChange(of: hiddenStatOptions) { _, newValue in
+            HiddenColumnsStorage.save(newValue, gameId: viewModel.gameId)
+        }
         .onDisappear {
             viewModel.saveTimerOnExit()
         }
@@ -123,6 +131,10 @@ struct GameScreen: View {
         .sheet(isPresented: $showGameHistorySheet) {
             GameHistorySheet(gameHistory: currentGameHistory)
                 .presentationDetents([.large])
+        }
+        .sheet(isPresented: $showCustomizeColumnsSheet) {
+            CustomizeColumnsSheet(hiddenOptions: $hiddenStatOptions)
+                .presentationDetents([.medium])
         }
         .sheet(isPresented: $showGameInfoSheet) {
             GameInfoSheet()
@@ -188,6 +200,7 @@ struct GameScreen: View {
                 TeamOptionsDropdown(
                     teamName: liveGame.leftTeamName,
                     teamColor: liveGame.leftTeamColor.color,
+                    hiddenOptions: hiddenStatOptions,
                     onOptionSelected: { option in
                         viewModel.send(.onLeftTeamOptionSelected(option: option))
                         showLeftTeamOptionsDropdown = false
@@ -208,6 +221,7 @@ struct GameScreen: View {
                 TeamOptionsDropdown(
                     teamName: liveGame.rightTeamName,
                     teamColor: liveGame.rightTeamColor.color,
+                    hiddenOptions: hiddenStatOptions,
                     onOptionSelected: { option in
                         viewModel.send(.onRightTeamOptionSelected(option: option))
                         showRightTeamOptionsDropdown = false
@@ -1026,7 +1040,7 @@ struct GameScreen: View {
     }
 
     private var playersLeaderboard: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading) {
             
             HStack(alignment: .top, spacing: 12) {
                 // Place
@@ -1084,65 +1098,87 @@ struct GameScreen: View {
                     valuePath: \.assists,
                     option: .assist
                 )
-                playerStatColumn(
-                    header: NSLocalizedString("saves_icon", comment: ""),
-                    players: viewModel.uiState.playerUiModelList,
-                    valuePath: \.saves,
-                    option: .save
-                )
-                playerStatColumn(
-                    header: NSLocalizedString("dribbles_icon", comment: ""),
-                    players: viewModel.uiState.playerUiModelList,
-                    valuePath: \.dribbles,
-                    option: .dribble
-                )
-                playerStatColumn(
-                    header: NSLocalizedString("shots_icon", comment: ""),
-                    players: viewModel.uiState.playerUiModelList,
-                    valuePath: \.shots,
-                    option: .shot
-                )
-                playerStatColumn(
-                    header: NSLocalizedString("passes_icon", comment: ""),
-                    players: viewModel.uiState.playerUiModelList,
-                    valuePath: \.passes,
-                    option: .pass
-                )
-                playerStatColumn(
-                    header: NSLocalizedString("player_result_yellow_card", comment: ""),
-                    players: viewModel.uiState.playerUiModelList,
-                    valuePath: \.yellowCards,
-                    option: .yellowCard
-                )
-                playerStatColumn(
-                    header: NSLocalizedString("player_result_red_card", comment: ""),
-                    players: viewModel.uiState.playerUiModelList,
-                    valuePath: \.redCards,
-                    option: .redCard
-                )
+                if !hiddenStatOptions.contains(.save) {
+                    playerStatColumn(
+                        header: NSLocalizedString("saves_icon", comment: ""),
+                        players: viewModel.uiState.playerUiModelList,
+                        valuePath: \.saves,
+                        option: .save
+                    )
+                }
+                if !hiddenStatOptions.contains(.dribble) {
+                    playerStatColumn(
+                        header: NSLocalizedString("dribbles_icon", comment: ""),
+                        players: viewModel.uiState.playerUiModelList,
+                        valuePath: \.dribbles,
+                        option: .dribble
+                    )
+                }
+                if !hiddenStatOptions.contains(.shot) {
+                    playerStatColumn(
+                        header: NSLocalizedString("shots_icon", comment: ""),
+                        players: viewModel.uiState.playerUiModelList,
+                        valuePath: \.shots,
+                        option: .shot
+                    )
+                }
+                if !hiddenStatOptions.contains(.pass) {
+                    playerStatColumn(
+                        header: NSLocalizedString("passes_icon", comment: ""),
+                        players: viewModel.uiState.playerUiModelList,
+                        valuePath: \.passes,
+                        option: .pass
+                    )
+                }
+                if !hiddenStatOptions.contains(.yellowCard) {
+                    playerStatColumn(
+                        header: NSLocalizedString("player_result_yellow_card", comment: ""),
+                        players: viewModel.uiState.playerUiModelList,
+                        valuePath: \.yellowCards,
+                        option: .yellowCard
+                    )
+                }
+                if !hiddenStatOptions.contains(.redCard) {
+                    playerStatColumn(
+                        header: NSLocalizedString("player_result_red_card", comment: ""),
+                        players: viewModel.uiState.playerUiModelList,
+                        valuePath: \.redCards,
+                        option: .redCard
+                    )
+                }
             }
             .padding(12)
-            .background(AppColor.surface)
-            .cornerRadius(12)
-            .overlay {
-                if viewModel.uiState.uiLimited {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(AppColor.surface)
-                    
-                    VStack(spacing: 12) {
-                        Image(systemName: "lock.fill")
-                            .font(.largeTitle)
-                            .foregroundColor(AppColor.outline)
-                        
-                        Text(NSLocalizedString("player_result_limited_text", comment: ""))
-                            .font(.bodySmall)
-                            .foregroundColor(AppColor.outline)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 16)
-                    }
-                    .onTapGesture {
-                        viewModel.send(.onActivateClicked)
-                    }
+
+            Button {
+                showCustomizeColumnsSheet = true
+            } label: {
+                Text(NSLocalizedString("customize_columns", comment: ""))
+                    .font(.labelSmall)
+                    .foregroundColor(AppColor.outline)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.bottom, 12)
+        }
+        .background(AppColor.surface)
+        .cornerRadius(12)
+        .overlay {
+            if viewModel.uiState.uiLimited {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(AppColor.surface)
+
+                VStack(spacing: 12) {
+                    Image(systemName: "lock.fill")
+                        .font(.largeTitle)
+                        .foregroundColor(AppColor.outline)
+
+                    Text(NSLocalizedString("player_result_limited_text", comment: ""))
+                        .font(.bodySmall)
+                        .foregroundColor(AppColor.outline)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
+                }
+                .onTapGesture {
+                    viewModel.send(.onActivateClicked)
                 }
             }
         }
@@ -1718,13 +1754,14 @@ struct LiveGameResultSheet: View {
 struct TeamOptionsDropdown: View {
     let teamName: String
     let teamColor: Color
+    let hiddenOptions: Set<TeamOption>
     let onOptionSelected: (TeamOption) -> Void
     let onDismiss: () -> Void
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(TeamOption.allCases, id: \.self) { option in
+                ForEach(TeamOption.allCases.filter { !hiddenOptions.contains($0) }, id: \.self) { option in
                     Button {
                         onOptionSelected(option)
                     } label: {
@@ -1815,6 +1852,66 @@ struct TeamChangeDropdown: View {
                             .font(.bodySmall)
                             .foregroundColor(AppColor.outline)
                     }
+                }
+            }
+        }
+    }
+}
+
+struct CustomizeColumnsSheet: View {
+    @Binding var hiddenOptions: Set<TeamOption>
+    @Environment(\.dismiss) private var dismiss
+
+    private let toggleableOptions: [TeamOption] = [.save, .dribble, .shot, .pass, .yellowCard, .redCard]
+
+    var body: some View {
+        NavigationView {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(NSLocalizedString("customize_columns_subtitle", comment: ""))
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.outline)
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 8)
+
+                List {
+                    ForEach(toggleableOptions, id: \.self) { option in
+                        HStack {
+                            Text(NSLocalizedString(option.localizationKey, comment: ""))
+                                .font(.labelSmall)
+                                .foregroundColor(AppColor.onSurface)
+                            Spacer()
+                            Image(systemName: hiddenOptions.contains(option) ? "checkmark.circle" : "checkmark.circle.fill")
+                                .foregroundColor(hiddenOptions.contains(option) ? AppColor.outline : AppColor.primary)
+                                .font(.title3)
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            if hiddenOptions.contains(option) {
+                                hiddenOptions.remove(option)
+                            } else {
+                                hiddenOptions.insert(option)
+                            }
+                        }
+                        .listRowBackground(AppColor.surface)
+                    }
+                }
+                .listStyle(.insetGrouped)
+                .scrollContentBackground(.hidden)
+                .background(AppColor.background)
+            }
+            .background(AppColor.background)
+            .navigationTitle(NSLocalizedString("customize_columns_title", comment: ""))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(NSLocalizedString("done", comment: "")) {
+                        dismiss()
+                    }
+                    .font(.labelSmall)
+                    .foregroundColor(AppColor.primary)
                 }
             }
         }

@@ -13,7 +13,7 @@ import UIKit
 @MainActor
 final class GameViewModel: ObservableObject {
 
-    private let gameId: UUID
+    let gameId: UUID
     private let gameRepository: GameRepository
     private let liveGameRepository: LiveGameRepository
     private let teamRepository: TeamRepository

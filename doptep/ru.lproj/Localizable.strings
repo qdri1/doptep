@@ -96,6 +96,9 @@
 "team_option_red_card" = "Красная 🟥";
 "team_option_players_title" = "выберите автора";
 "team_option_players_auto_goal" = "Автогол";
+"customize_columns" = "Настроить";
+"customize_columns_title" = "Настройка столбцов";
+"customize_columns_subtitle" = "Показать или скрыть столбцы статистики";
 
 // MARK: - Best Player Options
 "best_player_option_best_player" = "Лучший игрок 🔥";

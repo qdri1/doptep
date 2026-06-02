@@ -96,6 +96,9 @@
 "team_option_red_card" = "Red 🟥";
 "team_option_players_title" = "Select player";
 "team_option_players_auto_goal" = "Own goal";
+"customize_columns" = "Customize";
+"customize_columns_title" = "Customize Columns";
+"customize_columns_subtitle" = "Show or hide stat columns";
 
 // MARK: - Best Player Options
 "best_player_option_best_player" = "Best player 🔥";
