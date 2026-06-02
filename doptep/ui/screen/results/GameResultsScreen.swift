@@ -265,7 +265,7 @@ struct TeamsResultsBlock: View {
                         HStack(spacing: 6) {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
-                                .frame(width: 12, height: 12)
+                                .frame(width: 16, height: 16)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 4)
                                         .stroke(team.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
