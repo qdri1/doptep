@@ -96,6 +96,9 @@ final class GameResultsViewModel: ObservableObject {
                 if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
                 if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
                 if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
+                let lhsNumber = lhs.number ?? Int.min
+                let rhsNumber = rhs.number ?? Int.min
+                if lhsNumber != rhsNumber { return lhsNumber < rhsNumber }
                 return lhs.name < rhs.name
             }
 

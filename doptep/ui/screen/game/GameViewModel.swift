@@ -216,6 +216,9 @@ final class GameViewModel: ObservableObject {
                     if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
                     if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
                     if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
+                    let lhsNumber = lhs.number ?? Int.min
+                    let rhsNumber = rhs.number ?? Int.min
+                    if lhsNumber != rhsNumber { return lhsNumber < rhsNumber }
                     return lhs.name < rhs.name
                 }
 
@@ -930,6 +933,9 @@ final class GameViewModel: ObservableObject {
             if lhs.teamPoints != rhs.teamPoints { return lhs.teamPoints > rhs.teamPoints }
             if lhs.teamGoalsDifference != rhs.teamGoalsDifference { return lhs.teamGoalsDifference > rhs.teamGoalsDifference }
             if lhs.teamName != rhs.teamName { return lhs.teamName < rhs.teamName }
+            let lhsNumber = lhs.number ?? Int.min
+            let rhsNumber = rhs.number ?? Int.min
+            if lhsNumber != rhsNumber { return lhsNumber < rhsNumber }
             return lhs.name < rhs.name
         }
     }
@@ -1036,7 +1042,15 @@ final class GameViewModel: ObservableObject {
 
         let players = uiState.playerUiModelList
             .filter { $0.teamId == liveGame.leftTeamId }
-            .sorted { $0.name < $1.name }
+            .sorted { lhs, rhs in
+                if (lhs.number == nil) != (rhs.number == nil) {
+                    return lhs.number != nil
+                }
+                if let lhsNumber = lhs.number, let rhsNumber = rhs.number, lhsNumber != rhsNumber {
+                    return lhsNumber < rhsNumber
+                }
+                return lhs.name < rhs.name
+            }
 
         let optionPlayers = OptionPlayersUiModel(
             option: option,
@@ -1052,7 +1066,15 @@ final class GameViewModel: ObservableObject {
 
         let players = uiState.playerUiModelList
             .filter { $0.teamId == liveGame.rightTeamId }
-            .sorted { $0.name < $1.name }
+            .sorted { lhs, rhs in
+                if (lhs.number == nil) != (rhs.number == nil) {
+                    return lhs.number != nil
+                }
+                if let lhsNumber = lhs.number, let rhsNumber = rhs.number, lhsNumber != rhsNumber {
+                    return lhsNumber < rhsNumber
+                }
+                return lhs.name < rhs.name
+            }
 
         let optionPlayers = OptionPlayersUiModel(
             option: option,

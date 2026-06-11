@@ -96,13 +96,15 @@ struct AddGameScreen: View {
             Button {
                 viewModel.send(.onFinishClicked)
             } label: {
-                Image(systemName: "checkmark")
-                    .font(.titleLarge)
-                    .foregroundColor(AppColor.onSurface)
+                Text(NSLocalizedString("done", comment: ""))
+                    .font(.bodyLarge)
+                    .foregroundColor(AppColor.primary)
             }
         }
         .padding()
         .background(AppColor.surface)
+        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+        .zIndex(1)
     }
 
     private var gameNameField: some View {
