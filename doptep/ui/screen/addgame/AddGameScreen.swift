@@ -66,7 +66,7 @@ struct AddGameScreen: View {
         }
         .background(AppColor.background)
         .navigationBarHidden(true)
-        .enableSwipeBack()
+        .enableSwipeBack(onSwipeBackBegan: dismissKeyboard)
         .sheet(isPresented: $showColorsSheet) {
             teamColorsSheet
         }
