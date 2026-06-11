@@ -378,6 +378,7 @@ final class GameViewModel: ObservableObject {
                 try await updateTeamsBlock()
                 try await updatePlayersBlock()
                 try await updateLiveGameBlock()
+                try gameRepository.saveContext()
             } catch {
                 snackbarMessage = "Error finishing game"
             }

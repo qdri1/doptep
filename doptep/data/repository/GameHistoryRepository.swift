@@ -49,13 +49,11 @@ final class GameHistoryRepository {
 
     func saveEntry(_ entry: GameHistoryEntryModel) -> UUID {
         context.insert(entry)
-        try? context.save()
         return entry.id
     }
 
     func saveActionEvent(_ event: GameHistoryActionEventModel) {
         context.insert(event)
-        try? context.save()
     }
 
     func deleteGameHistory(gameId: UUID) throws {
