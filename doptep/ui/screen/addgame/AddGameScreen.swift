@@ -76,9 +76,14 @@ struct AddGameScreen: View {
         }
     }
 
+    private func dismissKeyboard() {
+        focusedField = nil
+    }
+
     private var topBar: some View {
         HStack {
             Button {
+                dismissKeyboard()
                 viewModel.send(.closeScreen)
             } label: {
                 Image(systemName: "arrow.left")
@@ -94,6 +99,7 @@ struct AddGameScreen: View {
                 .frame(maxWidth: .infinity)
 
             Button {
+                dismissKeyboard()
                 viewModel.send(.onFinishClicked)
             } label: {
                 Text(NSLocalizedString("done", comment: ""))
