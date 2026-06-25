@@ -15,18 +15,29 @@ struct AddGameScreen: View {
 
     @State private var showColorsSheet = false
     @FocusState private var focusedField: Field?
+    @FocusState private var focusedPlayerNumberField: PlayerNumberField?
 
     private enum Field: Hashable {
-        case gameName, gameTime, teamName, playerNumber(Int), player(Int)
+        case gameName, gameTime, teamName, player(Int)
+    }
+    
+    private enum PlayerNumberField: Hashable {
+        case playerNumber(Int)
     }
 
     private var nextField: Field? {
         switch focusedField {
         case .gameName: return .gameTime
         case .gameTime: return .teamName
-        case .teamName: return playerFieldsCount > 0 ? .playerNumber(0) : nil
-        case .playerNumber(let index): return .player(index)
-        case .player(let index): return index < playerFieldsCount - 1 ? .playerNumber(index + 1) : nil
+        case .teamName: return playerFieldsCount > 0 ? .player(0) : nil
+        case .player(let index): return index < playerFieldsCount - 1 ? .player(index + 1) : nil
+        case nil: return nil
+        }
+    }
+    
+    private var nextPlayerNumberField: PlayerNumberField? {
+        switch focusedPlayerNumberField {
+        case .playerNumber(let index): return index < playerFieldsCount - 1 ? .playerNumber(index + 1) : nil
         case nil: return nil
         }
     }
@@ -57,9 +68,21 @@ struct AddGameScreen: View {
                         focusedField = next
                     }
                 }
-                if let field = focusedField, field == .gameTime {
+                if let field = focusedField {
+                    if field == .gameTime || field == .player(playerFieldsCount - 1) {
+                        Button(NSLocalizedString("keyboard_done", comment: "")) {
+                            focusedField = nil
+                        }
+                    }
+                }
+                if let nextPlayerNumber = nextPlayerNumberField {
+                    Button(NSLocalizedString("keyboard_next", comment: "")) {
+                        focusedPlayerNumberField = nextPlayerNumber
+                    }
+                }
+                if let field = focusedPlayerNumberField, field == .playerNumber(playerFieldsCount - 1) {
                     Button(NSLocalizedString("keyboard_done", comment: "")) {
-                        focusedField = nil
+                        focusedPlayerNumberField = nil
                     }
                 }
             }
@@ -78,6 +101,7 @@ struct AddGameScreen: View {
 
     private func dismissKeyboard() {
         focusedField = nil
+        focusedPlayerNumberField = nil
     }
 
     private var topBar: some View {
@@ -385,7 +409,7 @@ struct AddGameScreen: View {
             TextField("", text: numberBinding, prompt: Text("№").foregroundColor(AppColor.outline))
                 .keyboardType(.numberPad)
                 .textFieldStyle(RoundedNumberFieldStyle())
-                .focused($focusedField, equals: .playerNumber(fieldIndex))
+                .focused($focusedPlayerNumberField, equals: .playerNumber(fieldIndex))
 
             TextField(
                 "",
