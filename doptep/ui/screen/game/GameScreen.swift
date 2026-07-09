@@ -8,6 +8,12 @@ import RevenueCat
 import RevenueCatUI
 
 struct GameScreen: View {
+    private enum TeamActionSide { case left, right }
+    private enum TeamActionPage {
+        case options
+        case players(OptionPlayersUiModel)
+    }
+
     @StateObject private var viewModel: GameViewModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -16,7 +22,9 @@ struct GameScreen: View {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
-    @State private var showOptionPlayersSheet = false
+    @State private var showTeamActionSheet = false
+    @State private var teamActionSide: TeamActionSide = .left
+    @State private var teamActionPage: TeamActionPage = .options
     @State private var showPlayerResultSheet = false
     @State private var showLiveGameResultSheet = false
     @State private var showStayTeamSheet = false
@@ -34,13 +42,10 @@ struct GameScreen: View {
     @State private var pendingActivationAfterPaywall = false
     @State private var showNoEntitlementAlert = false
     @State private var gameResultsGameId: UUID?
-    @State private var showLeftTeamOptionsDropdown = false
-    @State private var showRightTeamOptionsDropdown = false
     @State private var showLeftTeamChangeDropdown = false
     @State private var showRightTeamChangeDropdown = false
     @State private var restoreFailureMessage: String?
 
-    @State private var currentOptionPlayers: OptionPlayersUiModel?
     @State private var currentPlayerResult: PlayerResultUiModel?
     @State private var showTeamResultSheet = false
     @State private var currentTeamResult: TeamUiModel?
@@ -83,10 +88,18 @@ struct GameScreen: View {
             handleEffect(effect)
         }
         .onChange(of: viewModel.uiState.showLeftTeamOptionsDropdown) { _, newValue in
-            showLeftTeamOptionsDropdown = newValue
+            if newValue {
+                teamActionSide = .left
+                teamActionPage = .options
+                showTeamActionSheet = true
+            }
         }
         .onChange(of: viewModel.uiState.showRightTeamOptionsDropdown) { _, newValue in
-            showRightTeamOptionsDropdown = newValue
+            if newValue {
+                teamActionSide = .right
+                teamActionPage = .options
+                showTeamActionSheet = true
+            }
         }
         .onChange(of: viewModel.uiState.showLeftTeamChangeDropdown) { _, newValue in
             showLeftTeamChangeDropdown = newValue
@@ -103,26 +116,17 @@ struct GameScreen: View {
         .onDisappear {
             viewModel.saveTimerOnExit()
         }
-        .sheet(isPresented: $showOptionPlayersSheet) {
-            if let optionPlayers = currentOptionPlayers {
-                OptionPlayersSheet(
-                    optionPlayers: optionPlayers,
-                    onPlayerSelected: { player in
-                        viewModel.send(.onOptionPlayersSelected(
-                            teamId: optionPlayers.teamId,
-                            playerUiModel: player,
-                            option: optionPlayers.option
-                        ))
-                        showOptionPlayersSheet = false
-                    },
-                    onAutoGoalSelected: {
-                        viewModel.send(.onOptionPlayersAutoGoalSelected(teamId: optionPlayers.teamId))
-                        showOptionPlayersSheet = false
-                    },
-                    onDismiss: { showOptionPlayersSheet = false }
-                )
-                .presentationDetents([.medium])
+        .sheet(isPresented: $showTeamActionSheet, onDismiss: {
+            if case .options = teamActionPage {
+                if teamActionSide == .left {
+                    viewModel.send(.onLeftTeamOptionSelected(option: nil))
+                } else {
+                    viewModel.send(.onRightTeamOptionSelected(option: nil))
+                }
             }
+            teamActionPage = .options
+        }) {
+            teamActionSheetContent
         }
         .sheet(isPresented: $showBestPlayersSheet) {
             BestPlayersSheet(bestPlayers: currentBestPlayers)
@@ -188,48 +192,6 @@ struct GameScreen: View {
                         showLiveGameResultSheet = false
                     },
                     onDismiss: { showLiveGameResultSheet = false }
-                )
-                .presentationDetents([.medium])
-            }
-        }
-        .sheet(isPresented: $showLeftTeamOptionsDropdown, onDismiss: {
-            viewModel.send(.onLeftTeamOptionSelected(option: nil))
-            showLeftTeamOptionsDropdown = false
-        }) {
-            if let liveGame = viewModel.uiState.liveGameUiModel {
-                TeamOptionsDropdown(
-                    teamName: liveGame.leftTeamName,
-                    teamColor: liveGame.leftTeamColor.color,
-                    hiddenOptions: hiddenStatOptions,
-                    onOptionSelected: { option in
-                        viewModel.send(.onLeftTeamOptionSelected(option: option))
-                        showLeftTeamOptionsDropdown = false
-                    },
-                    onDismiss: {
-                        viewModel.send(.onLeftTeamOptionSelected(option: nil))
-                        showLeftTeamOptionsDropdown = false
-                    }
-                )
-                .presentationDetents([.medium])
-            }
-        }
-        .sheet(isPresented: $showRightTeamOptionsDropdown, onDismiss: {
-            viewModel.send(.onRightTeamOptionSelected(option: nil))
-            showRightTeamOptionsDropdown = false
-        }) {
-            if let liveGame = viewModel.uiState.liveGameUiModel {
-                TeamOptionsDropdown(
-                    teamName: liveGame.rightTeamName,
-                    teamColor: liveGame.rightTeamColor.color,
-                    hiddenOptions: hiddenStatOptions,
-                    onOptionSelected: { option in
-                        viewModel.send(.onRightTeamOptionSelected(option: option))
-                        showRightTeamOptionsDropdown = false
-                    },
-                    onDismiss: {
-                        viewModel.send(.onRightTeamOptionSelected(option: nil))
-                        showRightTeamOptionsDropdown = false
-                    }
                 )
                 .presentationDetents([.medium])
             }
@@ -1194,9 +1156,9 @@ struct GameScreen: View {
             gameResultsGameId = gameId
             showGameResultsScreen = true
         case .showOptionPlayersBottomSheet(let optionPlayers):
-            currentOptionPlayers = optionPlayers
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                showOptionPlayersSheet = true
+            teamActionPage = .players(optionPlayers)
+            if !showTeamActionSheet {
+                showTeamActionSheet = true
             }
         case .showPlayerResultBottomSheet(let playerResult):
             currentPlayerResult = playerResult
@@ -1229,6 +1191,106 @@ struct GameScreen: View {
             showGameHistorySheet = true
         case .showSnackbar(let message):
             viewModel.snackbarMessage = message
+        }
+    }
+
+    @ViewBuilder
+    private var teamActionSheetContent: some View {
+        if let liveGame = viewModel.uiState.liveGameUiModel {
+            switch teamActionPage {
+            case .options:
+                TeamOptionsDropdown(
+                    teamName: teamActionSide == .left ? liveGame.leftTeamName : liveGame.rightTeamName,
+                    teamColor: (teamActionSide == .left ? liveGame.leftTeamColor : liveGame.rightTeamColor).color,
+                    hiddenOptions: hiddenStatOptions,
+                    onOptionSelected: { option in
+                        if teamActionSide == .left {
+                            viewModel.send(.onLeftTeamOptionSelected(option: option))
+                        } else {
+                            viewModel.send(.onRightTeamOptionSelected(option: option))
+                        }
+                    },
+                    onDismiss: {
+                        if teamActionSide == .left {
+                            viewModel.send(.onLeftTeamOptionSelected(option: nil))
+                        } else {
+                            viewModel.send(.onRightTeamOptionSelected(option: nil))
+                        }
+                        showTeamActionSheet = false
+                    }
+                )
+                .presentationDetents([.medium])
+            case .players(let optionPlayers):
+                OptionPlayersSheet(
+                    optionPlayers: optionPlayers,
+                    onPlayerSelected: { player in
+                        viewModel.send(.onOptionPlayersSelected(
+                            teamId: optionPlayers.teamId,
+                            playerUiModel: player,
+                            option: optionPlayers.option
+                        ))
+                        showTeamActionSheet = false
+                    },
+                    onAutoGoalSelected: {
+                        viewModel.send(.onOptionPlayersAutoGoalSelected(teamId: optionPlayers.teamId))
+                        showTeamActionSheet = false
+                    },
+                    onDismiss: { showTeamActionSheet = false }
+                )
+                .presentationDetents([.medium])
+            }
+        }
+    }
+}
+
+struct TeamOptionsDropdown: View {
+    let teamName: String
+    let teamColor: Color
+    let hiddenOptions: Set<TeamOption>
+    let onOptionSelected: (TeamOption) -> Void
+    let onDismiss: () -> Void
+
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(TeamOption.allCases.filter { !hiddenOptions.contains($0) }, id: \.self) { option in
+                    Button {
+                        onOptionSelected(option)
+                    } label: {
+                        Text(NSLocalizedString(option.localizationKey, comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.onSurface)
+                    }
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .background(AppColor.background)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    HStack(spacing: 8) {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(teamColor)
+                            .frame(width: 20, height: 20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                            )
+                        Text(teamName)
+                            .font(.bodyMedium)
+                            .foregroundColor(AppColor.onSurface)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        onDismiss()
+                    } label: {
+                        Text(NSLocalizedString("cancel", comment: ""))
+                            .font(.bodySmall)
+                            .foregroundColor(AppColor.outline)
+                    }
+                }
+            }
         }
     }
 }
@@ -1720,58 +1782,6 @@ struct LiveGameResultSheet: View {
                     Text(NSLocalizedString("edit_team_goals", comment: ""))
                         .font(.bodyMedium)
                         .foregroundColor(AppColor.onSurface)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        onDismiss()
-                    } label: {
-                        Text(NSLocalizedString("cancel", comment: ""))
-                            .font(.bodySmall)
-                            .foregroundColor(AppColor.outline)
-                    }
-                }
-            }
-        }
-    }
-}
-
-struct TeamOptionsDropdown: View {
-    let teamName: String
-    let teamColor: Color
-    let hiddenOptions: Set<TeamOption>
-    let onOptionSelected: (TeamOption) -> Void
-    let onDismiss: () -> Void
-
-    var body: some View {
-        NavigationView {
-            List {
-                ForEach(TeamOption.allCases.filter { !hiddenOptions.contains($0) }, id: \.self) { option in
-                    Button {
-                        onOptionSelected(option)
-                    } label: {
-                        Text(NSLocalizedString(option.localizationKey, comment: ""))
-                            .font(.bodySmall)
-                            .foregroundColor(AppColor.onSurface)
-                    }
-                }
-            }
-            .scrollContentBackground(.hidden)
-            .background(AppColor.background)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    HStack(spacing: 8) {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(teamColor)
-                            .frame(width: 20, height: 20)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                            )
-                        Text(teamName)
-                            .font(.bodyMedium)
-                            .foregroundColor(AppColor.onSurface)
-                    }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
