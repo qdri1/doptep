@@ -1310,9 +1310,8 @@ struct OptionPlayersSheet: View {
                     } label: {
                         HStack(spacing: 8) {
                             PlayerTeamBadge(teamColor: player.teamColor, number: player.number)
-                            Text(player.name)
-                                .font(.bodySmall)
-                                .foregroundColor(AppColor.onSurface)
+                            Text(player.name.prefix(1)).font(.bodySmall).bold().foregroundColor(AppColor.onSurface)
+                            + Text(player.name.dropFirst()).font(.bodySmall).foregroundColor(AppColor.onSurface)
                         }
                     }
                 }
