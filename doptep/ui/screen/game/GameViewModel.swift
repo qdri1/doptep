@@ -75,12 +75,6 @@ final class GameViewModel: ObservableObject {
         self.gameHistoryRepository = gameHistoryRepository
         self.audioManager = audioManager
 
-        // Billing status is a synchronous in-memory read, so resolve it
-        // immediately rather than waiting on fetchGame()'s async load —
-        // otherwise activationInfoBlock pops in after the first frame and
-        // shoves the rest of the screen down.
-        updateBillingState()
-
         fetchGame()
         setupLifecycleObservers()
     }
