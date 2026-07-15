@@ -69,7 +69,6 @@ struct GameScreen: View {
                         scoreboardSection(liveGame: liveGame)
                     }
                     timerSection
-                    startFinishButton
                     soundsSection
                     if viewModel.uiState.teamUiModelList.count > 2 {
                         teamsLeaderboard
@@ -402,27 +401,38 @@ struct GameScreen: View {
         .background(AppColor.surface)
     }
 
-    private func scoreboardSection(liveGame: LiveGameUiModel) -> some View {
-        VStack(spacing: 8) {
-            HStack {
-                if liveGame.isLive {
-                    Text("Live")
-                        .font(.labelSmall)
-                        .foregroundColor(Color(hex: "#EC7063"))
-                } else {
-                    if viewModel.uiState.gameUiModel?.teamQuantity == .team2 {
-                        Text(String(format: NSLocalizedString("half_count", comment: ""), "\(liveGame.gameCount)"))
-                            .font(.labelSmall)
-                            .foregroundColor(AppColor.onSurfaceVariant)
-                    } else {
-                        Text(String(format: NSLocalizedString("game_count", comment: ""), "\(liveGame.gameCount)"))
-                            .font(.labelSmall)
-                            .foregroundColor(AppColor.onSurfaceVariant)
-                    }
-                }
-            }
+    /// Shared pitch-card shell (gradient, grass stripes, rounded border,
+    /// shadow) so the scoreboard, timer and start/finish sections all read
+    /// as one visual family while staying separate, independently spaced
+    /// blocks in the layout.
+    private func pitchCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(spacing: 16) {
+            content()
+        }
+        .padding(.vertical, 20)
+        .padding(.horizontal, 16)
+        .background(ScoreboardBackground())
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.18), Color.white.opacity(0.02)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ),
+                    lineWidth: 1
+                )
+        )
+        .shadow(color: Color(hex: "#0A2818").opacity(0.4), radius: 20, x: 0, y: 10)
+        .padding(.horizontal, 16)
+    }
 
-            HStack(spacing: 0) {
+    private func scoreboardSection(liveGame: LiveGameUiModel) -> some View {
+        pitchCard {
+            matchStatusBadge(liveGame: liveGame)
+
+            HStack(spacing: 4) {
                 teamScoreView(
                     name: liveGame.leftTeamName,
                     color: liveGame.leftTeamColor.color,
@@ -431,6 +441,7 @@ struct GameScreen: View {
                     isWinning: liveGame.isLeftTeamWin,
                     isLeft: true
                 )
+                .contentShape(Rectangle())
                 .onTapGesture {
                     viewModel.send(.onLeftTeamClicked)
                 }
@@ -446,22 +457,9 @@ struct GameScreen: View {
                         )
                     }
                 }
-                
-                if liveGame.isLive {
-                    Text("vs")
-                        .font(.titleLarge)
-                        .foregroundColor(AppColor.onSurface)
-                        .padding(.horizontal, 8)
-                } else {
-                    Button {
-                        viewModel.send(.onTeamChangeIconClicked)
-                    } label: {
-                        Image(systemName: "arrow.left.arrow.right")
-                            .font(.titleLarge)
-                            .foregroundColor(AppColor.onSurfaceVariant)
-                            .padding(.horizontal, 8)
-                    }
-                }
+
+                centerDivider(liveGame: liveGame)
+                    .padding(.horizontal, 2)
 
                 teamScoreView(
                     name: liveGame.rightTeamName,
@@ -471,6 +469,7 @@ struct GameScreen: View {
                     isWinning: liveGame.isRightTeamWin,
                     isLeft: false
                 )
+                .contentShape(Rectangle())
                 .onTapGesture {
                     viewModel.send(.onRightTeamClicked)
                 }
@@ -487,212 +486,309 @@ struct GameScreen: View {
                     }
                 }
             }
+            .background(PitchCenterMark())
 
-            let shouldShowStreak: Bool = {
-                guard let gameUiModel = viewModel.uiState.gameUiModel else { return false }
-                if gameUiModel.teamQuantity == .team4 { return true }
-                guard gameUiModel.teamQuantity == .team3, let rule = gameUiModel.gameRule as? GameRuleTeam3 else { return false }
-                return rule == .winnerStay3 || rule == .winnerStay4 || rule == .winnerStayUnlimited
-            }()
             if shouldShowStreak {
-                HStack {
-                    Text(String(format: NSLocalizedString("win_streak", comment: ""), "\(liveGame.leftTeamWinCount)"))
-                        .font(.labelSmall)
-                        .foregroundColor(AppColor.onSurfaceVariant)
-                        .frame(maxWidth: .infinity)
-                        .multilineTextAlignment(.center)
-
-                    Text(String(format: NSLocalizedString("win_streak", comment: ""), "\(liveGame.rightTeamWinCount)"))
-                        .font(.labelSmall)
-                        .foregroundColor(AppColor.onSurfaceVariant)
-                        .frame(maxWidth: .infinity)
-                        .multilineTextAlignment(.center)
-                }
+                streakRow(liveGame: liveGame)
             }
 
             if !viewModel.uiState.nextPlayingTeamsUiModelList.isEmpty {
-                VStack(spacing: 4) {
-                    
-                    Spacer().frame(height: 2)
-                    
-                    HStack(spacing: 12) {
-                        Rectangle()
-                            .frame(maxWidth: .infinity, maxHeight: 1)
-                            .foregroundColor(AppColor.background)
-                        Text(NSLocalizedString("next_playing_teams", comment: ""))
-                            .font(.labelSmall)
-                            .foregroundColor(AppColor.outline)
-                            .fixedSize()
-                        Rectangle()
-                            .frame(maxWidth: .infinity, maxHeight: 1)
-                            .foregroundColor(AppColor.background)
-                    }
-
-                    Spacer().frame(height: 4)
-
-                    ForEach(viewModel.uiState.nextPlayingTeamsUiModelList.indices, id: \.self) { index in
-                        let nextTeams = viewModel.uiState.nextPlayingTeamsUiModelList[index]
-                        HStack(spacing: 6) {
-                            if let leftTeam = nextTeams.leftTeam {
-                                Text(leftTeam.name)
-                                    .font(.labelSmall)
-                                    .foregroundColor(AppColor.onSurface)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                RoundedRectangle(cornerRadius: 4)
-                                    .frame(width: 12, height: 12)
-                                    .foregroundColor(leftTeam.color.color)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 4)
-                                            .stroke(leftTeam.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                    )
-                            } else {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .frame(width: 12, height: 12)
-                                    .foregroundColor(AppColor.onSurfaceVariant.opacity(0.0))
-                                Text("?")
-                                    .font(.labelSmall)
-                                    .foregroundColor(AppColor.onSurface)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                            }
-
-                            Text("-")
-                                .font(.labelSmall)
-                                .foregroundColor(AppColor.onSurface)
-
-                            if let rightTeam = nextTeams.rightTeam {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .frame(width: 12, height: 12)
-                                    .foregroundColor(rightTeam.color.color)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 4)
-                                            .stroke(rightTeam.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                    )
-                                Text(rightTeam.name)
-                                    .font(.labelSmall)
-                                    .foregroundColor(AppColor.onSurface)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            } else {
-                                Text("?")
-                                    .font(.labelSmall)
-                                    .foregroundColor(AppColor.onSurface)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                RoundedRectangle(cornerRadius: 4)
-                                    .frame(width: 12, height: 12)
-                                    .foregroundColor(AppColor.onSurfaceVariant.opacity(0.0))
-                            }
-                        }
-                    }
-                }
+                nextPlayingFooter
             } else if !viewModel.uiState.restTeamUiModelList.isEmpty {
-                VStack(spacing: 4) {
+                restFooter
+            }
+        }
+    }
 
-                    Spacer().frame(height: 2)
+    private var shouldShowStreak: Bool {
+        guard let gameUiModel = viewModel.uiState.gameUiModel else { return false }
+        if gameUiModel.teamQuantity == .team4 { return true }
+        guard gameUiModel.teamQuantity == .team3, let rule = gameUiModel.gameRule as? GameRuleTeam3 else { return false }
+        return rule == .winnerStay3 || rule == .winnerStay4 || rule == .winnerStayUnlimited
+    }
 
-                    HStack(spacing: 12) {
-                        Rectangle()
-                            .frame(maxWidth: .infinity, maxHeight: 1)
-                            .foregroundColor(AppColor.background)
-                        Text(NSLocalizedString("next_playing_teams", comment: ""))
+    private func matchStatusBadge(liveGame: LiveGameUiModel) -> some View {
+        Group {
+            if liveGame.isLive {
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(Color(hex: "#FF4B4B"))
+                        .frame(width: 7, height: 7)
+                        .phaseAnimator([false, true]) { view, phase in
+                            view
+                                .scaleEffect(phase ? 1.6 : 1.0)
+                                .opacity(phase ? 0.4 : 1.0)
+                        } animation: { _ in
+                            .easeInOut(duration: 0.9)
+                        }
+                    Text("LIVE")
+                        .font(.labelSmall)
+                        .tracking(1.2)
+                        .foregroundColor(.white)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 5)
+                .background(Capsule().fill(Color(hex: "#FF4B4B").opacity(0.22)))
+                .overlay(Capsule().stroke(Color(hex: "#FF4B4B").opacity(0.5), lineWidth: 1))
+            } else {
+                HStack(spacing: 6) {
+                    Image(systemName: "sportscourt.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(Color(hex: "#FFD54A"))
+                    Text(matchStatusText(liveGame: liveGame))
+                        .font(.labelSmall)
+                        .foregroundColor(.white.opacity(0.8))
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 5)
+                .background(Capsule().fill(Color.white.opacity(0.08)))
+            }
+        }
+    }
+
+    private func matchStatusText(liveGame: LiveGameUiModel) -> String {
+        if viewModel.uiState.gameUiModel?.teamQuantity == .team2 {
+            return String(format: NSLocalizedString("half_count", comment: ""), "\(liveGame.gameCount)")
+        } else {
+            return String(format: NSLocalizedString("game_count", comment: ""), "\(liveGame.gameCount)")
+        }
+    }
+
+    private func centerDivider(liveGame: LiveGameUiModel) -> some View {
+        ZStack {
+            Circle()
+                .fill(Color.white.opacity(0.06))
+                .frame(width: 52, height: 52)
+            Circle()
+                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                .frame(width: 52, height: 52)
+
+            if liveGame.isLive {
+                Image(systemName: "soccerball")
+                    .font(.system(size: 20))
+                    .foregroundColor(.white.opacity(0.9))
+            } else {
+                Button {
+                    viewModel.send(.onTeamChangeIconClicked)
+                } label: {
+                    Image(systemName: "arrow.left.arrow.right")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundColor(.white.opacity(0.9))
+                }
+            }
+        }
+    }
+
+    private func streakRow(liveGame: LiveGameUiModel) -> some View {
+        HStack(spacing: 8) {
+            streakPill(count: liveGame.leftTeamWinCount)
+                .frame(maxWidth: .infinity)
+            streakPill(count: liveGame.rightTeamWinCount)
+                .frame(maxWidth: .infinity)
+        }
+    }
+
+    private func streakPill(count: Int) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "flame.fill")
+                .font(.system(size: 10))
+                .foregroundColor(Color(hex: "#FFB020"))
+            Text(String(format: NSLocalizedString("win_streak", comment: ""), "\(count)"))
+                .font(.labelSmall)
+                .foregroundColor(.white.opacity(0.75))
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(Capsule().fill(Color.white.opacity(0.08)))
+    }
+
+    private func scoreboardDivider(title: String) -> some View {
+        HStack(spacing: 12) {
+            Rectangle().frame(maxWidth: .infinity, maxHeight: 1).foregroundColor(.white.opacity(0.12))
+            Text(title.uppercased())
+                .font(.labelSmall)
+                .foregroundColor(Color(hex: "#FFD54A").opacity(0.85))
+                .tracking(0.8)
+                .fixedSize()
+            Rectangle().frame(maxWidth: .infinity, maxHeight: 1).foregroundColor(.white.opacity(0.12))
+        }
+    }
+
+    private func scoreboardTeamChip(_ color: Color?) -> some View {
+        RoundedRectangle(cornerRadius: 4)
+            .fill(color ?? Color.clear)
+            .frame(width: 12, height: 12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(Color.white.opacity(color == .white ? 0.6 : 0.15), lineWidth: 1)
+            )
+    }
+
+    private var nextPlayingFooter: some View {
+        VStack(spacing: 10) {
+            scoreboardDivider(title: NSLocalizedString("next_playing_teams", comment: ""))
+
+            ForEach(viewModel.uiState.nextPlayingTeamsUiModelList.indices, id: \.self) { index in
+                let nextTeams = viewModel.uiState.nextPlayingTeamsUiModelList[index]
+                HStack(spacing: 6) {
+                    if let leftTeam = nextTeams.leftTeam {
+                        Text(leftTeam.name)
                             .font(.labelSmall)
-                            .foregroundColor(AppColor.outline)
-                            .fixedSize()
-                        Rectangle()
-                            .frame(maxWidth: .infinity, maxHeight: 1)
-                            .foregroundColor(AppColor.background)
+                            .foregroundColor(.white.opacity(0.85))
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        scoreboardTeamChip(leftTeam.color.color)
+                    } else {
+                        scoreboardTeamChip(nil)
+                        Text("?")
+                            .font(.labelSmall)
+                            .foregroundColor(.white.opacity(0.85))
+                            .frame(maxWidth: .infinity, alignment: .trailing)
                     }
 
-                    Spacer().frame(height: 12)
+                    Text("–")
+                        .font(.labelSmall)
+                        .foregroundColor(.white.opacity(0.4))
 
-                    ForEach(viewModel.uiState.restTeamUiModelList, id: \.id) { teamUiModel in
-                        HStack(spacing: 6) {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(teamUiModel.color.color)
-                                .frame(width: 12, height: 12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .stroke(teamUiModel.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                )
-                            Text(teamUiModel.name)
-                                .font(.labelSmall)
-                                .foregroundColor(AppColor.onSurface)
-                                .lineLimit(1)
-                        }
+                    if let rightTeam = nextTeams.rightTeam {
+                        scoreboardTeamChip(rightTeam.color.color)
+                        Text(rightTeam.name)
+                            .font(.labelSmall)
+                            .foregroundColor(.white.opacity(0.85))
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
+                        Text("?")
+                            .font(.labelSmall)
+                            .foregroundColor(.white.opacity(0.85))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        scoreboardTeamChip(nil)
                     }
                 }
             }
         }
-        .padding()
-        .background(AppColor.surface)
-        .cornerRadius(16)
-        .padding(.horizontal, 16)
+    }
+
+    private var restFooter: some View {
+        VStack(spacing: 10) {
+            scoreboardDivider(title: NSLocalizedString("next_playing_teams", comment: ""))
+
+            ForEach(viewModel.uiState.restTeamUiModelList, id: \.id) { teamUiModel in
+                HStack(spacing: 6) {
+                    scoreboardTeamChip(teamUiModel.color.color)
+                    Text(teamUiModel.name)
+                        .font(.labelSmall)
+                        .foregroundColor(.white.opacity(0.85))
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+            }
+        }
+    }
+
+    private func jerseyBadge(color: Color) -> some View {
+        Image("ic_jersey")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .foregroundColor(color)
+            .frame(width: 38, height: 38)
+            .shadow(color: Color.black.opacity(0.25), radius: 3, x: 0, y: 2)
     }
 
     private func teamScoreView(name: String, color: Color, goals: Int, winCount: Int, isWinning: Bool, isLeft: Bool) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 10) {
+            jerseyBadge(color: color)
+                .overlay(alignment: .topTrailing) {
+                    if winCount > 2 {
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(Color(hex: "#FFB020"))
+                            .padding(4)
+                            .background(Circle().fill(Color(hex: "#123D22")))
+                            .offset(x: 8, y: -6)
+                    }
+                }
 
             Text("\(goals)")
-                .font(.custom("Montserrat-Bold", size: 48))
-                .foregroundColor(AppColor.onSurface)
-            
-            Text(name)
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurface)
+                .font(.custom("Montserrat-Bold", size: 52))
+                .foregroundColor(.white)
+                .monospacedDigit()
+                .shadow(color: isWinning ? Color(hex: "#FFD54A").opacity(0.6) : .clear, radius: 12)
+
+            Text(name.uppercased())
+                .font(.labelMedium)
+                .foregroundColor(.white.opacity(0.85))
+                .tracking(0.6)
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
+                .lineLimit(2, reservesSpace: true)
                 .minimumScaleFactor(0.7)
-            
+                .frame(maxWidth: .infinity)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding()
-        .background(color.opacity(0.2))
-        .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-        )
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 4)
     }
 
     private var timerSection: some View {
-        Button {
-            viewModel.send(.onTimerClicked)
-        } label: {
-            HStack {
-                if viewModel.uiState.isTimerPlay {
-                    Image(systemName: "pause.fill")
-                        .foregroundColor(AppColor.onSurface)
-                } else {
-                    Image(systemName: "play.fill")
-                        .foregroundColor(AppColor.onSurface)
+        pitchCard {
+            Button {
+                viewModel.send(.onTimerClicked)
+            } label: {
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.white.opacity(0.10))
+                            .frame(width: 44, height: 44)
+                        Circle()
+                            .stroke(Color.white.opacity(0.25), lineWidth: 1)
+                            .frame(width: 44, height: 44)
+                        Image(systemName: viewModel.uiState.isTimerPlay ? "pause.fill" : "play.fill")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.white)
+                    }
+
+                    Text(viewModel.timerValue)
+                        .font(.custom("Montserrat-Bold", size: 34))
+                        .foregroundColor(.white)
+                        .monospacedDigit()
                 }
-
-                Text(viewModel.timerValue)
-                    .font(.custom("Montserrat-Bold", size: 32))
-                    .foregroundColor(AppColor.onSurface)
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(AppColor.surface)
-            .cornerRadius(16)
-            .padding(.horizontal, 16)
-        }
-    }
-
-    private var startFinishButton: some View {
-        Button {
-            viewModel.send(.onStartFinishButtonClicked)
-        } label: {
-            Text(viewModel.uiState.liveGameUiModel?.isLive == true
-                 ? NSLocalizedString("finish_game", comment: "")
-                 : NSLocalizedString("start_game", comment: ""))
-                .font(.titleMedium)
-                .foregroundColor(AppColor.onPrimary)
-                .padding()
                 .frame(maxWidth: .infinity)
-                .background(viewModel.uiState.liveGameUiModel?.isLive == true ? Color(hex: "#EC7063") : AppColor.primary)
-                .cornerRadius(16)
-                .padding(.horizontal, 16)
+            }
+            .buttonStyle(.plain)
+
+            Rectangle()
+                .fill(Color.white.opacity(0.10))
+                .frame(height: 1)
+
+            let isLive = viewModel.uiState.liveGameUiModel?.isLive == true
+            let accentColor = isLive ? Color(hex: "#EC7063") : AppColor.primary
+
+            Button {
+                viewModel.send(.onStartFinishButtonClicked)
+            } label: {
+                HStack(spacing: 8) {
+                    Text(isLive
+                         ? NSLocalizedString("finish_game", comment: "")
+                         : NSLocalizedString("start_game", comment: ""))
+                        .font(.titleMedium)
+                        .tracking(0.4)
+                }
+                .foregroundColor(.white)
+                .padding(.vertical, 14)
+                .frame(maxWidth: .infinity)
+                .background(
+                    LinearGradient(
+                        colors: isLive
+                            ? [Color(hex: "#EC7063"), Color(hex: "#C0392B")]
+                            : [AppColor.primary, Color(hex: "#155A22")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .shadow(color: accentColor.opacity(0.4), radius: 10, x: 0, y: 4)
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -1239,6 +1335,50 @@ struct GameScreen: View {
                 )
                 .presentationDetents([.medium])
             }
+        }
+    }
+}
+
+/// A short-sleeve football kit silhouette: rounded V-collar, softly curved
+/// sleeve ends, gently tapered torso — traced clockwise from the neckline.
+private struct ScoreboardBackground: View {
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [Color(hex: "#0B2F1B"), Color(hex: "#123D22"), Color(hex: "#0A2818")],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            GeometryReader { geo in
+                let stripeCount = 8
+                let stripeWidth = geo.size.width / CGFloat(stripeCount)
+                HStack(spacing: 0) {
+                    ForEach(0..<stripeCount, id: \.self) { index in
+                        Rectangle()
+                            .fill(Color.white.opacity(index.isMultiple(of: 2) ? 0.025 : 0))
+                            .frame(width: stripeWidth)
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Decorative pitch halfway-line + center circle, meant to sit behind the
+/// score row only so it always stays centered on `centerDivider` regardless
+/// of which optional sections (streak row, next/rest team footers) render
+/// below it and change the card's overall height.
+private struct PitchCenterMark: View {
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(Color.white.opacity(0.06), lineWidth: 1.5)
+                .frame(width: 130, height: 130)
+
+            Rectangle()
+                .fill(Color.white.opacity(0.06))
+                .frame(width: 1.5)
         }
     }
 }
