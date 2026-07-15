@@ -65,7 +65,9 @@ struct GameScreen: View {
                         activationInfoBlock
                     }
                     infoSection
-                    if let liveGame = viewModel.uiState.liveGameUiModel {
+                    if viewModel.uiState.gameUiModel == nil {
+                        scoreboardSkeleton
+                    } else if let liveGame = viewModel.uiState.liveGameUiModel {
                         scoreboardSection(liveGame: liveGame)
                     }
                     timerSection
@@ -426,6 +428,45 @@ struct GameScreen: View {
         )
         .shadow(color: Color(hex: "#0A2818").opacity(0.4), radius: 20, x: 0, y: 10)
         .padding(.horizontal, 16)
+    }
+
+    /// Placeholder shown while the initial game/live-game data is still
+    /// loading, sized to match the real scoreboard card so it doesn't pop
+    /// in and shove the rest of the screen down once data arrives.
+    private var scoreboardSkeleton: some View {
+        pitchCard {
+            Capsule()
+                .fill(Color.white.opacity(0.10))
+                .frame(width: 70, height: 22)
+                .shimmering()
+
+            HStack(spacing: 4) {
+                skeletonTeamColumn
+
+                Circle()
+                    .fill(Color.white.opacity(0.08))
+                    .frame(width: 52, height: 52)
+                    .shimmering()
+
+                skeletonTeamColumn
+            }
+        }
+    }
+
+    private var skeletonTeamColumn: some View {
+        VStack(spacing: 10) {
+            Circle()
+                .fill(Color.white.opacity(0.10))
+                .frame(width: 38, height: 38)
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.white.opacity(0.10))
+                .frame(width: 44, height: 40)
+            RoundedRectangle(cornerRadius: 4)
+                .fill(Color.white.opacity(0.08))
+                .frame(width: 70, height: 12)
+        }
+        .frame(maxWidth: .infinity)
+        .shimmering()
     }
 
     private func scoreboardSection(liveGame: LiveGameUiModel) -> some View {
@@ -931,6 +972,24 @@ struct GameScreen: View {
                 .padding(16)
                 .background(AppColor.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
+            } else {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(0..<4, id: \.self) { _ in
+                        HStack(spacing: 4) {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(AppColor.surfaceVariant)
+                                .frame(width: 120, height: 14)
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(AppColor.surfaceVariant)
+                                .frame(width: 60, height: 12)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .background(AppColor.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .shimmering()
             }
         }
         .padding(.horizontal, 16)
@@ -1369,6 +1428,40 @@ private struct ScoreboardBackground: View {
 /// score row only so it always stays centered on `centerDivider` regardless
 /// of which optional sections (streak row, next/rest team footers) render
 /// below it and change the card's overall height.
+/// Sweeps a soft highlight across `content`, masked to its own shape so the
+/// glow only travels over the placeholder bars themselves. Driven off
+/// `TimelineView` rather than a toggled `@State` value, so — unlike a
+/// `.animation(_:value:)`-based loop — it can't get stuck mid-cycle if the
+/// view is torn down and rebuilt while already mid-animation.
+private struct ShimmerModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .overlay {
+                TimelineView(.animation) { timeline in
+                    GeometryReader { geo in
+                        let cycle = 1.4
+                        let phase = timeline.date.timeIntervalSinceReferenceDate
+                            .truncatingRemainder(dividingBy: cycle) / cycle
+                        LinearGradient(
+                            colors: [.clear, Color.white.opacity(0.35), .clear],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                        .frame(width: geo.size.width * 0.5)
+                        .offset(x: -geo.size.width * 0.5 + CGFloat(phase) * geo.size.width * 1.5)
+                    }
+                }
+                .mask(content)
+            }
+    }
+}
+
+private extension View {
+    func shimmering() -> some View {
+        modifier(ShimmerModifier())
+    }
+}
+
 private struct PitchCenterMark: View {
     var body: some View {
         ZStack {
