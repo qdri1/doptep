@@ -792,6 +792,7 @@ struct GameScreen: View {
                         .font(.custom("Montserrat-Bold", size: 34))
                         .foregroundColor(.white)
                         .monospacedDigit()
+                        .padding(.trailing, 58)
                 }
                 .frame(maxWidth: .infinity)
             }
