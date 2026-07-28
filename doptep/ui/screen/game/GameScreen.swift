@@ -1492,8 +1492,9 @@ struct TeamOptionsDropdown: View {
                         onOptionSelected(option)
                     } label: {
                         Text(NSLocalizedString(option.localizationKey, comment: ""))
-                            .font(.bodySmall)
+                            .font(.titleSmall)
                             .foregroundColor(AppColor.onSurface)
+                            .padding(4)
                     }
                 }
             }
@@ -1501,7 +1502,7 @@ struct TeamOptionsDropdown: View {
             .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .principal) {
+                ToolbarItem(placement: .title) {
                     HStack(spacing: 8) {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(teamColor)
@@ -1511,11 +1512,11 @@ struct TeamOptionsDropdown: View {
                                     .stroke(teamColor == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                             )
                         Text(teamName)
-                            .font(.bodyMedium)
+                            .font(.titleMedium)
                             .foregroundColor(AppColor.onSurface)
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         onDismiss()
                     } label: {
@@ -1544,9 +1545,10 @@ struct OptionPlayersSheet: View {
                     } label: {
                         HStack(spacing: 8) {
                             PlayerTeamBadge(teamColor: player.teamColor, number: player.number)
-                            Text(player.name.prefix(1)).font(.bodySmall).bold().foregroundColor(AppColor.onSurface)
-                            + Text(player.name.dropFirst()).font(.bodySmall).foregroundColor(AppColor.onSurface)
+                            Text(player.name.prefix(1)).font(.titleSmall).bold().foregroundColor(AppColor.onSurface)
+                            + Text(player.name.dropFirst()).font(.titleSmall).foregroundColor(AppColor.onSurface)
                         }
+                        .padding(4)
                     }
                 }
 
@@ -1555,8 +1557,9 @@ struct OptionPlayersSheet: View {
                         onAutoGoalSelected()
                     } label: {
                         Text(NSLocalizedString("auto_goal", comment: ""))
-                            .font(.bodySmall)
+                            .font(.titleSmall)
                             .foregroundColor(.orange)
+                            .padding(4)
                     }
                 }
             }
@@ -1564,12 +1567,12 @@ struct OptionPlayersSheet: View {
             .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .principal) {
+                ToolbarItem(placement: .title) {
                     Text(NSLocalizedString(optionPlayers.option.localizationKey, comment: ""))
-                        .font(.bodyMedium)
+                        .font(.titleMedium)
                         .foregroundColor(AppColor.onSurface)
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         onDismiss()
                     } label: {
