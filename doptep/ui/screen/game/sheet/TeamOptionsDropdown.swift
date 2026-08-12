@@ -49,15 +49,6 @@ struct TeamOptionsDropdown: View {
                             .foregroundColor(AppColor.onSurface)
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        onDismiss()
-                    } label: {
-                        Text(NSLocalizedString("cancel", comment: ""))
-                            .font(.bodySmall)
-                            .foregroundColor(AppColor.outline)
-                    }
-                }
             }
         }
     }

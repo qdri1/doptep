@@ -57,6 +57,18 @@ struct GameScreen: View {
     @State private var hiddenStatOptions: Set<TeamOption> = []
 
     var body: some View {
+        withConfirmationDialogs(
+            withAlerts(
+                withNavigationDestinations(
+                    withSheets(
+                        withOnChangeHandlers(mainContent)
+                    )
+                )
+            )
+        )
+    }
+
+    private var mainContent: some View {
         VStack(spacing: 0) {
             topBar
             ScrollView(.vertical, showsIndicators: false) {
@@ -85,300 +97,330 @@ struct GameScreen: View {
         .navigationBarHidden(true)
         .enableSwipeBack()
         .snackbar(message: $viewModel.snackbarMessage)
-        .onChange(of: viewModel.effect) { _, effect in
-            handleEffect(effect)
-        }
-        .onChange(of: viewModel.uiState.showLeftTeamOptionsDropdown) { _, newValue in
-            if newValue {
-                teamActionSide = .left
-                teamActionPage = .options
-                showTeamActionSheet = true
-            }
-        }
-        .onChange(of: viewModel.uiState.showRightTeamOptionsDropdown) { _, newValue in
-            if newValue {
-                teamActionSide = .right
-                teamActionPage = .options
-                showTeamActionSheet = true
-            }
-        }
-        .onChange(of: viewModel.uiState.showLeftTeamChangeDropdown) { _, newValue in
-            showLeftTeamChangeDropdown = newValue
-        }
-        .onChange(of: viewModel.uiState.showRightTeamChangeDropdown) { _, newValue in
-            showRightTeamChangeDropdown = newValue
-        }
         .onAppear {
             hiddenStatOptions = HiddenColumnsStorage.load(gameId: viewModel.gameId)
-        }
-        .onChange(of: hiddenStatOptions) { _, newValue in
-            HiddenColumnsStorage.save(newValue, gameId: viewModel.gameId)
         }
         .onDisappear {
             viewModel.saveTimerOnExit()
         }
-        .sheet(isPresented: $showTeamActionSheet, onDismiss: {
-            if case .options = teamActionPage {
-                if teamActionSide == .left {
-                    viewModel.send(.onLeftTeamOptionSelected(option: nil))
-                } else {
-                    viewModel.send(.onRightTeamOptionSelected(option: nil))
-                }
-            }
-            teamActionPage = .options
-        }) {
-            teamActionSheetContent
-        }
-        .sheet(isPresented: $showBestPlayersSheet) {
-            BestPlayersSheet(bestPlayers: currentBestPlayers)
-                .presentationDetents([.large])
-        }
-        .sheet(isPresented: $showGameHistorySheet) {
-            GameHistorySheet(gameHistory: currentGameHistory)
-                .presentationDetents([.large])
-        }
-        .sheet(isPresented: $showCustomizeColumnsSheet) {
-            CustomizeColumnsSheet(hiddenOptions: $hiddenStatOptions)
-                .presentationDetents([.medium])
-        }
-        .sheet(isPresented: $showGameInfoSheet) {
-            GameInfoSheet()
-                .presentationDetents([.large])
-        }
-        .sheet(isPresented: $showPlayerResultSheet) {
-            if let playerResult = currentPlayerResult {
-                PlayerResultSheet(
-                    playerResult: playerResult,
-                    onSave: { option, value in
-                        let updatedResult = PlayerResultUiModel(
-                            playerUiModel: playerResult.playerUiModel,
-                            option: option
-                        )
-                        viewModel.send(.onSavePlayerResultClicked(
-                            playerResultUiModel: updatedResult,
-                            playerResultValue: value
-                        ))
-                        showPlayerResultSheet = false
-                    },
-                    onDismiss: { showPlayerResultSheet = false }
-                )
-                .presentationDetents([.medium])
-            }
-        }
-        .sheet(isPresented: $showTeamResultSheet) {
-            if let teamResult = currentTeamResult {
-                GameTeamResultSheet(
-                    teamUiModel: teamResult,
-                    onSaveClicked: { team, value in
-                        viewModel.send(.onSaveTeamResultClicked(
-                            teamUiModel: team,
-                            pointsValue: value
-                        ))
-                        showTeamResultSheet = false
-                    },
-                    onDismissed: { showTeamResultSheet = false }
-                )
-                .presentationDetents([.medium])
-            }
-        }
-        .sheet(isPresented: $showLiveGameResultSheet) {
-            if let liveGameResult = currentLiveGameResult {
-                LiveGameResultSheet(
-                    liveGameResult: liveGameResult,
-                    onSave: { value in
-                        viewModel.send(.onSaveLiveGameResultClicked(
-                            liveGameResultUiModel: liveGameResult,
-                            teamGoalsValue: value
-                        ))
-                        showLiveGameResultSheet = false
-                    },
-                    onDismiss: { showLiveGameResultSheet = false }
-                )
-                .presentationDetents([.medium])
-            }
-        }
-        .sheet(isPresented: $showLeftTeamChangeDropdown, onDismiss: {
-            viewModel.send(.onLeftTeamChangeClicked(teamId: nil))
-            showLeftTeamChangeDropdown = false
-        }) {
-            if let liveGame = viewModel.uiState.liveGameUiModel {
-                TeamChangeDropdown(
-                    teams: viewModel.uiState.teamUiModelList,
-                    excludeTeamIds: [liveGame.leftTeamId, liveGame.rightTeamId],
-                    onTeamSelected: { teamId in
-                        viewModel.send(.onLeftTeamChangeClicked(teamId: teamId))
-                        showLeftTeamChangeDropdown = false
-                    },
-                    onDismiss: {
-                        viewModel.send(.onLeftTeamChangeClicked(teamId: nil))
-                        showLeftTeamChangeDropdown = false
-                    }
-                )
-                .presentationDetents([.medium])
-            }
-        }
-        .sheet(isPresented: $showRightTeamChangeDropdown, onDismiss: {
-            viewModel.send(.onRightTeamChangeClicked(teamId: nil))
-            showRightTeamChangeDropdown = false
-        }) {
-            if let liveGame = viewModel.uiState.liveGameUiModel {
-                TeamChangeDropdown(
-                    teams: viewModel.uiState.teamUiModelList,
-                    excludeTeamIds: [liveGame.leftTeamId, liveGame.rightTeamId],
-                    onTeamSelected: { teamId in
-                        viewModel.send(.onRightTeamChangeClicked(teamId: teamId))
-                        showRightTeamChangeDropdown = false
-                    },
-                    onDismiss: {
-                        viewModel.send(.onRightTeamChangeClicked(teamId: nil))
-                        showRightTeamChangeDropdown = false
-                    }
-                )
-                .presentationDetents([.medium])
-            }
-        }
-        .navigationDestination(isPresented: $showAddGameScreen) {
-            if let gameId = updateGameId {
-                AddGameScreen(viewModel: viewModel.createAddGameViewModel(gameId: gameId))
-            }
-        }
-        .onChange(of: showAddGameScreen) { _, newValue in
-            if !newValue { viewModel.refreshData() }
-        }
-        .navigationDestination(isPresented: $showGameResultsScreen) {
-            if let gameId = gameResultsGameId {
-                GameResultsScreen(viewModel: viewModel.createGameResultsViewModel(gameId: gameId, modelContext: modelContext))
-            }
-        }
         .fullScreenCover(isPresented: $showActivationScreen, onDismiss: { viewModel.updateBillingState() }) {
             ActivationScreen()
         }
-        .sheet(isPresented: $showPaywall, onDismiss: {
-            if pendingActivationAfterPaywall {
-                pendingActivationAfterPaywall = false
-                showActivationScreen = true
+    }
+
+    // MARK: - onChange
+
+    private func withOnChangeHandlers<Content: View>(_ content: Content) -> some View {
+        content
+            .onChange(of: viewModel.effect) { _, effect in
+                handleEffect(effect)
             }
-        }) {
-            RevenueCatUI.PaywallView()
-                .onPurchaseCompleted { customerInfo in
-                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                    if success {
-                        pendingActivationAfterPaywall = true
-                        showPaywall = false
+            .onChange(of: viewModel.uiState.showLeftTeamOptionsDropdown) { _, newValue in
+                if newValue {
+                    teamActionSide = .left
+                    teamActionPage = .options
+                    showTeamActionSheet = true
+                }
+            }
+            .onChange(of: viewModel.uiState.showRightTeamOptionsDropdown) { _, newValue in
+                if newValue {
+                    teamActionSide = .right
+                    teamActionPage = .options
+                    showTeamActionSheet = true
+                }
+            }
+            .onChange(of: viewModel.uiState.showLeftTeamChangeDropdown) { _, newValue in
+                showLeftTeamChangeDropdown = newValue
+            }
+            .onChange(of: viewModel.uiState.showRightTeamChangeDropdown) { _, newValue in
+                showRightTeamChangeDropdown = newValue
+            }
+            .onChange(of: hiddenStatOptions) { _, newValue in
+                HiddenColumnsStorage.save(newValue, gameId: viewModel.gameId)
+            }
+            .onChange(of: showAddGameScreen) { _, newValue in
+                if !newValue { viewModel.refreshData() }
+            }
+    }
+
+    // MARK: - sheet
+
+    private func withSheets<Content: View>(_ content: Content) -> some View {
+        content
+            .sheet(isPresented: $showTeamActionSheet, onDismiss: {
+                if case .options = teamActionPage {
+                    if teamActionSide == .left {
+                        viewModel.send(.onLeftTeamOptionSelected(option: nil))
                     } else {
-                        showNoEntitlementAlert = true
+                        viewModel.send(.onRightTeamOptionSelected(option: nil))
                     }
                 }
-                .onRestoreCompleted { customerInfo in
-                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                    if success {
-                        pendingActivationAfterPaywall = true
-                        showPaywall = false
-                    } else {
-                        showNoEntitlementAlert = true
-                    }
+                teamActionPage = .options
+            }) {
+                teamActionSheetContent
+            }
+            .sheet(isPresented: $showBestPlayersSheet) {
+                BestPlayersSheet(bestPlayers: currentBestPlayers)
+                    .presentationDetents([.large])
+            }
+            .sheet(isPresented: $showGameHistorySheet) {
+                GameHistorySheet(gameHistory: currentGameHistory)
+                    .presentationDetents([.large])
+            }
+            .sheet(isPresented: $showCustomizeColumnsSheet) {
+                CustomizeColumnsSheet(hiddenOptions: $hiddenStatOptions)
+                    .presentationDetents([.medium])
+            }
+            .sheet(isPresented: $showGameInfoSheet) {
+                GameInfoSheet()
+                    .presentationDetents([.large])
+            }
+            .sheet(isPresented: $showPlayerResultSheet) {
+                if let playerResult = currentPlayerResult {
+                    PlayerResultSheet(
+                        playerResult: playerResult,
+                        onSave: { option, value in
+                            let updatedResult = PlayerResultUiModel(
+                                playerUiModel: playerResult.playerUiModel,
+                                option: option
+                            )
+                            viewModel.send(.onSavePlayerResultClicked(
+                                playerResultUiModel: updatedResult,
+                                playerResultValue: value
+                            ))
+                            showPlayerResultSheet = false
+                        },
+                        onDismiss: { showPlayerResultSheet = false }
+                    )
+                    .presentationDetents([.medium])
                 }
-                .onRestoreFailure { error in
-                    restoreFailureMessage = error.localizedDescription
+            }
+            .sheet(isPresented: $showTeamResultSheet) {
+                if let teamResult = currentTeamResult {
+                    GameTeamResultSheet(
+                        teamUiModel: teamResult,
+                        onSaveClicked: { team, value in
+                            viewModel.send(.onSaveTeamResultClicked(
+                                teamUiModel: team,
+                                pointsValue: value
+                            ))
+                            showTeamResultSheet = false
+                        },
+                        onDismissed: { showTeamResultSheet = false }
+                    )
+                    .presentationDetents([.medium])
                 }
-        }
-        .alert(NSLocalizedString("no_active_entitlement", comment: ""), isPresented: $showNoEntitlementAlert) {
-            Button("OK", role: .cancel) {}
-        }
-        .alert(restoreFailureMessage ?? "", isPresented: Binding(
-            get: { restoreFailureMessage != nil },
-            set: { if !$0 { restoreFailureMessage = nil } }
-        )) {
-            Button("OK", role: .cancel) {}
-        }
-        .confirmationDialog("", isPresented: $showDeleteConfirmation) {
-            Button(NSLocalizedString("delete", comment: ""), role: .destructive) {
-                viewModel.send(.onDeleteGameConfirmationClicked)
             }
-        } message: {
-            Text(NSLocalizedString("delete_game_confirmation", comment: ""))
-                .font(.bodySmall)
-        }
-        .confirmationDialog("", isPresented: $showClearResultsConfirmation) {
-            Button(NSLocalizedString("clear", comment: ""), role: .destructive) {
-                viewModel.send(.onClearResultsConfirmationClicked)
+            .sheet(isPresented: $showLiveGameResultSheet) {
+                if let liveGameResult = currentLiveGameResult {
+                    LiveGameResultSheet(
+                        liveGameResult: liveGameResult,
+                        onSave: { value in
+                            viewModel.send(.onSaveLiveGameResultClicked(
+                                liveGameResultUiModel: liveGameResult,
+                                teamGoalsValue: value
+                            ))
+                            showLiveGameResultSheet = false
+                        },
+                        onDismiss: { showLiveGameResultSheet = false }
+                    )
+                    .presentationDetents([.medium])
+                }
             }
-        } message: {
-            Text(NSLocalizedString("clear_results_confirmation", comment: ""))
-        }
-        .confirmationDialog("", isPresented: $showFinishGameConfirmation) {
-            Button(NSLocalizedString("finish", comment: ""), role: .destructive) {
-                viewModel.send(.onFinishGameConfirmationClicked)
-            }
-        } message: {
-            Text(NSLocalizedString("finish_game_confirmation", comment: ""))
-                .font(.bodySmall)
-        }
-        .confirmationDialog("", isPresented: $showGoBackConfirmation) {
-            Button(NSLocalizedString("leave", comment: ""), role: .destructive) {
-                viewModel.send(.onGoBackConfirmationClicked)
-            }
-        } message: {
-            Text(NSLocalizedString("go_back_confirmation", comment: ""))
-                .font(.bodySmall)
-        }
-        .sheet(isPresented: $showStayTeamSheet) {
-            if let liveGame = viewModel.uiState.liveGameUiModel {
-                VStack(spacing: 0) {
-                    Text(NSLocalizedString("choose_staying_team", comment: ""))
-                        .font(.bodyMedium)
-                        .foregroundColor(AppColor.onSurface)
-                        .padding(.vertical, 20)
-
-                    Divider()
-
-                    Button {
-                        showStayTeamSheet = false
-                        viewModel.send(.onLeftTeamStayClicked)
-                    } label: {
-                        HStack(spacing: 8) {
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(liveGame.leftTeamColor.color)
-                                .frame(width: 20, height: 20)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .stroke(liveGame.leftTeamColor.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                )
-                            Text(liveGame.leftTeamName)
-                                .font(.bodySmall)
-                                .foregroundColor(AppColor.onSurface)
+            .sheet(isPresented: $showLeftTeamChangeDropdown, onDismiss: {
+                viewModel.send(.onLeftTeamChangeClicked(teamId: nil))
+                showLeftTeamChangeDropdown = false
+            }) {
+                if let liveGame = viewModel.uiState.liveGameUiModel {
+                    TeamChangeDropdown(
+                        teams: viewModel.uiState.teamUiModelList,
+                        excludeTeamIds: [liveGame.leftTeamId, liveGame.rightTeamId],
+                        onTeamSelected: { teamId in
+                            viewModel.send(.onLeftTeamChangeClicked(teamId: teamId))
+                            showLeftTeamChangeDropdown = false
+                        },
+                        onDismiss: {
+                            viewModel.send(.onLeftTeamChangeClicked(teamId: nil))
+                            showLeftTeamChangeDropdown = false
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                    }
-
-                    Divider()
-
-                    Button {
-                        showStayTeamSheet = false
-                        viewModel.send(.onRightTeamStayClicked)
-                    } label: {
-                        HStack(spacing: 8) {
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(liveGame.rightTeamColor.color)
-                                .frame(width: 20, height: 20)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .stroke(liveGame.rightTeamColor.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
-                                )
-                            Text(liveGame.rightTeamName)
-                                .font(.bodySmall)
-                                .foregroundColor(AppColor.onSurface)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                    }
+                    )
+                    .presentationDetents([.medium])
                 }
-                .background(AppColor.surface)
-                .interactiveDismissDisabled(true)
-                .presentationDetents([.height(180)])
             }
-        }
+            .sheet(isPresented: $showRightTeamChangeDropdown, onDismiss: {
+                viewModel.send(.onRightTeamChangeClicked(teamId: nil))
+                showRightTeamChangeDropdown = false
+            }) {
+                if let liveGame = viewModel.uiState.liveGameUiModel {
+                    TeamChangeDropdown(
+                        teams: viewModel.uiState.teamUiModelList,
+                        excludeTeamIds: [liveGame.leftTeamId, liveGame.rightTeamId],
+                        onTeamSelected: { teamId in
+                            viewModel.send(.onRightTeamChangeClicked(teamId: teamId))
+                            showRightTeamChangeDropdown = false
+                        },
+                        onDismiss: {
+                            viewModel.send(.onRightTeamChangeClicked(teamId: nil))
+                            showRightTeamChangeDropdown = false
+                        }
+                    )
+                    .presentationDetents([.medium])
+                }
+            }
+            .sheet(isPresented: $showPaywall, onDismiss: {
+                if pendingActivationAfterPaywall {
+                    pendingActivationAfterPaywall = false
+                    showActivationScreen = true
+                }
+            }) {
+                RevenueCatUI.PaywallView()
+                    .onPurchaseCompleted { customerInfo in
+                        let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                        if success {
+                            pendingActivationAfterPaywall = true
+                            showPaywall = false
+                        } else {
+                            showNoEntitlementAlert = true
+                        }
+                    }
+                    .onRestoreCompleted { customerInfo in
+                        let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
+                        if success {
+                            pendingActivationAfterPaywall = true
+                            showPaywall = false
+                        } else {
+                            showNoEntitlementAlert = true
+                        }
+                    }
+                    .onRestoreFailure { error in
+                        restoreFailureMessage = error.localizedDescription
+                    }
+            }
+            .sheet(isPresented: $showStayTeamSheet) {
+                if let liveGame = viewModel.uiState.liveGameUiModel {
+                    VStack(spacing: 0) {
+                        Text(NSLocalizedString("choose_staying_team", comment: ""))
+                            .font(.bodyMedium)
+                            .foregroundColor(AppColor.onSurface)
+                            .padding(.vertical, 20)
+
+                        Divider()
+
+                        Button {
+                            showStayTeamSheet = false
+                            viewModel.send(.onLeftTeamStayClicked)
+                        } label: {
+                            HStack(spacing: 8) {
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(liveGame.leftTeamColor.color)
+                                    .frame(width: 20, height: 20)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .stroke(liveGame.leftTeamColor.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                    )
+                                Text(liveGame.leftTeamName)
+                                    .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                        }
+
+                        Divider()
+
+                        Button {
+                            showStayTeamSheet = false
+                            viewModel.send(.onRightTeamStayClicked)
+                        } label: {
+                            HStack(spacing: 8) {
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(liveGame.rightTeamColor.color)
+                                    .frame(width: 20, height: 20)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .stroke(liveGame.rightTeamColor.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
+                                    )
+                                Text(liveGame.rightTeamName)
+                                    .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                        }
+                    }
+                    .background(AppColor.surface)
+                    .interactiveDismissDisabled(true)
+                    .presentationDetents([.height(180)])
+                }
+            }
+    }
+
+    // MARK: - navigationDestination
+
+    private func withNavigationDestinations<Content: View>(_ content: Content) -> some View {
+        content
+            .navigationDestination(isPresented: $showAddGameScreen) {
+                if let gameId = updateGameId {
+                    AddGameScreen(viewModel: viewModel.createAddGameViewModel(gameId: gameId))
+                }
+            }
+            .navigationDestination(isPresented: $showGameResultsScreen) {
+                if let gameId = gameResultsGameId {
+                    GameResultsScreen(viewModel: viewModel.createGameResultsViewModel(gameId: gameId, modelContext: modelContext))
+                }
+            }
+    }
+
+    // MARK: - alert
+
+    private func withAlerts<Content: View>(_ content: Content) -> some View {
+        content
+            .alert(NSLocalizedString("no_active_entitlement", comment: ""), isPresented: $showNoEntitlementAlert) {
+                Button("OK", role: .cancel) {}
+            }
+            .alert(restoreFailureMessage ?? "", isPresented: Binding(
+                get: { restoreFailureMessage != nil },
+                set: { if !$0 { restoreFailureMessage = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            }
+    }
+
+    // MARK: - confirmationDialog
+
+    private func withConfirmationDialogs<Content: View>(_ content: Content) -> some View {
+        content
+            .confirmationDialog("", isPresented: $showDeleteConfirmation) {
+                Button(NSLocalizedString("delete", comment: ""), role: .destructive) {
+                    viewModel.send(.onDeleteGameConfirmationClicked)
+                }
+            } message: {
+                Text(NSLocalizedString("delete_game_confirmation", comment: ""))
+                    .font(.bodySmall)
+            }
+            .confirmationDialog("", isPresented: $showClearResultsConfirmation) {
+                Button(NSLocalizedString("clear", comment: ""), role: .destructive) {
+                    viewModel.send(.onClearResultsConfirmationClicked)
+                }
+            } message: {
+                Text(NSLocalizedString("clear_results_confirmation", comment: ""))
+            }
+            .confirmationDialog("", isPresented: $showFinishGameConfirmation) {
+                Button(NSLocalizedString("finish", comment: ""), role: .destructive) {
+                    viewModel.send(.onFinishGameConfirmationClicked)
+                }
+            } message: {
+                Text(NSLocalizedString("finish_game_confirmation", comment: ""))
+                    .font(.bodySmall)
+            }
+            .confirmationDialog("", isPresented: $showGoBackConfirmation) {
+                Button(NSLocalizedString("leave", comment: ""), role: .destructive) {
+                    viewModel.send(.onGoBackConfirmationClicked)
+                }
+            } message: {
+                Text(NSLocalizedString("go_back_confirmation", comment: ""))
+                    .font(.bodySmall)
+            }
     }
 
     private var topBar: some View {
@@ -757,7 +799,7 @@ struct GameScreen: View {
                 .monospacedDigit()
                 .shadow(color: isWinning ? Color(hex: "#FFD54A").opacity(0.6) : .clear, radius: 12)
 
-            Text(name.uppercased())
+            Text(name)
                 .font(.labelMedium)
                 .foregroundColor(.white.opacity(0.85))
                 .tracking(0.6)
@@ -1008,6 +1050,8 @@ struct GameScreen: View {
         }
     }
 
+    // MARK: - Teams Leaderboard
+    
     private var teamsLeaderboard: some View {
         VStack(alignment: .leading, spacing: 8) {
 
@@ -1156,6 +1200,8 @@ struct GameScreen: View {
             }
         }
     }
+    
+    // MARK: - Players Leaderboard
 
     private var playersLeaderboard: some View {
         VStack(alignment: .leading) {

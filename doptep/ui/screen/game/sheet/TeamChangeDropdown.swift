@@ -30,13 +30,13 @@ struct TeamChangeDropdown: View {
                         HStack {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(team.color.color)
-                                .frame(width: 12, height: 12)
+                                .frame(width: 16, height: 16)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 4)
                                         .stroke(team.color == .white ? AppColor.surfaceVariant : Color.clear, lineWidth: 1)
                                 )
                             Text(team.name)
-                                .font(.bodySmall)
+                                .font(.titleSmall)
                                 .foregroundColor(AppColor.onSurface)
                         }
                     }
@@ -46,19 +46,10 @@ struct TeamChangeDropdown: View {
             .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .principal) {
+                ToolbarItem(placement: .title) {
                     Text(NSLocalizedString("choose_team", comment: ""))
-                        .font(.bodyMedium)
+                        .font(.titleMedium)
                         .foregroundColor(AppColor.onSurface)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        onDismiss()
-                    } label: {
-                        Text(NSLocalizedString("cancel", comment: ""))
-                            .font(.bodySmall)
-                            .foregroundColor(AppColor.outline)
-                    }
                 }
             }
         }
