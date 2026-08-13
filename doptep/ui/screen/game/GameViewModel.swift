@@ -1771,6 +1771,32 @@ final class GameViewModel: ObservableObject {
                         number: player.number
                     )
                 }
+
+                if diffs > 0 {
+                    for _ in 0..<diffs {
+                        currentGameActions.append(PendingGameAction(
+                            teamName: player.teamName,
+                            teamColor: player.teamColor.rawValue,
+                            playerName: player.name,
+                            playerNumber: player.number,
+                            actionType: playerResultUiModel.option.rawValue,
+                            elapsedSeconds: currentElapsedSeconds()
+                        ))
+                    }
+                } else if diffs < 0 {
+                    var remainingToRemove = -diffs
+                    for index in currentGameActions.indices.reversed() {
+                        guard remainingToRemove > 0 else { break }
+                        let action = currentGameActions[index]
+                        if action.actionType == playerResultUiModel.option.rawValue,
+                           action.teamName == player.teamName,
+                           action.playerName == player.name {
+                            currentGameActions.remove(at: index)
+                            remainingToRemove -= 1
+                        }
+                    }
+                }
+
                 try playerRepository.updatePlayer(player)
                 try playerHistoryRepository.updatePlayerHistory(playerId: player.id, option: playerResultUiModel.option, value: diffs)
                 try await updatePlayersBlock()
