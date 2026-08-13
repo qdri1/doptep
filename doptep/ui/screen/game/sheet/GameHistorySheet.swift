@@ -379,29 +379,6 @@ private struct GameHistoryPDFContent: View {
 private struct GameHistoryEntryItemView: View {
     let entry: GameHistoryEntryUiModel
 
-    private var backgroundGradient: LinearGradient? {
-        if entry.winnerTeamName.isEmpty { return nil }
-        if entry.winnerTeamName == entry.leftTeamName {
-            return LinearGradient(
-                colors: [
-                    entry.leftTeamColor.color == .white ? AppColor.surfaceVariant.opacity(0.5) : entry.leftTeamColor.color.opacity(0.25),
-                    AppColor.surface
-                ],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-        } else {
-            return LinearGradient(
-                colors: [
-                    AppColor.surface,
-                    entry.rightTeamColor.color == .white ? AppColor.surfaceVariant.opacity(0.5) : entry.rightTeamColor.color.opacity(0.25)
-                ],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-        }
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             // Game number + duration
@@ -484,11 +461,7 @@ private struct GameHistoryEntryItemView: View {
         }
         .padding(16)
         .background {
-            if let gradient = backgroundGradient {
-                gradient
-            } else {
-                AppColor.surface
-            }
+            AppColor.surface
         }
     }
 }
