@@ -34,6 +34,9 @@
 "save_success" = "Сақталды";
 "cancel" = "Болдырмау";
 "done" = "Дайын";
+"share" = "Бөлісу";
+"share_pdf_preparing" = "PDF дайындалуда…";
+"share_pdf_error" = "PDF жасау мүмкін болмады. Қайталап көріңіз.";
 "yes" = "Иә";
 "no" = "Жоқ";
 "edit_result" = "Нәтижені өңдеу";

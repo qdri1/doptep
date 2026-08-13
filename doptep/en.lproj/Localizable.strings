@@ -34,6 +34,9 @@
 "save_success" = "Saved";
 "cancel" = "Cancel";
 "done" = "Done";
+"share" = "Share";
+"share_pdf_preparing" = "Preparing PDF…";
+"share_pdf_error" = "Couldn't create the PDF. Please try again.";
 "yes" = "Yes";
 "no" = "No";
 "edit_result" = "Edit Result";

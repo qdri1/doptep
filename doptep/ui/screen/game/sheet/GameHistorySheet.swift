@@ -152,6 +152,10 @@ struct GameHistorySheet: View {
     @State private var scrollSpeed: ScrollSpeed = .x1
     @StateObject private var scrollController = SmoothScrollController()
     @State private var autoScrollTask: Task<Void, Never>?
+    @State private var pdfShareURL: URL?
+    @State private var showShareSheet = false
+    @State private var showShareError = false
+    @State private var isPreparingPDF = false
 
     var body: some View {
         NavigationView {
@@ -182,9 +186,92 @@ struct GameHistorySheet: View {
                         .font(.bodyMedium)
                         .foregroundColor(AppColor.onSurface)
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        Task { await shareAsPDF() }
+                    } label: {
+                        if isPreparingPDF {
+                            ProgressView()
+                                .tint(AppColor.onSurface)
+                        } else {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(AppColor.onSurface)
+                        }
+                    }
+                    .disabled(gameHistory.isEmpty || isPreparingPDF)
+                    .accessibilityLabel(NSLocalizedString(isPreparingPDF ? "share_pdf_preparing" : "share", comment: ""))
+                }
             }
         }
         .onDisappear { stopAutoScroll() }
+        .sheet(isPresented: $showShareSheet) {
+            if let pdfShareURL {
+                ShareSheet(items: [pdfShareURL])
+            }
+        }
+        .alert(NSLocalizedString("share_pdf_error", comment: ""), isPresented: $showShareError) {
+            Button("OK", role: .cancel) {}
+        }
+    }
+
+    /// Renders the history list to a single-page PDF and hands it to the
+    /// system share sheet, retrying internally if the first attempt fails.
+    ///
+    /// `ImageRenderer` needs SwiftUI to have actually completed a
+    /// layout/draw pass for its content before its reported size is
+    /// reliable. The very first `ImageRenderer` use in an app session can
+    /// still report a `size` of `.zero` to `render(...)` even after an
+    /// eager `.uiImage` warm-up (the underlying render pipeline itself is
+    /// what's cold, not just this one view) — that produces an empty PDF
+    /// page and shows up as a blank share sheet. Rather than surface that
+    /// as a failure the user has to work around by tapping again, this
+    /// retries a couple of times with a short delay in between, which is
+    /// enough for the pipeline to finish warming up. The share sheet only
+    /// opens once a real, non-empty PDF exists.
+    @MainActor
+    private func shareAsPDF() async {
+        isPreparingPDF = true
+        defer { isPreparingPDF = false }
+
+        if let url = await renderPDF(attempts: 3) {
+            pdfShareURL = url
+            showShareSheet = true
+        } else {
+            showShareError = true
+        }
+    }
+
+    @MainActor
+    private func renderPDF(attempts: Int) async -> URL? {
+        for attempt in 0..<attempts {
+            let content = GameHistoryPDFContent(gameHistory: gameHistory)
+            let renderer = ImageRenderer(content: content)
+            renderer.scale = UIScreen.main.scale
+            _ = renderer.uiImage
+
+            let url = FileManager.default.temporaryDirectory
+                .appendingPathComponent("game_history_\(Int(Date().timeIntervalSince1970))_\(attempt)")
+                .appendingPathExtension("pdf")
+
+            var didRenderPDF = false
+            renderer.render { size, renderContext in
+                guard size.width > 0, size.height > 0 else { return }
+                var mediaBox = CGRect(origin: .zero, size: size)
+                guard let pdfContext = CGContext(url as CFURL, mediaBox: &mediaBox, nil) else { return }
+                pdfContext.beginPDFPage(nil)
+                renderContext(pdfContext)
+                pdfContext.endPDFPage()
+                pdfContext.closePDF()
+                didRenderPDF = true
+            }
+
+            if didRenderPDF {
+                return url
+            }
+
+            try? await Task.sleep(for: .milliseconds(150))
+        }
+        return nil
     }
 
     private var historyContent: some View {
@@ -250,6 +337,33 @@ struct GameHistorySheet: View {
         autoScrollDirection = .none
         autoScrollTask?.cancel()
         autoScrollTask = nil
+    }
+}
+
+// MARK: - PDF export content
+
+/// Off-screen layout used only for PDF rendering (via `ImageRenderer`). Fixed
+/// width so the renderer can measure a definite ideal height for the whole
+/// list — unlike `historyContent`, this isn't hosted in a `ScrollView`, since
+/// the PDF page just grows to fit everything on one long page.
+private struct GameHistoryPDFContent: View {
+    let gameHistory: [GameHistoryEntryUiModel]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Text(NSLocalizedString("function_history", comment: ""))
+                .font(.titleLarge)
+                .foregroundColor(AppColor.onSurface)
+                .padding(.vertical, 16)
+
+            ForEach(Array(gameHistory.enumerated()), id: \.offset) { _, entry in
+                GameHistoryEntryItemView(entry: entry)
+                Divider()
+                    .background(AppColor.surfaceVariant)
+            }
+        }
+        .frame(width: 600)
+        .background(AppColor.surface)
     }
 }
 
