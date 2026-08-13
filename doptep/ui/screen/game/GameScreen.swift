@@ -1263,6 +1263,14 @@ struct GameScreen: View {
                         option: .save
                     )
                 }
+                if !hiddenStatOptions.contains(.tackle) {
+                    playerStatColumn(
+                        header: NSLocalizedString("tackles_icon", comment: ""),
+                        players: viewModel.uiState.playerUiModelList,
+                        valuePath: \.tackles,
+                        option: .tackle
+                    )
+                }
                 if !hiddenStatOptions.contains(.dribble) {
                     playerStatColumn(
                         header: NSLocalizedString("dribbles_icon", comment: ""),

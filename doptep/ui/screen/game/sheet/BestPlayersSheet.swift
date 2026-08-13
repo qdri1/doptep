@@ -40,6 +40,7 @@ struct BestPlayersSheet: View {
                                     stat(bestPlayer.playerUiModel.goals, "text_goal"),
                                     stat(bestPlayer.playerUiModel.assists, "text_assist"),
                                     stat(bestPlayer.playerUiModel.saves, "text_save"),
+                                    stat(bestPlayer.playerUiModel.tackles, "text_tackle"),
                                     stat(bestPlayer.playerUiModel.dribbles, "text_dribble"),
                                     stat(bestPlayer.playerUiModel.passes, "text_pass"),
                                     stat(bestPlayer.playerUiModel.shots, "text_shot"),
@@ -63,6 +64,10 @@ struct BestPlayersSheet: View {
                                     .foregroundColor(AppColor.onSurface)
                             case .saves:
                                 Text("\(bestPlayer.playerUiModel.saves) \(NSLocalizedString("text_save", comment: ""))")
+                                    .font(.bodySmall)
+                                    .foregroundColor(AppColor.onSurface)
+                            case .tackles:
+                                Text("\(bestPlayer.playerUiModel.tackles) \(NSLocalizedString("text_tackle", comment: ""))")
                                     .font(.bodySmall)
                                     .foregroundColor(AppColor.onSurface)
                             case .dribbles:

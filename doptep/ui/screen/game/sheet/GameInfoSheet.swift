@@ -64,6 +64,7 @@ struct GameInfoSheet: View {
                         InfoRow(symbol: NSLocalizedString("goals_icon", comment: ""), description: NSLocalizedString("players_block_info_goals", comment: ""))
                         InfoRow(symbol: NSLocalizedString("assists_icon", comment: ""), description: NSLocalizedString("players_block_info_assists", comment: ""))
                         InfoRow(symbol: NSLocalizedString("saves_icon", comment: ""), description: NSLocalizedString("players_block_info_saves", comment: ""))
+                        InfoRow(symbol: NSLocalizedString("tackles_icon", comment: ""), description: NSLocalizedString("players_block_info_tackles", comment: ""))
                         InfoRow(symbol: NSLocalizedString("dribbles_icon", comment: ""), description: NSLocalizedString("players_block_info_dribbles", comment: ""))
                         InfoRow(symbol: NSLocalizedString("shots_icon", comment: ""), description: NSLocalizedString("players_block_info_shots", comment: ""))
                         InfoRow(symbol: NSLocalizedString("passes_icon", comment: ""), description: NSLocalizedString("players_block_info_passes", comment: ""))

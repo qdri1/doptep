@@ -14,7 +14,7 @@ struct CustomizeColumnsSheet: View {
     @Binding var hiddenOptions: Set<TeamOption>
     @Environment(\.dismiss) private var dismiss
 
-    private let toggleableOptions: [TeamOption] = [.save, .dribble, .shot, .pass, .yellowCard, .redCard]
+    private let toggleableOptions: [TeamOption] = [.save, .tackle, .dribble, .shot, .pass, .yellowCard, .redCard]
 
     var body: some View {
         NavigationView {

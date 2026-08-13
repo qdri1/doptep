@@ -417,6 +417,16 @@ struct PlayersResultsBlock: View {
                         onPlayerResultClicked: onPlayerResultClicked
                     )
                 }
+                if !hiddenOptions.contains(.tackle) {
+                    resultsPlayerStatColumn(
+                        header: NSLocalizedString("tackles_icon", comment: ""),
+                        players: playerUiModelList,
+                        valuePath: \.tackles,
+                        option: .tackle,
+                        uiLimited: uiLimited,
+                        onPlayerResultClicked: onPlayerResultClicked
+                    )
+                }
                 if !hiddenOptions.contains(.dribble) {
                     resultsPlayerStatColumn(
                         header: NSLocalizedString("dribbles_icon", comment: ""),
@@ -589,6 +599,7 @@ struct GameResultPlayerResultSheet: View {
         case .goal: initialValue = playerResultUiModel.playerUiModel.goals
         case .assist: initialValue = playerResultUiModel.playerUiModel.assists
         case .save: initialValue = playerResultUiModel.playerUiModel.saves
+        case .tackle: initialValue = playerResultUiModel.playerUiModel.tackles
         case .dribble: initialValue = playerResultUiModel.playerUiModel.dribbles
         case .shot: initialValue = playerResultUiModel.playerUiModel.shots
         case .pass: initialValue = playerResultUiModel.playerUiModel.passes

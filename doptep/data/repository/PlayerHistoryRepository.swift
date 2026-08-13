@@ -38,6 +38,7 @@ final class PlayerHistoryRepository {
                 passes: model.passes,
                 shots: model.shots,
                 saves: model.saves,
+                tackles: model.tackles ?? 0,
                 yellowCards: model.yellowCards ?? 0,
                 redCards: model.redCards ?? 0,
                 number: model.number
@@ -66,6 +67,7 @@ final class PlayerHistoryRepository {
             passes: model.passes,
             shots: model.shots,
             saves: model.saves,
+            tackles: model.tackles ?? 0,
             yellowCards: model.yellowCards ?? 0,
             redCards: model.redCards ?? 0,
             number: model.number
@@ -93,6 +95,7 @@ final class PlayerHistoryRepository {
             passes: model.passes,
             shots: model.shots,
             saves: model.saves,
+            tackles: model.tackles ?? 0,
             yellowCards: model.yellowCards ?? 0,
             redCards: model.redCards ?? 0,
             number: model.number
@@ -112,6 +115,7 @@ final class PlayerHistoryRepository {
         model.passes = uiModel.passes
         model.shots = uiModel.shots
         model.saves = uiModel.saves
+        model.tackles = uiModel.tackles
         model.yellowCards = uiModel.yellowCards
         model.redCards = uiModel.redCards
         model.number = uiModel.number
@@ -127,6 +131,8 @@ final class PlayerHistoryRepository {
             model.assists = model.assists + value
         case .save:
             model.saves = model.saves + value
+        case .tackle:
+            model.tackles = (model.tackles ?? 0) + value
         case .dribble:
             model.dribbles = model.dribbles + value
         case .shot:

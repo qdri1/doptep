@@ -79,6 +79,7 @@
 "goals_icon" = "⚽️";
 "assists_icon" = "A";
 "saves_icon" = "SV";
+"tackles_icon" = "T";
 "dribbles_icon" = "D";
 "shots_icon" = "SH";
 "passes_icon" = "P";
@@ -92,6 +93,7 @@
 "team_option_pass" = "Pass";
 "team_option_shot" = "Shot";
 "team_option_save" = "Save";
+"team_option_tackle" = "Tackle";
 "team_option_yellow_card" = "Yellow 🟨";
 "team_option_red_card" = "Red 🟥";
 "team_option_players_title" = "Select player";
@@ -105,6 +107,7 @@
 "best_player_option_goals" = "Top scorer ⚽️";
 "best_player_option_assists" = "Best assists";
 "best_player_option_saves" = "Best saves";
+"best_player_option_tackles" = "Best tackles";
 "best_player_option_dribbles" = "Best dribbles";
 "best_player_option_passes" = "Best passes";
 "best_player_option_shots" = "Best shots";
@@ -117,6 +120,7 @@
 "text_to_speech_pass" = "Great pass by %@";
 "text_to_speech_shot" = "Powerful shot by %@";
 "text_to_speech_save" = "Great save by %@";
+"text_to_speech_tackle" = "Great tackle by %@";
 "text_to_speech_yellow_card" = "Yellow card %@";
 "text_to_speech_red_card" = "Red card %@";
 
@@ -200,6 +204,7 @@
 "players_block_info_goals" = "Goal";
 "players_block_info_assists" = "Assist";
 "players_block_info_saves" = "Best save";
+"players_block_info_tackles" = "Nice tackle";
 "players_block_info_dribbles" = "Nice dribble";
 "players_block_info_shots" = "Powerful accurate shot";
 "players_block_info_passes" = "Nice pass";
@@ -289,6 +294,7 @@
 "text_pass" = "pass";
 "text_shot" = "shot";
 "text_save" = "save";
+"text_tackle" = "tackle";
 "text_yellow_card" = "yellow 🟨";
 "text_red_card" = "red 🟥";
 

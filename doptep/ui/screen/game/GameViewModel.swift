@@ -302,6 +302,7 @@ final class GameViewModel: ObservableObject {
                             name: player.name,
                             goals: 0, assists: 0, dribbles: 0,
                             passes: 0, shots: 0, saves: 0,
+                            tackles: 0,
                             yellowCards: 0, redCards: 0,
                             number: player.number
                         )
@@ -1206,6 +1207,7 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals + 1,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards,
                         number: playerUiModel.number
                     )
@@ -1236,6 +1238,7 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists + 1, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards,
                         number: playerUiModel.number
                     )
@@ -1255,12 +1258,33 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves + 1,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards,
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
                         audioManager.speak(
                             text: String(format: NSLocalizedString("text_to_speech_save", comment: ""), playerUiModel.name),
+                            completion: { self.audioManager.playSound(GameSounds.goalSave.fileName) }
+                        )
+                    }
+                    
+                case .tackle:
+                    updatedPlayer = PlayerUiModel(
+                        id: playerUiModel.id, teamId: playerUiModel.teamId,
+                        teamColor: playerUiModel.teamColor, teamName: playerUiModel.teamName,
+                        teamPoints: playerUiModel.teamPoints, teamGoalsDifference: playerUiModel.teamGoalsDifference,
+                        name: playerUiModel.name,
+                        goals: playerUiModel.goals,
+                        assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
+                        passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles + 1,
+                        yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards,
+                        number: playerUiModel.number
+                    )
+                    if !uiState.uiLimited {
+                        audioManager.speak(
+                            text: String(format: NSLocalizedString("text_to_speech_tackle", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.goalSave.fileName) }
                         )
                     }
@@ -1274,6 +1298,7 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles + 1,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards,
                         number: playerUiModel.number
                     )
@@ -1293,6 +1318,7 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots + 1, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards,
                         number: playerUiModel.number
                     )
@@ -1312,6 +1338,7 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes + 1, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards,
                         number: playerUiModel.number
                     )
@@ -1331,6 +1358,7 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards + 1, redCards: playerUiModel.redCards,
                         number: playerUiModel.number
                     )
@@ -1350,6 +1378,7 @@ final class GameViewModel: ObservableObject {
                         goals: playerUiModel.goals,
                         assists: playerUiModel.assists, dribbles: playerUiModel.dribbles,
                         passes: playerUiModel.passes, shots: playerUiModel.shots, saves: playerUiModel.saves,
+                        tackles: playerUiModel.tackles,
                         yellowCards: playerUiModel.yellowCards, redCards: playerUiModel.redCards + 1,
                         number: playerUiModel.number
                     )
@@ -1561,8 +1590,8 @@ final class GameViewModel: ObservableObject {
         let players = uiState.playerUiModelList
 
         if let best = players.max(by: { lhs, rhs in
-            let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.dribbles + lhs.passes + lhs.shots - lhs.yellowCards - (lhs.redCards * 3)
-            let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.dribbles + rhs.passes + rhs.shots - rhs.yellowCards - (rhs.redCards * 3)
+            let lhsScore = (lhs.goals * 3) + (lhs.assists * 2) + (lhs.saves * 2) + lhs.tackles + lhs.dribbles + lhs.passes + lhs.shots - lhs.yellowCards - (lhs.redCards * 3)
+            let rhsScore = (rhs.goals * 3) + (rhs.assists * 2) + (rhs.saves * 2) + rhs.tackles + rhs.dribbles + rhs.passes + rhs.shots - rhs.yellowCards - (rhs.redCards * 3)
             return lhsScore < rhsScore
         }) {
             bestPlayers.append(BestPlayerUiModel(option: .bestPlayer, playerUiModel: best))
@@ -1572,6 +1601,7 @@ final class GameViewModel: ObservableObject {
             (.goals, { $0.goals > 0 }, { $0.goals }),
             (.assists, { $0.assists > 0 }, { $0.assists }),
             (.saves, { $0.saves > 0 }, { $0.saves }),
+            (.tackles, { $0.tackles > 0 }, { $0.tackles }),
             (.dribbles, { $0.dribbles > 0 }, { $0.dribbles }),
             (.passes, { $0.passes > 0 }, { $0.passes }),
             (.shots, { $0.shots > 0 }, { $0.shots }),
@@ -1640,6 +1670,7 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: value, assists: player.assists, dribbles: player.dribbles,
                         passes: player.passes, shots: player.shots, saves: player.saves,
+                        tackles: player.tackles,
                         yellowCards: player.yellowCards, redCards: player.redCards,
                         number: player.number
                     )
@@ -1651,6 +1682,7 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: value, dribbles: player.dribbles,
                         passes: player.passes, shots: player.shots, saves: player.saves,
+                        tackles: player.tackles,
                         yellowCards: player.yellowCards, redCards: player.redCards,
                         number: player.number
                     )
@@ -1662,6 +1694,19 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                         passes: player.passes, shots: player.shots, saves: value,
+                        tackles: player.tackles,
+                        yellowCards: player.yellowCards, redCards: player.redCards,
+                        number: player.number
+                    )
+                case .tackle:
+                    diffs = value - player.tackles
+                    player = PlayerUiModel(
+                        id: player.id, teamId: player.teamId, teamColor: player.teamColor,
+                        teamName: player.teamName, teamPoints: player.teamPoints,
+                        teamGoalsDifference: player.teamGoalsDifference, name: player.name,
+                        goals: player.goals, assists: player.assists, dribbles: player.dribbles,
+                        passes: player.passes, shots: player.shots, saves: player.saves,
+                        tackles: value,
                         yellowCards: player.yellowCards, redCards: player.redCards,
                         number: player.number
                     )
@@ -1673,6 +1718,7 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: value,
                         passes: player.passes, shots: player.shots, saves: player.saves,
+                        tackles: player.tackles,
                         yellowCards: player.yellowCards, redCards: player.redCards,
                         number: player.number
                     )
@@ -1684,6 +1730,7 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                         passes: player.passes, shots: value, saves: player.saves,
+                        tackles: player.tackles,
                         yellowCards: player.yellowCards, redCards: player.redCards,
                         number: player.number
                     )
@@ -1695,6 +1742,7 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                         passes: value, shots: player.shots, saves: player.saves,
+                        tackles: player.tackles,
                         yellowCards: player.yellowCards, redCards: player.redCards,
                         number: player.number
                     )
@@ -1706,6 +1754,7 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                         passes: player.passes, shots: player.shots, saves: player.saves,
+                        tackles: player.tackles,
                         yellowCards: value, redCards: player.redCards,
                         number: player.number
                     )
@@ -1717,6 +1766,7 @@ final class GameViewModel: ObservableObject {
                         teamGoalsDifference: player.teamGoalsDifference, name: player.name,
                         goals: player.goals, assists: player.assists, dribbles: player.dribbles,
                         passes: player.passes, shots: player.shots, saves: player.saves,
+                        tackles: player.tackles,
                         yellowCards: player.yellowCards, redCards: value,
                         number: player.number
                     )

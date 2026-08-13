@@ -403,6 +403,7 @@ private struct ActionEventRowView: View {
         case "goal": return NSLocalizedString("text_goal", comment: "") + " ⚽️"
         case "assist": return NSLocalizedString("text_assist", comment: "")
         case "save": return NSLocalizedString("text_save", comment: "")
+        case "tackle": return NSLocalizedString("text_tackle", comment: "")
         case "dribble": return NSLocalizedString("text_dribble", comment: "")
         case "pass": return NSLocalizedString("text_pass", comment: "")
         case "shot": return NSLocalizedString("text_shot", comment: "")

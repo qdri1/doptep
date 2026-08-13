@@ -10,6 +10,7 @@ enum BestPlayerOption: String, CaseIterable {
     case goals
     case assists
     case saves
+    case tackles
     case dribbles
     case passes
     case shots
@@ -21,6 +22,7 @@ enum BestPlayerOption: String, CaseIterable {
         case .goals: return "best_player_option_goals"
         case .assists: return "best_player_option_assists"
         case .saves: return "best_player_option_saves"
+        case .tackles: return "best_player_option_tackles"
         case .dribbles: return "best_player_option_dribbles"
         case .passes: return "best_player_option_passes"
         case .shots: return "best_player_option_shots"

@@ -388,6 +388,7 @@ final class AddGameViewModel: ObservableObject {
                                     passes: existingPlayer.passes,
                                     shots: existingPlayer.shots,
                                     saves: existingPlayer.saves,
+                                    tackles: existingPlayer.tackles,
                                     yellowCards: existingPlayer.yellowCards,
                                     redCards: existingPlayer.redCards,
                                     number: newNumber
@@ -407,6 +408,7 @@ final class AddGameViewModel: ObservableObject {
                                         passes: historyPlayer.passes,
                                         shots: historyPlayer.shots,
                                         saves: historyPlayer.saves,
+                                        tackles: historyPlayer.tackles,
                                         yellowCards: historyPlayer.yellowCards,
                                         redCards: historyPlayer.redCards,
                                         number: newNumber
@@ -436,6 +438,7 @@ final class AddGameViewModel: ObservableObject {
                                     passes: existingPlayer.passes,
                                     shots: existingPlayer.shots,
                                     saves: existingPlayer.saves,
+                                    tackles: existingPlayer.tackles,
                                     yellowCards: existingPlayer.yellowCards,
                                     redCards: existingPlayer.redCards,
                                     number: newNumber
@@ -456,6 +459,7 @@ final class AddGameViewModel: ObservableObject {
                                         passes: historyPlayer.passes,
                                         shots: historyPlayer.shots,
                                         saves: historyPlayer.saves,
+                                        tackles: historyPlayer.tackles,
                                         yellowCards: historyPlayer.yellowCards,
                                         redCards: historyPlayer.redCards,
                                         number: newNumber
@@ -486,6 +490,7 @@ final class AddGameViewModel: ObservableObject {
                                 passes: historyPlayer.passes,
                                 shots: historyPlayer.shots,
                                 saves: historyPlayer.saves,
+                                tackles: historyPlayer.tackles,
                                 yellowCards: historyPlayer.yellowCards,
                                 redCards: historyPlayer.redCards,
                                 number: newNumber
@@ -502,6 +507,7 @@ final class AddGameViewModel: ObservableObject {
                                 passes: 0,
                                 shots: 0,
                                 saves: 0,
+                                tackles: 0,
                                 number: newNumber
                             )
                             playerHistoryRepository.savePlayerHistory(newPlayerHistory.toPlayerHistoryModel())

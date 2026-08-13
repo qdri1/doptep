@@ -79,6 +79,7 @@
 "goals_icon" = "⚽️";
 "assists_icon" = "А";
 "saves_icon" = "С";
+"tackles_icon" = "О";
 "dribbles_icon" = "Д";
 "shots_icon" = "У";
 "passes_icon" = "П";
@@ -92,6 +93,7 @@
 "team_option_pass" = "Пас";
 "team_option_shot" = "Удар";
 "team_option_save" = "Сейв";
+"team_option_tackle" = "Отбор мяча";
 "team_option_yellow_card" = "Жёлтая 🟨";
 "team_option_red_card" = "Красная 🟥";
 "team_option_players_title" = "выберите автора";
@@ -105,6 +107,7 @@
 "best_player_option_goals" = "Лучший бомбардир️ ⚽️";
 "best_player_option_assists" = "Лучший ассист";
 "best_player_option_saves" = "Лучший сейв";
+"best_player_option_tackles" = "Лучший отбор";
 "best_player_option_dribbles" = "Лучший дриблинг";
 "best_player_option_passes" = "Лучший пас";
 "best_player_option_shots" = "Лучший удар";
@@ -117,6 +120,7 @@
 "text_to_speech_pass" = "Красивый пас от %@";
 "text_to_speech_shot" = "Мощный удар от %@";
 "text_to_speech_save" = "Лучший сейв от %@";
+"text_to_speech_tackle" = "Красивый отбор мяча от %@";
 "text_to_speech_yellow_card" = "Жёлтая карточка %@";
 "text_to_speech_red_card" = "Красная карточка %@";
 
@@ -200,6 +204,7 @@
 "players_block_info_goals" = "Гол";
 "players_block_info_assists" = "Ассист";
 "players_block_info_saves" = "Лучший сейв";
+"players_block_info_tackles" = "Красивый отбор мяча";
 "players_block_info_dribbles" = "Красивый проход/дриблинг";
 "players_block_info_shots" = "Мощный точный удар";
 "players_block_info_passes" = "Красивый пас";
@@ -289,6 +294,7 @@
 "text_pass" = "пас";
 "text_shot" = "удар";
 "text_save" = "сейв";
+"text_tackle" = "отбор";
 "text_yellow_card" = "жёлтая 🟨";
 "text_red_card" = "красная 🟥";
 

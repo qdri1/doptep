@@ -17,6 +17,7 @@ final class PlayerModel {
     var passes: Int
     var shots: Int
     var saves: Int
+    var tackles: Int?
     var yellowCards: Int?
     var redCards: Int?
     var number: Int?
@@ -31,6 +32,7 @@ final class PlayerModel {
         passes: Int = 0,
         shots: Int = 0,
         saves: Int = 0,
+        tackles: Int = 0,
         yellowCards: Int = 0,
         redCards: Int = 0,
         number: Int? = nil
@@ -44,6 +46,7 @@ final class PlayerModel {
         self.passes = passes
         self.shots = shots
         self.saves = saves
+        self.tackles = tackles
         self.yellowCards = yellowCards
         self.redCards = redCards
         self.number = number
@@ -63,6 +66,7 @@ extension PlayerModel {
             passes: passes,
             shots: shots,
             saves: saves,
+            tackles: tackles ?? 0,
             yellowCards: yellowCards ?? 0,
             redCards: redCards ?? 0,
             number: number

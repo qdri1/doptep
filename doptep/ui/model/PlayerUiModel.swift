@@ -19,6 +19,7 @@ struct PlayerUiModel: Identifiable, Equatable {
     let passes: Int
     let shots: Int
     let saves: Int
+    let tackles: Int
     let yellowCards: Int
     let redCards: Int
     let number: Int?
@@ -37,6 +38,7 @@ struct PlayerUiModel: Identifiable, Equatable {
         passes: Int,
         shots: Int,
         saves: Int,
+        tackles: Int,
         yellowCards: Int,
         redCards: Int,
         number: Int?
@@ -54,6 +56,7 @@ struct PlayerUiModel: Identifiable, Equatable {
         self.passes = passes
         self.shots = shots
         self.saves = saves
+        self.tackles = tackles
         self.yellowCards = yellowCards
         self.redCards = redCards
         self.number = number
@@ -72,6 +75,7 @@ extension PlayerUiModel {
             passes: passes,
             shots: shots,
             saves: saves,
+            tackles: tackles,
             yellowCards: yellowCards,
             redCards: redCards,
             number: number
@@ -89,6 +93,7 @@ extension PlayerUiModel {
             passes: passes,
             shots: shots,
             saves: saves,
+            tackles: tackles,
             yellowCards: yellowCards,
             redCards: redCards,
             number: number
@@ -110,6 +115,7 @@ extension PlayerUiModel {
             passes: 0,
             shots: 0,
             saves: 0,
+            tackles: 0,
             yellowCards: 0,
             redCards: 0,
             number: nil

@@ -27,6 +27,7 @@ struct PlayerResultSheet: View {
         case .goal: initialValue = playerResult.playerUiModel.goals
         case .assist: initialValue = playerResult.playerUiModel.assists
         case .save: initialValue = playerResult.playerUiModel.saves
+        case .tackle: initialValue = playerResult.playerUiModel.tackles
         case .dribble: initialValue = playerResult.playerUiModel.dribbles
         case .shot: initialValue = playerResult.playerUiModel.shots
         case .pass: initialValue = playerResult.playerUiModel.passes

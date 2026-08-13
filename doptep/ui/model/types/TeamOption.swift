@@ -9,6 +9,7 @@ enum TeamOption: String, CaseIterable {
     case goal
     case assist
     case save
+    case tackle
     case dribble
     case shot
     case pass
@@ -20,6 +21,7 @@ enum TeamOption: String, CaseIterable {
         case .goal: return "team_option_goal"
         case .assist: return "team_option_assist"
         case .save: return "team_option_save"
+        case .tackle: return "team_option_tackle"
         case .dribble: return "team_option_dribble"
         case .shot: return "team_option_shot"
         case .pass: return "team_option_pass"

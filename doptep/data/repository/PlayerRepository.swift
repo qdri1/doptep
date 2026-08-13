@@ -38,6 +38,7 @@ final class PlayerRepository {
                 passes: model.passes,
                 shots: model.shots,
                 saves: model.saves,
+                tackles: model.tackles ?? 0,
                 yellowCards: model.yellowCards ?? 0,
                 redCards: model.redCards ?? 0,
                 number: model.number
@@ -66,6 +67,7 @@ final class PlayerRepository {
             passes: model.passes,
             shots: model.shots,
             saves: model.saves,
+            tackles: model.tackles ?? 0,
             yellowCards: model.yellowCards ?? 0,
             redCards: model.redCards ?? 0,
             number: model.number
@@ -86,6 +88,7 @@ final class PlayerRepository {
         model.passes = uiModel.passes
         model.shots = uiModel.shots
         model.saves = uiModel.saves
+        model.tackles = uiModel.tackles
         model.yellowCards = uiModel.yellowCards
         model.redCards = uiModel.redCards
         model.number = uiModel.number
