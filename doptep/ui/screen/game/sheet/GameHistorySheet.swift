@@ -241,6 +241,12 @@ struct GameHistorySheet: View {
         }
     }
 
+    private static let pdfFileNameDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        return formatter
+    }()
+
     @MainActor
     private func renderPDF(attempts: Int) async -> URL? {
         for attempt in 0..<attempts {
@@ -249,8 +255,9 @@ struct GameHistorySheet: View {
             renderer.scale = UIScreen.main.scale
             _ = renderer.uiImage
 
+            let shareDate = Self.pdfFileNameDateFormatter.string(from: Date())
             let url = FileManager.default.temporaryDirectory
-                .appendingPathComponent("game_history_\(Int(Date().timeIntervalSince1970))_\(attempt)")
+                .appendingPathComponent("game_history_\(shareDate)_\(Int(Date().timeIntervalSince1970))_\(attempt)")
                 .appendingPathExtension("pdf")
 
             var didRenderPDF = false
