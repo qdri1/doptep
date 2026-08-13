@@ -1285,7 +1285,7 @@ final class GameViewModel: ObservableObject {
                     if !uiState.uiLimited {
                         audioManager.speak(
                             text: String(format: NSLocalizedString("text_to_speech_tackle", comment: ""), playerUiModel.name),
-                            completion: { self.audioManager.playSound(GameSounds.goalSave.fileName) }
+                            completion: { self.audioManager.playSound(GameSounds.girlsApplause.fileName) }
                         )
                     }
 
