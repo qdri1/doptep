@@ -494,7 +494,7 @@ private struct ActionEventRowView: View {
 
     private func actionTypeLabel(_ actionType: String) -> String {
         switch actionType {
-        case "goal": return NSLocalizedString("text_goal", comment: "") + " ⚽️"
+        case "goal": return NSLocalizedString("text_goal", comment: "")
         case "assist": return NSLocalizedString("text_assist", comment: "")
         case "save": return NSLocalizedString("text_save", comment: "")
         case "tackle": return NSLocalizedString("text_tackle", comment: "")
