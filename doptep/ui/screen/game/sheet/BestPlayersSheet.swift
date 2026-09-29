@@ -147,15 +147,18 @@ private struct BestPlayerHeroCard: View {
                 Spacer()
             }
 
-            HStack(spacing: 12) {
-                PlayerTeamBadge(teamColor: bestPlayer.playerUiModel.teamColor, number: bestPlayer.playerUiModel.number, size: 32)
+            HStack(spacing: 10) {
+                PlayerTeamBadge(teamColor: bestPlayer.playerUiModel.teamColor, number: bestPlayer.playerUiModel.number, size: 24)
 
                 Text(bestPlayer.playerUiModel.name)
                     .font(.titleLarge)
                     .foregroundColor(.white)
                     .lineLimit(1)
 
-                Spacer()
+                Spacer(minLength: 8)
+
+                mvpBadge
+                    .fixedSize()
             }
 
             if !stats.isEmpty {
@@ -177,11 +180,20 @@ private struct BestPlayerHeroCard: View {
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            LinearGradient(
-                colors: [AppColor.primary, Color(hex: "#155A22")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            ZStack {
+                LinearGradient(
+                    colors: [Color(hex: "#3D0B02"), Color(hex: "#B3200B"), Color(hex: "#FF7A1A")],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+                RadialGradient(
+                    colors: [Color(hex: "#FFD166").opacity(0.55), Color.clear],
+                    center: .topTrailing,
+                    startRadius: 4,
+                    endRadius: 170
+                )
+            }
         )
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay(
@@ -195,7 +207,37 @@ private struct BestPlayerHeroCard: View {
                     lineWidth: 1
                 )
         )
-        .shadow(color: AppColor.primary.opacity(0.35), radius: 12, x: 0, y: 6)
+        .shadow(color: Color(hex: "#FF4E00").opacity(0.4), radius: 14, x: 0, y: 6)
+    }
+
+    private var mvpBadge: some View {
+        HStack(spacing: 5) {
+            Image(systemName: "flame.fill")
+                .font(.system(size: 16, weight: .bold))
+
+            Text("MVP")
+                .font(.system(size: 18, weight: .heavy, design: .rounded))
+                .tracking(0.5)
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(
+            Capsule()
+                .fill(
+                    LinearGradient(
+                        colors: [Color(hex: "#FF3D00"), Color(hex: "#FF9F1C")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+        )
+        .overlay(
+            Capsule()
+                .stroke(Color.white.opacity(0.5), lineWidth: 0.75)
+        )
+        .shadow(color: Color(hex: "#FF3D00").opacity(0.5), radius: 6, x: 0, y: 2)
+        .rotationEffect(.degrees(-4))
     }
 
     private func stat(_ value: Int, _ key: String) -> String? {

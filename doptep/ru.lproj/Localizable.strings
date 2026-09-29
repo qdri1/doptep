@@ -106,7 +106,7 @@
 "customize_columns_subtitle" = "Показать или скрыть столбцы статистики";
 
 // MARK: - Best Player Options
-"best_player_option_best_player" = "Лучший игрок 🔥";
+"best_player_option_best_player" = "Лучший игрок";
 "best_player_option_goals" = "Лучший бомбардир️ ⚽️";
 "best_player_option_assists" = "Лучший ассист";
 "best_player_option_saves" = "Лучший сейв";

@@ -106,7 +106,7 @@
 "customize_columns_subtitle" = "Show or hide stat columns";
 
 // MARK: - Best Player Options
-"best_player_option_best_player" = "Best player 🔥";
+"best_player_option_best_player" = "Best player";
 "best_player_option_goals" = "Top scorer ⚽️";
 "best_player_option_assists" = "Best assists";
 "best_player_option_saves" = "Best saves";
