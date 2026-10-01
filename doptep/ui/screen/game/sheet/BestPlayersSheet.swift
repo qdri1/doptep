@@ -155,10 +155,7 @@ private struct BestPlayerHeroCard: View {
                     .foregroundColor(.white)
                     .lineLimit(1)
 
-                Spacer(minLength: 8)
-
-                mvpBadge
-                    .fixedSize()
+                Spacer()
             }
 
             if !stats.isEmpty {
@@ -208,6 +205,14 @@ private struct BestPlayerHeroCard: View {
                 )
         )
         .shadow(color: Color(hex: "#FF4E00").opacity(0.4), radius: 14, x: 0, y: 6)
+        .overlay(alignment: .topTrailing) {
+            // Positioned independently of the row layout above, so it
+            // floats over the card rather than pushing the trophy/name
+            // rows around — sits roughly on the seam between them.
+            mvpBadge
+                .padding(.top, 32)
+                .padding(.trailing, 20)
+        }
     }
 
     private var mvpBadge: some View {
