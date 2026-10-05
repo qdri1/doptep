@@ -647,9 +647,8 @@ struct GameScreen: View {
                 .frame(width: 52, height: 52)
 
             if liveGame.isLive {
-                Image(systemName: "soccerball")
-                    .font(.system(size: 20))
-                    .foregroundColor(.white.opacity(0.9))
+                LottieView(name: "soccer-ball")
+                    .frame(width: 24, height: 24)
             } else {
                 Button {
                     viewModel.send(.onTeamChangeIconClicked)
