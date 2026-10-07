@@ -342,7 +342,9 @@ final class GameViewModel: ObservableObject {
     }
 
     private func startGame(_ liveGame: LiveGameUiModel) {
-        audioManager.playSound("start_match")
+        if SoundSettingsStorage.isEnabled(.startMatch) {
+            audioManager.playSound("start_match")
+        }
         currentGameActions.removeAll()
         startTimer()
 
@@ -359,7 +361,9 @@ final class GameViewModel: ObservableObject {
     }
 
     private func finishGame() {
-        audioManager.playSound("finish")
+        if SoundSettingsStorage.isEnabled(.finishMatch) {
+            audioManager.playSound("finish")
+        }
         pendingGameDurationSeconds = currentElapsedSeconds()
         resetTimer()
 
@@ -969,11 +973,11 @@ final class GameViewModel: ObservableObject {
                 self.timerValue = self.formatTime(self.timerMillis)
 
                 if self.timerMillis == 60000 {
-                    if !self.uiState.uiLimited {
+                    if !self.uiState.uiLimited && SoundSettingsStorage.isEnabled(.oneMinuteLeft) {
                         self.audioManager.playSound("minuta")
                     }
                 } else if self.timerMillis == 10000 {
-                    if !self.uiState.uiLimited {
+                    if !self.uiState.uiLimited && SoundSettingsStorage.isEnabled(.tenSecondsLeft) {
                         self.audioManager.playSound("do_auta")
                     }
                 }
@@ -1001,18 +1005,22 @@ final class GameViewModel: ObservableObject {
         if !uiState.uiLimited {
             let minutaDelay = Double(max(0, timerMillis - 60000)) / 1000.0
             let doAutaDelay = Double(max(0, timerMillis - 10000)) / 1000.0
-            audioManager.scheduleTimerMilestoneSound(
-                soundName: "minuta_caf",
-                afterSeconds: minutaDelay,
-                identifier: "timer_minuta",
-                title: NSLocalizedString("notification_title_minuta", comment: "")
-            )
-            audioManager.scheduleTimerMilestoneSound(
-                soundName: "do_auta_caf",
-                afterSeconds: doAutaDelay,
-                identifier: "timer_do_auta",
-                title: NSLocalizedString("notification_title_do_auta", comment: "")
-            )
+            if SoundSettingsStorage.isEnabled(.oneMinuteLeft) {
+                audioManager.scheduleTimerMilestoneSound(
+                    soundName: "minuta_caf",
+                    afterSeconds: minutaDelay,
+                    identifier: "timer_minuta",
+                    title: NSLocalizedString("notification_title_minuta", comment: "")
+                )
+            }
+            if SoundSettingsStorage.isEnabled(.tenSecondsLeft) {
+                audioManager.scheduleTimerMilestoneSound(
+                    soundName: "do_auta_caf",
+                    afterSeconds: doAutaDelay,
+                    identifier: "timer_do_auta",
+                    title: NSLocalizedString("notification_title_do_auta", comment: "")
+                )
+            }
         }
     }
     
@@ -1212,7 +1220,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_goal", comment: ""), playerUiModel.name),
                             completion: {
                                 switch Int.random(in: 0..<3) {
@@ -1243,7 +1251,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_assist", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.girlsApplause.fileName) }
                         )
@@ -1263,7 +1271,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_save", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.goalSave.fileName) }
                         )
@@ -1283,7 +1291,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_tackle", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.girlsApplause.fileName) }
                         )
@@ -1303,7 +1311,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_dribble", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.bilgeninIstepJatyr.fileName) }
                         )
@@ -1323,7 +1331,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_shot", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.suiii.fileName) }
                         )
@@ -1343,7 +1351,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_pass", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.stadiumApplause.fileName) }
                         )
@@ -1363,7 +1371,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_yellow_card", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.penaltyRealMadrid.fileName) }
                         )
@@ -1383,7 +1391,7 @@ final class GameViewModel: ObservableObject {
                         number: playerUiModel.number
                     )
                     if !uiState.uiLimited {
-                        audioManager.speak(
+                        speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_red_card", comment: ""), playerUiModel.name),
                             completion: { self.audioManager.playSound(GameSounds.penaltyRealMadrid.fileName) }
                         )
@@ -1442,7 +1450,7 @@ final class GameViewModel: ObservableObject {
                 
                 
                 if !uiState.uiLimited {
-                    audioManager.speak(
+                    speakAction(
                         text: NSLocalizedString("team_option_players_auto_goal", comment: ""),
                         completion: {
                             switch Int.random(in: 0..<3) {
@@ -1566,6 +1574,21 @@ final class GameViewModel: ObservableObject {
         }
     }
 
+    /// Voice-over for a player action followed by its sound ([completion]).
+    /// Each part can be switched off on the sound settings screen.
+    private func speakAction(text: String, completion: @escaping () -> Void) {
+        let playActionSound = {
+            if SoundSettingsStorage.isEnabled(.actionSounds) {
+                completion()
+            }
+        }
+        guard SoundSettingsStorage.isEnabled(.actionVoice) else {
+            playActionSound()
+            return
+        }
+        audioManager.speak(text: text, completion: playActionSound)
+    }
+
     private func onFunctionClicked(_ function: GameFunction) {
         switch function {
         case .bestPlayers:
@@ -1580,6 +1603,8 @@ final class GameViewModel: ObservableObject {
             effect = .showGameInfoBottomSheet
         case .allResults:
             onAllResultsClicked()
+        case .settings:
+            effect = .openSoundSettingsScreen
         case .delete:
             onDeleteGameClicked()
         }

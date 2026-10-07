@@ -313,3 +313,21 @@
 "update_required_title" = "Қосымшаның жаңа версиясы шықты";
 "update_button_update" = "Жаңарту";
 "update_button_skip" = "Өткізіп жіберу";
+
+/* Sound settings */
+"function_settings" = "Дыбыс баптаулары";
+"sound_settings_title" = "Дыбыс баптаулары";
+"sound_settings_all" = "Барлық автоматты дыбыстар";
+"sound_settings_all_description" = "Барлық дыбыстар мен дауыстап айтуды бірден қосу немесе өшіру";
+"sound_setting_start_match" = "Матчтың басталуы";
+"sound_setting_start_match_description" = "Ойын басталғанда ысқырық";
+"sound_setting_finish_match" = "Матчтың аяқталуы";
+"sound_setting_finish_match_description" = "Ойын аяқталғанда дыбыс";
+"sound_setting_one_minute_left" = "1 минут қалды";
+"sound_setting_one_minute_left_description" = "Ойын біткенше 1 минут қалғанда дыбыстық ескерту";
+"sound_setting_ten_seconds_left" = "10 секунд қалды";
+"sound_setting_ten_seconds_left_description" = "Ойын біткенше 10 секунд қалғанда дыбыстық ескерту";
+"sound_setting_action_voice" = "Әрекеттерді дауыстап айту";
+"sound_setting_action_voice_description" = "Гол, пас, сейв және басқа әрекеттерде ойыншының атын айту";
+"sound_setting_action_sounds" = "Әрекеттен кейінгі дыбыстар";
+"sound_setting_action_sounds_description" = "Гол, пас және басқа әрекеттерден кейінгі жанкүйерлер дыбыстары";

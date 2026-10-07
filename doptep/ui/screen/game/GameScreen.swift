@@ -37,6 +37,7 @@ struct GameScreen: View {
     @State private var showAddGameScreen = false
     @State private var updateGameId: UUID?
     @State private var showGameResultsScreen = false
+    @State private var showSoundSettingsScreen = false
     @State private var showActivationScreen = false
     @State private var showPaywall = false
     @State private var pendingActivationAfterPaywall = false
@@ -368,6 +369,9 @@ struct GameScreen: View {
                 if let gameId = gameResultsGameId {
                     GameResultsScreen(viewModel: viewModel.createGameResultsViewModel(gameId: gameId, modelContext: modelContext))
                 }
+            }
+            .navigationDestination(isPresented: $showSoundSettingsScreen) {
+                SoundSettingsScreen()
             }
     }
 
@@ -1364,6 +1368,8 @@ struct GameScreen: View {
         case .openGameResultsScreen(let gameId):
             gameResultsGameId = gameId
             showGameResultsScreen = true
+        case .openSoundSettingsScreen:
+            showSoundSettingsScreen = true
         case .showOptionPlayersBottomSheet(let optionPlayers):
             teamActionPage = .players(optionPlayers)
             if !showTeamActionSheet {

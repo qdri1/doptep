@@ -313,3 +313,21 @@
 "update_required_title" = "Доступна новая версия приложения";
 "update_button_update" = "Обновить";
 "update_button_skip" = "Пропустить";
+
+/* Sound settings */
+"function_settings" = "Настройки звука";
+"sound_settings_title" = "Настройки звука";
+"sound_settings_all" = "Все автоматические звуки";
+"sound_settings_all_description" = "Включить или выключить все звуки и озвучку сразу";
+"sound_setting_start_match" = "Начало матча";
+"sound_setting_start_match_description" = "Свисток при старте игры";
+"sound_setting_finish_match" = "Конец матча";
+"sound_setting_finish_match_description" = "Звук при завершении игры";
+"sound_setting_one_minute_left" = "Осталась 1 минута";
+"sound_setting_one_minute_left_description" = "Звуковое оповещение за минуту до конца игры";
+"sound_setting_ten_seconds_left" = "Осталось 10 секунд";
+"sound_setting_ten_seconds_left_description" = "Звуковое оповещение «Играем до аута» за 10 секунд до конца игры";
+"sound_setting_action_voice" = "Озвучка действий";
+"sound_setting_action_voice_description" = "Голос называет имя игрока при голе, пасе, сейве и других действиях";
+"sound_setting_action_sounds" = "Звуки после действий";
+"sound_setting_action_sounds_description" = "Звуки трибун после гола, паса и других действий";

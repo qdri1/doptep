@@ -12,6 +12,7 @@ enum GameFunction: String, CaseIterable {
     case clearResults
     case info
     case allResults
+    case settings
     case delete
 
     var localizationKey: String {
@@ -22,6 +23,7 @@ enum GameFunction: String, CaseIterable {
         case .clearResults: return "function_clear_result"
         case .info: return "function_info"
         case .allResults: return "function_all_results"
+        case .settings: return "function_settings"
         case .delete: return "function_remove"
         }
     }
@@ -34,6 +36,7 @@ enum GameFunction: String, CaseIterable {
         case .clearResults: return "arrow.clockwise"
         case .info: return "info.circle"
         case .allResults: return "calendar"
+        case .settings: return "gearshape"
         case .delete: return "trash"
         }
     }
