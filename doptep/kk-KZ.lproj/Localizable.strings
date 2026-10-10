@@ -202,6 +202,8 @@
 "teams_block_info_goals_conceded" = "Соғылған/жіберілген голдар саны (+/-)";
 "teams_block_info_goals_difference" = "Гол айырмасы";
 "teams_block_info_points" = "Ұпай саны";
+"team_result_option_goals" = "Соғылған голдар";
+"team_result_option_conceded" = "Жіберілген голдар";
 
 // MARK: - Players Block Info
 "players_block_info_goals" = "Гол";

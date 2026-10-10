@@ -168,10 +168,10 @@ final class GameViewModel: ObservableObject {
             effect = .showPlayerResultBottomSheet(playerResultUiModel: playerResultUiModel)
         case .onSavePlayerResultClicked(let playerResultUiModel, let playerResultValue):
             onSavePlayerResultClicked(playerResultUiModel: playerResultUiModel, value: playerResultValue)
-        case .onTeamResultClicked(let teamUiModel):
-            effect = .showTeamResultBottomSheet(teamUiModel: teamUiModel)
-        case .onSaveTeamResultClicked(let teamUiModel, let pointsValue):
-            onSaveTeamResultClicked(teamUiModel: teamUiModel, value: pointsValue)
+        case .onTeamResultClicked(let teamResultUiModel):
+            effect = .showTeamResultBottomSheet(teamResultUiModel: teamResultUiModel)
+        case .onSaveTeamResultClicked(let teamResultUiModel, let teamResultValue):
+            onSaveTeamResultClicked(teamResultUiModel: teamResultUiModel, value: teamResultValue)
         case .onLiveGameResultClicked(let liveGameResultUiModel):
             if isLive {
                 effect = .showLiveGameResultBottomSheet(liveGameResultUiModel: liveGameResultUiModel)
@@ -1832,26 +1832,15 @@ final class GameViewModel: ObservableObject {
         }
     }
 
-    private func onSaveTeamResultClicked(teamUiModel: TeamUiModel, value: Int) {
+    private func onSaveTeamResultClicked(teamResultUiModel: TeamResultUiModel, value: Int) {
         Task {
             do {
-                let diff = value - teamUiModel.points
-                let updated = TeamUiModel(
-                    id: teamUiModel.id,
-                    gameId: teamUiModel.gameId,
-                    name: teamUiModel.name,
-                    color: teamUiModel.color,
-                    games: teamUiModel.games,
-                    wins: teamUiModel.wins,
-                    draws: teamUiModel.draws,
-                    loses: teamUiModel.loses,
-                    goals: teamUiModel.goals,
-                    conceded: teamUiModel.conceded,
-                    points: value
-                )
+                let option = teamResultUiModel.option
+                let diff = value - teamResultUiModel.value
+                let updated = teamResultUiModel.teamUiModel.withValue(value, for: option)
                 try teamRepository.updateTeam(updated)
                 if let model = try teamHistoryRepository.getTeamHistoryEntity(teamId: updated.id) {
-                    model.points = model.points + diff
+                    model.setValue(max(model.value(of: option) + diff, 0), for: option)
                 }
                 try await updateTeamsBlock()
                 snackbarMessage = NSLocalizedString("save_success", comment: "")

@@ -8,7 +8,7 @@ import Foundation
 enum GameResultsEffect: Hashable, Identifiable, Equatable {
     case closeScreen
     case showPlayerResultBottomSheet(playerResultUiModel: PlayerResultUiModel)
-    case showTeamResultBottomSheet(teamUiModel: TeamUiModel)
+    case showTeamResultBottomSheet(teamResultUiModel: TeamResultUiModel)
     case showSnackbar(message: String)
     case showBestPlayersBottomSheet(bestPlayers: [BestPlayerUiModel])
     case showClearAllGamesResultsConfirmationBottomSheet

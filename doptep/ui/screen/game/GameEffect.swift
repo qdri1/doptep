@@ -13,7 +13,7 @@ enum GameEffect: Hashable, Identifiable, Equatable {
     case openSoundSettingsScreen
     case showOptionPlayersBottomSheet(optionPlayersUiModel: OptionPlayersUiModel)
     case showPlayerResultBottomSheet(playerResultUiModel: PlayerResultUiModel)
-    case showTeamResultBottomSheet(teamUiModel: TeamUiModel)
+    case showTeamResultBottomSheet(teamResultUiModel: TeamResultUiModel)
     case showLiveGameResultBottomSheet(liveGameResultUiModel: LiveGameResultUiModel)
     case showStayTeamSelectionBottomSheet
     case showDeleteGameConfirmationBottomSheet

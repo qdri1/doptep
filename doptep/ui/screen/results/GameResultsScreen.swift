@@ -13,7 +13,7 @@ struct GameResultsScreen: View {
     @State private var showPlayerResultSheet = false
     @State private var playerResultUiModel: PlayerResultUiModel?
     @State private var showTeamResultSheet = false
-    @State private var teamResultUiModel: TeamUiModel?
+    @State private var teamResultUiModel: TeamResultUiModel?
     @State private var snackbarMessage: String?
     @State private var showBestPlayersSheet = false
     @State private var bestPlayersForSheet: [BestPlayerUiModel] = []
@@ -52,8 +52,8 @@ struct GameResultsScreen: View {
                     if viewModel.uiState.teamUiModelList.count > 2 {
                         TeamsResultsBlock(
                             teamUiModelList: viewModel.uiState.teamUiModelList,
-                            onTeamResultClicked: { team in
-                                viewModel.action(GameResultsAction.onTeamResultClicked(teamUiModel: team))
+                            onTeamResultClicked: { teamResult in
+                                viewModel.action(GameResultsAction.onTeamResultClicked(teamResultUiModel: teamResult))
                             }
                         )
                     }
@@ -113,11 +113,11 @@ struct GameResultsScreen: View {
         .sheet(isPresented: $showTeamResultSheet) {
             if let teamResult = teamResultUiModel {
                 GameTeamResultSheet(
-                    teamUiModel: teamResult,
-                    onSaveClicked: { team, value in
+                    teamResultUiModel: teamResult,
+                    onSaveClicked: { result, value in
                         viewModel.action(.onSaveTeamResultClicked(
-                            teamUiModel: team,
-                            pointsValue: value
+                            teamResultUiModel: result,
+                            teamResultValue: value
                         ))
                         showTeamResultSheet = false
                     },
@@ -243,7 +243,7 @@ struct GameResultsScreen: View {
 
 struct TeamsResultsBlock: View {
     let teamUiModelList: [TeamUiModel]
-    let onTeamResultClicked: (TeamUiModel) -> Void
+    let onTeamResultClicked: (TeamResultUiModel) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -291,25 +291,34 @@ struct TeamsResultsBlock: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 // Stats columns
-                resultsStatColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("games_short", comment: ""),
-                    values: teamUiModelList.map { ("\($0.games)", nil) }
+                    teams: teamUiModelList,
+                    option: .games,
+                    onTeamResultClicked: onTeamResultClicked
                 )
-                resultsStatColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("wins_short", comment: ""),
-                    values: teamUiModelList.map { ("\($0.wins)", nil) }
+                    teams: teamUiModelList,
+                    option: .wins,
+                    onTeamResultClicked: onTeamResultClicked
                 )
-                resultsStatColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("draws_short", comment: ""),
-                    values: teamUiModelList.map { ("\($0.draws)", nil) }
+                    teams: teamUiModelList,
+                    option: .draws,
+                    onTeamResultClicked: onTeamResultClicked
                 )
-                resultsStatColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("loses_short", comment: ""),
-                    values: teamUiModelList.map { ("\($0.loses)", nil) }
+                    teams: teamUiModelList,
+                    option: .loses,
+                    onTeamResultClicked: onTeamResultClicked
                 )
-                resultsStatColumn(
+                TeamGoalsResultColumn(
                     header: NSLocalizedString("goals_short", comment: ""),
-                    values: teamUiModelList.map { ("\($0.goals)-\($0.conceded)", nil) }
+                    teams: teamUiModelList,
+                    onTeamResultClicked: onTeamResultClicked
                 )
                 resultsStatColumn(
                     header: NSLocalizedString("goal_difference_short", comment: ""),
@@ -317,8 +326,10 @@ struct TeamsResultsBlock: View {
                         ($0.goalsDifference > 0 ? "+\($0.goalsDifference)" : "\($0.goalsDifference)", nil)
                     }
                 )
-                resultsTeamPointsColumn(
+                TeamResultColumn(
+                    header: NSLocalizedString("points_short", comment: ""),
                     teams: teamUiModelList,
+                    option: .points,
                     onTeamResultClicked: onTeamResultClicked
                 )
             }
@@ -556,23 +567,74 @@ private func resultsPlayerStatColumn(
     }
 }
 
-private func resultsTeamPointsColumn(
-    teams: [TeamUiModel],
-    onTeamResultClicked: @escaping (TeamUiModel) -> Void
-) -> some View {
-    VStack(spacing: 8) {
-        Text(NSLocalizedString("points_short", comment: ""))
-            .font(.labelSmall)
-            .foregroundColor(AppColor.outline)
+// MARK: - Team Result Columns
 
-        ForEach(teams, id: \.id) { team in
-            Text("\(team.points)")
-                .font(.labelLarge)
-                .foregroundColor(AppColor.onSurface)
-                .onTapGesture {
-                    onTeamResultClicked(team)
-                }
+struct TeamResultColumn: View {
+    let header: String
+    let teams: [TeamUiModel]
+    let option: TeamResultOption
+    let onTeamResultClicked: (TeamResultUiModel) -> Void
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Text(header)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.outline)
+
+            ForEach(teams, id: \.id) { team in
+                TeamResultValueText(
+                    text: "\(team.value(of: option))",
+                    font: option == .points ? .labelLarge : .labelSmall,
+                    onClick: { onTeamResultClicked(TeamResultUiModel(teamUiModel: team, option: option)) }
+                )
+            }
         }
+    }
+}
+
+struct TeamGoalsResultColumn: View {
+    let header: String
+    let teams: [TeamUiModel]
+    let onTeamResultClicked: (TeamResultUiModel) -> Void
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Text(header)
+                .font(.labelSmall)
+                .foregroundColor(AppColor.outline)
+
+            ForEach(teams, id: \.id) { team in
+                HStack(spacing: 0) {
+                    TeamResultValueText(
+                        text: "\(team.goals)",
+                        font: .labelSmall,
+                        onClick: { onTeamResultClicked(TeamResultUiModel(teamUiModel: team, option: .goals)) }
+                    )
+                    Text("-")
+                        .font(.labelSmall)
+                        .foregroundColor(AppColor.onSurface)
+                    TeamResultValueText(
+                        text: "\(team.conceded)",
+                        font: .labelSmall,
+                        onClick: { onTeamResultClicked(TeamResultUiModel(teamUiModel: team, option: .conceded)) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+private struct TeamResultValueText: View {
+    let text: String
+    let font: Font
+    let onClick: () -> Void
+
+    var body: some View {
+        Text(text)
+            .font(font)
+            .foregroundColor(AppColor.onSurface)
+            .contentShape(Rectangle())
+            .onTapGesture { onClick() }
     }
 }
 
@@ -702,21 +764,23 @@ struct GameResultPlayerResultSheet: View {
 // MARK: - Team Result Sheet
 
 struct GameTeamResultSheet: View {
-    let teamUiModel: TeamUiModel
-    let onSaveClicked: (TeamUiModel, Int) -> Void
+    let teamResultUiModel: TeamResultUiModel
+    let onSaveClicked: (TeamResultUiModel, Int) -> Void
     let onDismissed: () -> Void
 
     @State private var value: Int
 
+    private var teamUiModel: TeamUiModel { teamResultUiModel.teamUiModel }
+
     init(
-        teamUiModel: TeamUiModel,
-        onSaveClicked: @escaping (TeamUiModel, Int) -> Void,
+        teamResultUiModel: TeamResultUiModel,
+        onSaveClicked: @escaping (TeamResultUiModel, Int) -> Void,
         onDismissed: @escaping () -> Void
     ) {
-        self.teamUiModel = teamUiModel
+        self.teamResultUiModel = teamResultUiModel
         self.onSaveClicked = onSaveClicked
         self.onDismissed = onDismissed
-        _value = State(initialValue: teamUiModel.points)
+        _value = State(initialValue: teamResultUiModel.value)
     }
 
     var body: some View {
@@ -741,7 +805,7 @@ struct GameTeamResultSheet: View {
                     .padding(.horizontal)
 
                     // Stat Type
-                    Text(NSLocalizedString("points_short", comment: ""))
+                    Text(NSLocalizedString(teamResultUiModel.option.localizationKey, comment: ""))
                         .font(.titleMedium)
                         .foregroundColor(AppColor.onSurfaceVariant)
 
@@ -772,7 +836,11 @@ struct GameTeamResultSheet: View {
 
                     // Save Button
                     Button {
-                        onSaveClicked(teamUiModel, value)
+                        if value != teamResultUiModel.value {
+                            onSaveClicked(teamResultUiModel, value)
+                        } else {
+                            onDismissed()
+                        }
                     } label: {
                         Text(NSLocalizedString("save", comment: ""))
                             .font(.titleMedium)

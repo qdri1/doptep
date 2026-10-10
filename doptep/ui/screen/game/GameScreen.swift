@@ -49,7 +49,7 @@ struct GameScreen: View {
 
     @State private var currentPlayerResult: PlayerResultUiModel?
     @State private var showTeamResultSheet = false
-    @State private var currentTeamResult: TeamUiModel?
+    @State private var currentTeamResult: TeamResultUiModel?
     @State private var currentLiveGameResult: LiveGameResultUiModel?
     @State private var currentBestPlayers: [BestPlayerUiModel] = []
     @State private var showGameHistorySheet = false
@@ -199,11 +199,11 @@ struct GameScreen: View {
             .sheet(isPresented: $showTeamResultSheet) {
                 if let teamResult = currentTeamResult {
                     GameTeamResultSheet(
-                        teamUiModel: teamResult,
-                        onSaveClicked: { team, value in
+                        teamResultUiModel: teamResult,
+                        onSaveClicked: { result, value in
                             viewModel.send(.onSaveTeamResultClicked(
-                                teamUiModel: team,
-                                pointsValue: value
+                                teamResultUiModel: result,
+                                teamResultValue: value
                             ))
                             showTeamResultSheet = false
                         },
@@ -1101,25 +1101,34 @@ struct GameScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 // Stats columns
-                statColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("games_short", comment: ""),
-                    values: viewModel.uiState.teamUiModelList.map { ("\($0.games)", nil) }
+                    teams: viewModel.uiState.teamUiModelList,
+                    option: .games,
+                    onTeamResultClicked: { viewModel.send(.onTeamResultClicked(teamResultUiModel: $0)) }
                 )
-                statColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("wins_short", comment: ""),
-                    values: viewModel.uiState.teamUiModelList.map { ("\($0.wins)", nil) }
+                    teams: viewModel.uiState.teamUiModelList,
+                    option: .wins,
+                    onTeamResultClicked: { viewModel.send(.onTeamResultClicked(teamResultUiModel: $0)) }
                 )
-                statColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("draws_short", comment: ""),
-                    values: viewModel.uiState.teamUiModelList.map { ("\($0.draws)", nil) }
+                    teams: viewModel.uiState.teamUiModelList,
+                    option: .draws,
+                    onTeamResultClicked: { viewModel.send(.onTeamResultClicked(teamResultUiModel: $0)) }
                 )
-                statColumn(
+                TeamResultColumn(
                     header: NSLocalizedString("loses_short", comment: ""),
-                    values: viewModel.uiState.teamUiModelList.map { ("\($0.loses)", nil) }
+                    teams: viewModel.uiState.teamUiModelList,
+                    option: .loses,
+                    onTeamResultClicked: { viewModel.send(.onTeamResultClicked(teamResultUiModel: $0)) }
                 )
-                statColumn(
+                TeamGoalsResultColumn(
                     header: NSLocalizedString("goals_short", comment: ""),
-                    values: viewModel.uiState.teamUiModelList.map { ("\($0.goals)-\($0.conceded)", nil) }
+                    teams: viewModel.uiState.teamUiModelList,
+                    onTeamResultClicked: { viewModel.send(.onTeamResultClicked(teamResultUiModel: $0)) }
                 )
                 statColumn(
                     header: NSLocalizedString("goal_difference_short", comment: ""),
@@ -1127,8 +1136,11 @@ struct GameScreen: View {
                         ($0.goalsDifference > 0 ? "+\($0.goalsDifference)" : "\($0.goalsDifference)", nil)
                     }
                 )
-                teamPointsColumn(
-                    teams: viewModel.uiState.teamUiModelList
+                TeamResultColumn(
+                    header: NSLocalizedString("points_short", comment: ""),
+                    teams: viewModel.uiState.teamUiModelList,
+                    option: .points,
+                    onTeamResultClicked: { viewModel.send(.onTeamResultClicked(teamResultUiModel: $0)) }
                 )
             }
             .padding(12)
@@ -1136,23 +1148,6 @@ struct GameScreen: View {
             .cornerRadius(12)
         }
         .padding(.horizontal, 16)
-    }
-
-    private func teamPointsColumn(teams: [TeamUiModel]) -> some View {
-        VStack(spacing: 8) {
-            Text(NSLocalizedString("points_short", comment: ""))
-                .font(.labelSmall)
-                .foregroundColor(AppColor.outline)
-
-            ForEach(teams, id: \.id) { team in
-                Text("\(team.points)")
-                    .font(.labelLarge)
-                    .foregroundColor(AppColor.onSurface)
-                    .onTapGesture {
-                        viewModel.send(.onTeamResultClicked(teamUiModel: team))
-                    }
-            }
-        }
     }
 
     private func statColumn(header: String, values: [(String, Font?)]) -> some View {

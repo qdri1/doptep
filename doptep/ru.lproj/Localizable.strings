@@ -202,6 +202,8 @@
 "teams_block_info_goals_conceded" = "Количество забитых/пропущенных (+/-) голов";
 "teams_block_info_goals_difference" = "Разница голов";
 "teams_block_info_points" = "Количество очков";
+"team_result_option_goals" = "Забитые голы";
+"team_result_option_conceded" = "Пропущенные голы";
 
 // MARK: - Players Block Info
 "players_block_info_goals" = "Гол";

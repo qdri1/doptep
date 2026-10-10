@@ -202,6 +202,8 @@
 "teams_block_info_goals_conceded" = "Goals scored/conceded (+/-)";
 "teams_block_info_goals_difference" = "Goal difference";
 "teams_block_info_points" = "Points";
+"team_result_option_goals" = "Goals scored";
+"team_result_option_conceded" = "Goals conceded";
 
 // MARK: - Players Block Info
 "players_block_info_goals" = "Goal";

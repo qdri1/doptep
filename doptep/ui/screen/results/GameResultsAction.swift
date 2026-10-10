@@ -9,8 +9,8 @@ enum GameResultsAction {
     case onBackClicked
     case onPlayerResultClicked(playerResultUiModel: PlayerResultUiModel)
     case onSavePlayerResultClicked(playerResultUiModel: PlayerResultUiModel, playerResultValue: Int)
-    case onTeamResultClicked(teamUiModel: TeamUiModel)
-    case onSaveTeamResultClicked(teamUiModel: TeamUiModel, pointsValue: Int)
+    case onTeamResultClicked(teamResultUiModel: TeamResultUiModel)
+    case onSaveTeamResultClicked(teamResultUiModel: TeamResultUiModel, teamResultValue: Int)
     case onBestPlayersAllGamesClicked
     case onClearAllGamesResultsClicked
     case onClearAllGamesResultsConfirmationClicked
