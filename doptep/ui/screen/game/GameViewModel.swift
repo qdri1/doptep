@@ -146,6 +146,8 @@ final class GameViewModel: ObservableObject {
             onRightTeamOptionSelected(option)
         case .onTeamChangeIconClicked:
             onTeamChangeIconClicked()
+        case .onDopClicked:
+            playDopTepSound()
         case .onLeftTeamChangeClicked(let teamId):
             onLeftTeamChangeClicked(teamId)
         case .onRightTeamChangeClicked(let teamId):
@@ -161,7 +163,11 @@ final class GameViewModel: ObservableObject {
         case .onRightTeamStayClicked:
             onRightTeamStayClicked()
         case .onSoundClicked(let sound):
-            audioManager.playSound(sound.fileName)
+            if sound == .dopTep {
+                playDopTepSound()
+            } else {
+                audioManager.playSound(sound.fileName)
+            }
         case .onFunctionClicked(let function):
             onFunctionClicked(function)
         case .onPlayerResultClicked(let playerResultUiModel):
@@ -246,6 +252,53 @@ final class GameViewModel: ObservableObject {
             timerMillis = timeInMinutes * 60 * 1000
         }
         timerValue = formatTime(timerMillis)
+    }
+
+    // MARK: - Language-dependent sounds
+
+    private var isKazakhLanguage: Bool {
+        let language = UserDefaults.standard.string(forKey: "app_language") ?? "kk-KZ"
+        return language == "kk-KZ" || language == "kk"
+    }
+
+    private var minutaSoundName: String {
+        isKazakhLanguage ? "oiynnyn_aiaktaluyna_1_minut_kaldy" : "minuta"
+    }
+
+    private var doAutaSoundName: String {
+        isKazakhLanguage ? "autka_dein_oinaimyz" : "do_auta"
+    }
+
+    private var finishMatchSoundName: String {
+        isKazakhLanguage ? "oiyn_aiaktaldy" : "finish"
+    }
+
+    private var assistSoundName: String {
+        isKazakhLanguage ? "kandai_galamat_pas_jane_gol" : "toni_kross_pass"
+    }
+
+    private var saveSoundName: String {
+        isKazakhLanguage ? "goal_save" : "kakoi_save"
+    }
+
+    private var dribbleSoundName: String {
+        isKazakhLanguage ? GameSounds.bilgeninIstepJatyr.fileName : GameSounds.girlsApplause.fileName
+    }
+
+    private func playGoalSound() {
+        let sounds = isKazakhLanguage
+            ? ["oooi_kandai_gol", "suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
+            : ["suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
+        if let sound = sounds.randomElement() {
+            audioManager.playSound(sound)
+        }
+    }
+
+    private func playDopTepSound() {
+        let sounds = ["sound_dop_tep_1", "sound_dop_tep_2", "sound_dop_tep_3", "sound_dop_tep_4"]
+        if let sound = sounds.randomElement() {
+            audioManager.playSound(sound)
+        }
     }
 
     private func formatTime(_ millis: Int) -> String {
@@ -362,7 +415,7 @@ final class GameViewModel: ObservableObject {
 
     private func finishGame() {
         if SoundSettingsStorage.isEnabled(.finishMatch) {
-            audioManager.playSound("finish")
+            audioManager.playSound(finishMatchSoundName)
         }
         pendingGameDurationSeconds = currentElapsedSeconds()
         resetTimer()
@@ -974,11 +1027,11 @@ final class GameViewModel: ObservableObject {
 
                 if self.timerMillis == 60000 {
                     if !self.uiState.uiLimited && SoundSettingsStorage.isEnabled(.oneMinuteLeft) {
-                        self.audioManager.playSound("minuta")
+                        self.audioManager.playSound(self.minutaSoundName)
                     }
                 } else if self.timerMillis == 10000 {
                     if !self.uiState.uiLimited && SoundSettingsStorage.isEnabled(.tenSecondsLeft) {
-                        self.audioManager.playSound("do_auta")
+                        self.audioManager.playSound(self.doAutaSoundName)
                     }
                 }
             }
@@ -1007,7 +1060,7 @@ final class GameViewModel: ObservableObject {
             let doAutaDelay = Double(max(0, timerMillis - 10000)) / 1000.0
             if SoundSettingsStorage.isEnabled(.oneMinuteLeft) {
                 audioManager.scheduleTimerMilestoneSound(
-                    soundName: "minuta_caf",
+                    soundName: "\(minutaSoundName)_caf",
                     afterSeconds: minutaDelay,
                     identifier: "timer_minuta",
                     title: NSLocalizedString("notification_title_minuta", comment: "")
@@ -1015,7 +1068,7 @@ final class GameViewModel: ObservableObject {
             }
             if SoundSettingsStorage.isEnabled(.tenSecondsLeft) {
                 audioManager.scheduleTimerMilestoneSound(
-                    soundName: "do_auta_caf",
+                    soundName: "\(doAutaSoundName)_caf",
                     afterSeconds: doAutaDelay,
                     identifier: "timer_do_auta",
                     title: NSLocalizedString("notification_title_do_auta", comment: "")
@@ -1223,16 +1276,7 @@ final class GameViewModel: ObservableObject {
                         speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_goal", comment: ""), playerUiModel.name),
                             completion: {
-                                switch Int.random(in: 0..<3) {
-                                case 0:
-                                    self.audioManager.playSound("oooi_kandai_gol")
-                                case 1:
-                                    self.audioManager.playSound("suiii_full")
-                                case 2:
-                                    self.audioManager.playSound("gol_gol_gol")
-                                default:
-                                    break
-                                }
+                                self.playGoalSound()
                             }
                         )
                     }
@@ -1253,7 +1297,7 @@ final class GameViewModel: ObservableObject {
                     if !uiState.uiLimited {
                         speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_assist", comment: ""), playerUiModel.name),
-                            completion: { self.audioManager.playSound(GameSounds.girlsApplause.fileName) }
+                            completion: { self.audioManager.playSound(self.assistSoundName) }
                         )
                     }
 
@@ -1273,7 +1317,7 @@ final class GameViewModel: ObservableObject {
                     if !uiState.uiLimited {
                         speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_save", comment: ""), playerUiModel.name),
-                            completion: { self.audioManager.playSound(GameSounds.goalSave.fileName) }
+                            completion: { self.audioManager.playSound(self.saveSoundName) }
                         )
                     }
                     
@@ -1293,7 +1337,7 @@ final class GameViewModel: ObservableObject {
                     if !uiState.uiLimited {
                         speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_tackle", comment: ""), playerUiModel.name),
-                            completion: { self.audioManager.playSound(GameSounds.girlsApplause.fileName) }
+                            completion: { self.audioManager.playSound(GameSounds.stadiumApplause.fileName) }
                         )
                     }
 
@@ -1313,7 +1357,7 @@ final class GameViewModel: ObservableObject {
                     if !uiState.uiLimited {
                         speakAction(
                             text: String(format: NSLocalizedString("text_to_speech_dribble", comment: ""), playerUiModel.name),
-                            completion: { self.audioManager.playSound(GameSounds.bilgeninIstepJatyr.fileName) }
+                            completion: { self.audioManager.playSound(self.dribbleSoundName) }
                         )
                     }
 
@@ -1453,16 +1497,7 @@ final class GameViewModel: ObservableObject {
                     speakAction(
                         text: NSLocalizedString("team_option_players_auto_goal", comment: ""),
                         completion: {
-                            switch Int.random(in: 0..<3) {
-                            case 0:
-                                self.audioManager.playSound("oooi_kandai_gol")
-                            case 1:
-                                self.audioManager.playSound("suiii_full")
-                            case 2:
-                                self.audioManager.playSound("gol_gol_gol")
-                            default:
-                                break
-                            }
+                            self.playGoalSound()
                         }
                     )
                 }

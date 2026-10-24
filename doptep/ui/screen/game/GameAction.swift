@@ -18,6 +18,7 @@ enum GameAction {
     case onLeftTeamOptionSelected(option: TeamOption?)
     case onRightTeamOptionSelected(option: TeamOption?)
     case onTeamChangeIconClicked
+    case onDopClicked
     case onLeftTeamChangeClicked(teamId: UUID?)
     case onRightTeamChangeClicked(teamId: UUID?)
     case onOptionPlayersSelected(teamId: UUID, playerUiModel: PlayerUiModel, option: TeamOption)

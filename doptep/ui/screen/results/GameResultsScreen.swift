@@ -260,6 +260,7 @@ struct TeamsResultsBlock: View {
                     Text(NSLocalizedString("team", comment: ""))
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
+                        .lineLimit(1)
 
                     ForEach(teamUiModelList, id: \.id) { team in
                         HStack(spacing: 6) {
@@ -355,7 +356,7 @@ struct PlayersResultsBlock: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
 
-            HStack(alignment: .top, spacing: 12) {
+            HStack(alignment: .top, spacing: 8) {
                 // Place
                 resultsStatColumn(
                     header: "#",
@@ -367,6 +368,7 @@ struct PlayersResultsBlock: View {
                     Text(NSLocalizedString("player", comment: ""))
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
+                        .lineLimit(1)
 
                     ForEach(playerUiModelList, id: \.id) { player in
                         HStack(spacing: 6) {

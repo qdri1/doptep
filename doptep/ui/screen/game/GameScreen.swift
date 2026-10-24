@@ -663,6 +663,13 @@ struct GameScreen: View {
                 }
             }
         }
+        .frame(width: 52, height: 52)
+        .contentShape(Circle())
+        .onTapGesture {
+            if liveGame.isLive {
+                viewModel.send(.onDopClicked)
+            }
+        }
     }
 
     private func streakRow(liveGame: LiveGameUiModel) -> some View {
@@ -886,7 +893,7 @@ struct GameScreen: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(GameSounds.allCases, id: \.self) { sound in
-                        let isLocked = uiLimited && sound != .whistle && sound != .startMatch
+                        let isLocked = uiLimited && sound != .dopTep && sound != .whistle && sound != .startMatch
                         Button {
                             if isLocked {
                                 viewModel.send(.onActivateClicked)
@@ -1070,6 +1077,7 @@ struct GameScreen: View {
                     Text(NSLocalizedString("team", comment: ""))
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
+                        .lineLimit(1)
 
                     ForEach(viewModel.uiState.teamUiModelList, id: \.id) { team in
                         HStack(spacing: 6) {
@@ -1204,7 +1212,7 @@ struct GameScreen: View {
     private var playersLeaderboard: some View {
         VStack(alignment: .leading) {
             
-            HStack(alignment: .top, spacing: 12) {
+            HStack(alignment: .top, spacing: 8) {
                 // Place
                 statColumn(
                     header: "#",
@@ -1216,6 +1224,7 @@ struct GameScreen: View {
                     Text(NSLocalizedString("player", comment: ""))
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
+                        .lineLimit(1)
 
                     ForEach(viewModel.uiState.playerUiModelList, id: \.id) { player in
                         HStack(spacing: 6) {

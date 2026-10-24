@@ -168,6 +168,13 @@
 "sound_tondyryp_tastagan" = "Тоңдырып\nтастаған";
 "sound_freed_from_desire" = "Freed From\nDesire";
 "sound_stadium_atmosphere" = "Stadium\nAtmosphere";
+"sound_satpayev_goal" = "Satpayev\nGooooal";
+"sound_dop_tep" = "Dop Tep";
+"sound_kakoi_save" = "Какой\nсейв";
+"sound_toni_kross_pass" = "Toni Kroos\npass";
+"sound_kandai_galamat_pas" = "Қандай ғаламат\nпас";
+"sound_sharip_commentator" = "Шәріп\nкомментатор";
+"sound_shakira_dai_dai" = "Dai Dai\nWorld Cup";
 
 // MARK: - Game History
 "function_history" = "History of games";
