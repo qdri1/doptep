@@ -73,8 +73,8 @@
 "draws_short" = "D";
 "loses_short" = "L";
 "goals_short" = "+/-";
-"goal_difference_short" = "GD";
-"points_short" = "PTS";
+"goal_difference_short" = "D";
+"points_short" = "PT";
 
 // MARK: - Player Results Table
 "player" = "Player";

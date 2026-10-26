@@ -73,8 +73,8 @@
 "draws_short" = "Н";
 "loses_short" = "П";
 "goals_short" = "+/-";
-"goal_difference_short" = "РГ";
-"points_short" = "ОЧК";
+"goal_difference_short" = "Р";
+"points_short" = "ОЧ";
 
 // MARK: - Player Results Table
 "player" = "Игрок";
@@ -207,7 +207,7 @@
 "teams_block_info_draws" = "Ничьи";
 "teams_block_info_loses" = "Поражения";
 "teams_block_info_goals_conceded" = "Количество забитых/пропущенных (+/-) голов";
-"teams_block_info_goals_difference" = "Разница голов";
+"teams_block_info_goals_difference" = "Разница забитых/пропущенных голов";
 "teams_block_info_points" = "Количество очков";
 "team_result_option_goals" = "Забитые голы";
 "team_result_option_conceded" = "Пропущенные голы";

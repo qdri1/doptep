@@ -73,7 +73,7 @@
 "draws_short" = "Т";
 "loses_short" = "Ұ";
 "goals_short" = "+/-";
-"goal_difference_short" = "ГА";
+"goal_difference_short" = "А";
 "points_short" = "ҰП";
 
 // MARK: - Player Results Table
@@ -207,7 +207,7 @@
 "teams_block_info_draws" = "Тең ойындар";
 "teams_block_info_loses" = "Ұтылыстар";
 "teams_block_info_goals_conceded" = "Соғылған/жіберілген голдар саны (+/-)";
-"teams_block_info_goals_difference" = "Гол айырмасы";
+"teams_block_info_goals_difference" = "Соғылған/жіберілген голдар айырмасы";
 "teams_block_info_points" = "Ұпай саны";
 "team_result_option_goals" = "Соғылған голдар";
 "team_result_option_conceded" = "Жіберілген голдар";
