@@ -6,13 +6,16 @@
 import Foundation
 
 enum HiddenColumnsStorage {
+    /// Columns hidden until the user changes them in "Customize columns".
+    private static let defaultHiddenOptions: Set<TeamOption> = [.yellowCard, .redCard]
+
     private static func key(for gameId: UUID) -> String {
         "hidden_columns_\(gameId.uuidString)"
     }
 
     static func load(gameId: UUID) -> Set<TeamOption> {
         guard let rawValues = UserDefaults.standard.stringArray(forKey: key(for: gameId)) else {
-            return []
+            return defaultHiddenOptions
         }
         return Set(rawValues.compactMap { TeamOption(rawValue: $0) })
     }
