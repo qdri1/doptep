@@ -52,7 +52,7 @@
 "game_rule_3_winner_stay_unlimited" = "Жеңген команда әрдайым қалады";
 
 // MARK: - Game Rules (4 teams)
-"game_rule_4_only_3_games" = "Дәл 3 ойын";
+"game_rule_4_only_2_games" = "Дәл 2 ойын";
 "game_rule_4_winner_stay_3" = "Жеңген команда қалады (макс. 3 ойын)";
 "game_rule_4_winner_stay_4" = "Жеңген команда қалады (макс. 4 ойын)";
 "game_rule_4_winner_stay_5" = "Жеңген команда қалады (макс. 5 ойын)";

@@ -80,6 +80,22 @@ final class LiveGameRepository {
         UserDefaults.standard.integer(forKey: timerKey)
     }
 
+    func getLastLeftTeamId(gameId: UUID) -> UUID? {
+        UserDefaults.standard.string(forKey: lastLeftTeamKey(gameId: gameId)).flatMap(UUID.init(uuidString:))
+    }
+
+    func saveLastLeftTeamId(gameId: UUID, teamId: UUID) {
+        UserDefaults.standard.set(teamId.uuidString, forKey: lastLeftTeamKey(gameId: gameId))
+    }
+
+    func clearLastLeftTeamId(gameId: UUID) {
+        UserDefaults.standard.removeObject(forKey: lastLeftTeamKey(gameId: gameId))
+    }
+
+    private func lastLeftTeamKey(gameId: UUID) -> String {
+        "last_left_team_id_\(gameId.uuidString)"
+    }
+
     private func getLiveGameEntity(gameId: UUID) throws -> LiveGameModel? {
         let descriptor = FetchDescriptor<LiveGameModel>(
             predicate: #Predicate { $0.gameId == gameId }

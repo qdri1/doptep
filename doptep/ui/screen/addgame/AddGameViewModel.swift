@@ -175,7 +175,7 @@ final class AddGameViewModel: ObservableObject {
         case .team3:
             gameRuleState = GameRuleTeam3.only2Games
         case .team4:
-            gameRuleState = GameRuleTeam4.only3Games
+            gameRuleState = GameRuleTeam4.only2Games
         }
 
         let quantity = teamQuantity.rawValue
@@ -262,7 +262,8 @@ final class AddGameViewModel: ObservableObject {
                 let teamModel = TeamModel(
                     gameId: newGameId,
                     name: teamName.trimmingCharacters(in: .whitespaces),
-                    color: teamColors[safe: index]?.rawValue ?? TeamColor.red.rawValue
+                    color: teamColors[safe: index]?.rawValue ?? TeamColor.red.rawValue,
+                    sortIndex: index
                 )
                 let teamId = teamRepository.saveTeam(teamModel)
                 savedTeamIds.append(teamId)

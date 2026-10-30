@@ -64,7 +64,7 @@ enum GameRuleTeam3: String, GameRule, CaseIterable {
 }
 
 enum GameRuleTeam4: String, GameRule, CaseIterable {
-    case only3Games
+    case only2Games
     case winnerStay3
     case winnerStay4
     case winnerStay5
@@ -73,7 +73,7 @@ enum GameRuleTeam4: String, GameRule, CaseIterable {
 
     var localizationKey: String {
         switch self {
-        case .only3Games: return "game_rule_4_only_3_games"
+        case .only2Games: return "game_rule_4_only_2_games"
         case .winnerStay3: return "game_rule_4_winner_stay_3"
         case .winnerStay4: return "game_rule_4_winner_stay_4"
         case .winnerStay5: return "game_rule_4_winner_stay_5"
@@ -82,7 +82,7 @@ enum GameRuleTeam4: String, GameRule, CaseIterable {
         }
     }
 
-    static func from(_ value: String, defaultValue: GameRuleTeam4 = .only3Games) -> GameRuleTeam4 {
+    static func from(_ value: String, defaultValue: GameRuleTeam4 = .only2Games) -> GameRuleTeam4 {
         GameRuleTeam4(rawValue: value) ?? defaultValue
     }
 }

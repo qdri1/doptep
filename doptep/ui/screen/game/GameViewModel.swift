@@ -30,11 +30,18 @@ final class GameViewModel: ObservableObject {
 
     private var timer: Timer? = nil
     private var timerMillis: Int = 0
-    private var oldTeamId: UUID = UUID()
+    
+    private var oldTeamId: UUID {
+        get { liveGameRepository.getLastLeftTeamId(gameId: gameId) ?? Self.noTeamId }
+        set { liveGameRepository.saveLastLeftTeamId(gameId: gameId, teamId: newValue) }
+    }
+
+    private static let noTeamId = UUID()
     private var backgroundDate: Date? = nil
     private var lifecycleObservers: [NSObjectProtocol] = []
 
     private var pendingGameDurationSeconds: Int = 0
+    private var teamCreationOrder: [UUID] = []
     private var currentGameActions: [PendingGameAction] = []
 
     private struct PendingGameAction {
@@ -364,9 +371,19 @@ final class GameViewModel: ObservableObject {
                 }
 
                 if let liveGame = uiState.liveGameUiModel {
-                    let clearedLiveGame = liveGame.updating(
+                    let firstTeam = teams.first
+                    let secondTeam = teams.dropFirst().first
+                    let clearedLiveGame = LiveGameUiModel(
+                        id: liveGame.id,
+                        gameId: liveGame.gameId,
+                        leftTeamId: firstTeam?.id ?? liveGame.leftTeamId,
+                        leftTeamName: firstTeam?.name ?? liveGame.leftTeamName,
+                        leftTeamColor: firstTeam?.color ?? liveGame.leftTeamColor,
                         leftTeamGoals: 0,
                         leftTeamWinCount: 0,
+                        rightTeamId: secondTeam?.id ?? liveGame.rightTeamId,
+                        rightTeamName: secondTeam?.name ?? liveGame.rightTeamName,
+                        rightTeamColor: secondTeam?.color ?? liveGame.rightTeamColor,
                         rightTeamGoals: 0,
                         rightTeamWinCount: 0,
                         gameCount: 0,
@@ -374,6 +391,7 @@ final class GameViewModel: ObservableObject {
                     )
                     try liveGameRepository.updateLiveGame(clearedLiveGame)
                 }
+                liveGameRepository.clearLastLeftTeamId(gameId: gameId)
 
                 try gameHistoryRepository.deleteGameHistory(gameId: gameId)
                 currentGameActions.removeAll()
@@ -526,7 +544,7 @@ final class GameViewModel: ObservableObject {
         let ids = [liveGame.leftTeamId, liveGame.rightTeamId, oldTeamId]
 
         switch rule {
-        case .only3Games:
+        case .only2Games:
             if liveGame.isLeftTeamWin {
                 try await updateLeftTeamWin(liveGame: liveGame)
             } else if liveGame.isRightTeamWin {
@@ -534,22 +552,13 @@ final class GameViewModel: ObservableObject {
             } else {
                 try await updateTeamsDraw(liveGame: liveGame)
             }
-            if let nextTeam = findNextTeam(excludingIds: ids) {
-                if liveGame.leftTeamWinCount == 0 && liveGame.rightTeamWinCount == 0 {
-                    oldTeamId = liveGame.rightTeamId
-                    try await updateLiveGameRightTeam(nextTeam: nextTeam, liveGame: liveGame)
-                } else if liveGame.leftTeamWinCount == 1 {
-                    oldTeamId = liveGame.rightTeamId
-                    try await updateLiveGameRightTeam(nextTeam: nextTeam, liveGame: liveGame)
-                } else if liveGame.leftTeamWinCount == 2 {
+            if let step = nextTeam4Only2GamesStep(team4Rotation(from: liveGame)) {
+                if step.isLeftTeamLeaving {
                     oldTeamId = liveGame.leftTeamId
-                    try await updateLiveGameLeftTeam(nextTeam: nextTeam, liveGame: liveGame)
-                } else if liveGame.rightTeamWinCount == 1 {
-                    oldTeamId = liveGame.leftTeamId
-                    try await updateLiveGameLeftTeam(nextTeam: nextTeam, liveGame: liveGame)
-                } else if liveGame.rightTeamWinCount == 2 {
+                    try await updateLiveGameLeftTeam(nextTeam: step.nextTeam, liveGame: liveGame)
+                } else {
                     oldTeamId = liveGame.rightTeamId
-                    try await updateLiveGameRightTeam(nextTeam: nextTeam, liveGame: liveGame)
+                    try await updateLiveGameRightTeam(nextTeam: step.nextTeam, liveGame: liveGame)
                 }
             }
 
@@ -916,7 +925,95 @@ final class GameViewModel: ObservableObject {
                 $0.id != liveGame.leftTeamId && $0.id != liveGame.rightTeamId
             }
             uiState.restTeamUiModelList = restTeams.sorted { ($0.id == oldTeamId ? 1 : 0) < ($1.id == oldTeamId ? 1 : 0) }
+            if let rule = gameUiModel.gameRule as? GameRuleTeam4, rule == .only2Games {
+                uiState.nextPlayingTeamsUiModelList = team4Only2GamesNextPlayingTeams(liveGame: liveGame)
+            } else {
+                uiState.nextPlayingTeamsUiModelList = []
+            }
         }
+    }
+
+    private struct Team4Rotation {
+        let leftTeamId: UUID
+        let leftGamesInRow: Int
+        let rightTeamId: UUID
+        let rightGamesInRow: Int
+        let gameCount: Int
+        let lastLeftTeamId: UUID?
+    }
+
+    private struct Team4RotationStep {
+        let isLeftTeamLeaving: Bool
+        let nextTeam: TeamUiModel
+        let rotation: Team4Rotation
+    }
+
+    private func team4Rotation(from liveGame: LiveGameUiModel) -> Team4Rotation {
+        Team4Rotation(
+            leftTeamId: liveGame.leftTeamId,
+            leftGamesInRow: liveGame.leftTeamWinCount,
+            rightTeamId: liveGame.rightTeamId,
+            rightGamesInRow: liveGame.rightTeamWinCount,
+            gameCount: liveGame.gameCount,
+            lastLeftTeamId: liveGameRepository.getLastLeftTeamId(gameId: gameId)
+        )
+    }
+
+    private func nextTeam4Only2GamesStep(_ rotation: Team4Rotation) -> Team4RotationStep? {
+        let creationIndex = { (team: TeamUiModel) in self.teamCreationOrder.firstIndex(of: team.id) ?? Int.max }
+        let restTeams = uiState.teamUiModelList
+            .filter { $0.id != rotation.leftTeamId && $0.id != rotation.rightTeamId }
+            .sorted { creationIndex($0) < creationIndex($1) }
+        guard let firstRestTeam = restTeams.first else { return nil }
+
+        let isFirstGame = rotation.gameCount == 0
+        let isLeftTeamLeaving = !isFirstGame && rotation.leftGamesInRow >= 1
+        
+        let nextTeam: TeamUiModel
+        if !isFirstGame, let lastLeftTeamId = rotation.lastLeftTeamId, restTeams.contains(where: { $0.id == lastLeftTeamId }) {
+            nextTeam = restTeams.first { $0.id != lastLeftTeamId } ?? firstRestTeam
+        } else {
+            nextTeam = firstRestTeam
+        }
+
+        let nextRotation: Team4Rotation
+        if isLeftTeamLeaving {
+            nextRotation = Team4Rotation(
+                leftTeamId: nextTeam.id,
+                leftGamesInRow: 0,
+                rightTeamId: rotation.rightTeamId,
+                rightGamesInRow: rotation.rightGamesInRow + 1,
+                gameCount: rotation.gameCount + 1,
+                lastLeftTeamId: rotation.leftTeamId
+            )
+        } else {
+            nextRotation = Team4Rotation(
+                leftTeamId: rotation.leftTeamId,
+                leftGamesInRow: rotation.leftGamesInRow + 1,
+                rightTeamId: nextTeam.id,
+                rightGamesInRow: 0,
+                gameCount: rotation.gameCount + 1,
+                lastLeftTeamId: rotation.rightTeamId
+            )
+        }
+        return Team4RotationStep(isLeftTeamLeaving: isLeftTeamLeaving, nextTeam: nextTeam, rotation: nextRotation)
+    }
+    
+    private func team4Only2GamesNextPlayingTeams(liveGame: LiveGameUiModel) -> [NextPlayingTeamsUiModel] {
+        let teams = uiState.teamUiModelList
+        var nextPlayingTeams: [NextPlayingTeamsUiModel] = []
+        var rotation = team4Rotation(from: liveGame)
+        for _ in 0..<2 {
+            guard let step = nextTeam4Only2GamesStep(rotation) else { break }
+            rotation = step.rotation
+            nextPlayingTeams.append(
+                NextPlayingTeamsUiModel(
+                    leftTeam: teams.first { $0.id == rotation.leftTeamId },
+                    rightTeam: teams.first { $0.id == rotation.rightTeamId }
+                )
+            )
+        }
+        return nextPlayingTeams
     }
 
     private func setTeam3Only2GamesNextPlayingTeams() {
@@ -942,7 +1039,9 @@ final class GameViewModel: ObservableObject {
     }
 
     private func updateTeamsBlock() async throws {
-        uiState.teamUiModelList = try teamRepository.getTeams(gameId: gameId)
+        let teams = try teamRepository.getTeams(gameId: gameId)
+        teamCreationOrder = teams.map(\.id)
+        uiState.teamUiModelList = teams
             .sorted { lhs, rhs in
                 if lhs.points != rhs.points { return lhs.points > rhs.points }
                 if lhs.goalsDifference != rhs.goalsDifference { return lhs.goalsDifference > rhs.goalsDifference }

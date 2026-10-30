@@ -19,6 +19,7 @@ final class TeamModel {
     var goals: Int
     var conceded: Int
     var points: Int
+    var sortIndex: Int = 0
 
     init(
         gameId: UUID,
@@ -30,7 +31,8 @@ final class TeamModel {
         loses: Int = 0,
         goals: Int = 0,
         conceded: Int = 0,
-        points: Int = 0
+        points: Int = 0,
+        sortIndex: Int = 0
     ) {
         self.id = UUID()
         self.gameId = gameId
@@ -43,6 +45,7 @@ final class TeamModel {
         self.goals = goals
         self.conceded = conceded
         self.points = points
+        self.sortIndex = sortIndex
     }
 
     var goalsDifference: Int {
