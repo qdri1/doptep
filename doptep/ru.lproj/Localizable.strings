@@ -47,7 +47,6 @@
 
 // MARK: - Game Rules (3 teams)
 "game_rule_3_only_2_games" = "Ровно 2 игры";
-"game_rule_3_winner_stay_2" = "Победивший остается (макс. 2 игры)";
 "game_rule_3_winner_stay_3" = "Победивший остается (макс. 3 игры)";
 "game_rule_3_winner_stay_4" = "Победивший остается (макс. 4 игры)";
 "game_rule_3_winner_stay_unlimited" = "Победивший всегда остается";

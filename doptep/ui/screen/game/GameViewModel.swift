@@ -498,8 +498,6 @@ final class GameViewModel: ObservableObject {
                 }
             }
 
-        case .winnerStay2:
-            try await finishGameRuleTeam3WinnerStay(liveGame: liveGame, ids: ids, winCount: 1)
         case .winnerStay3:
             try await finishGameRuleTeam3WinnerStay(liveGame: liveGame, ids: ids, winCount: 2)
         case .winnerStay4:
@@ -905,8 +903,6 @@ final class GameViewModel: ObservableObject {
             switch rule {
             case .only2Games:
                 setTeam3Only2GamesNextPlayingTeams()
-            case .winnerStay2:
-                setTeam3WinnerStayNextPlayingTeams(winCount: 1)
             case .winnerStay3:
                 uiState.nextPlayingTeamsUiModelList = []
             case .winnerStay4:
@@ -943,27 +939,6 @@ final class GameViewModel: ObservableObject {
         }
 
         uiState.nextPlayingTeamsUiModelList = [firstNextPlayingTeams, secondNextPlayingTeams]
-    }
-
-    private func setTeam3WinnerStayNextPlayingTeams(winCount: Int) {
-        guard let liveGame = uiState.liveGameUiModel else { return }
-        let teamList = uiState.teamUiModelList
-
-        let currentLeftTeam = teamList.first { $0.id == liveGame.leftTeamId }
-        let currentRightTeam = teamList.first { $0.id == liveGame.rightTeamId }
-        let restTeam = teamList.first { $0.id != liveGame.leftTeamId && $0.id != liveGame.rightTeamId }
-
-        let nextPlayingTeams: NextPlayingTeamsUiModel
-
-        if liveGame.leftTeamWinCount >= winCount {
-            nextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: restTeam, rightTeam: currentRightTeam)
-        } else if liveGame.rightTeamWinCount >= winCount {
-            nextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: currentLeftTeam, rightTeam: restTeam)
-        } else {
-            nextPlayingTeams = NextPlayingTeamsUiModel(leftTeam: restTeam, rightTeam: nil)
-        }
-
-        uiState.nextPlayingTeamsUiModelList = [nextPlayingTeams]
     }
 
     private func updateTeamsBlock() async throws {

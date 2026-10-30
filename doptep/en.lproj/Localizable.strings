@@ -47,7 +47,6 @@
 
 // MARK: - Game Rules (3 teams)
 "game_rule_3_only_2_games" = "Exactly 2 games";
-"game_rule_3_winner_stay_2" = "Winner stays (max. 2 games)";
 "game_rule_3_winner_stay_3" = "Winner stays (max. 3 games)";
 "game_rule_3_winner_stay_4" = "Winner stays (max. 4 games)";
 "game_rule_3_winner_stay_unlimited" = "Winner always stays";

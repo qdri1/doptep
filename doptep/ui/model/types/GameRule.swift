@@ -45,7 +45,6 @@ enum GameRuleTeam2: String, GameRule, CaseIterable {
 
 enum GameRuleTeam3: String, GameRule, CaseIterable {
     case only2Games
-    case winnerStay2
     case winnerStay3
     case winnerStay4
     case winnerStayUnlimited
@@ -53,7 +52,6 @@ enum GameRuleTeam3: String, GameRule, CaseIterable {
     var localizationKey: String {
         switch self {
         case .only2Games: return "game_rule_3_only_2_games"
-        case .winnerStay2: return "game_rule_3_winner_stay_2"
         case .winnerStay3: return "game_rule_3_winner_stay_3"
         case .winnerStay4: return "game_rule_3_winner_stay_4"
         case .winnerStayUnlimited: return "game_rule_3_winner_stay_unlimited"
