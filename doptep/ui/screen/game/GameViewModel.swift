@@ -394,6 +394,8 @@ final class GameViewModel: ObservableObject {
                     try liveGameRepository.updateLiveGame(clearedLiveGame)
                 }
                 liveGameRepository.clearLastLeftTeamId(gameId: gameId)
+                liveGameRepository.clearTeamOrder(gameId: gameId)
+                liveGameRepository.clearRoundRobinStart(gameId: gameId)
 
                 try gameHistoryRepository.deleteGameHistory(gameId: gameId)
                 currentGameActions.removeAll()
@@ -955,10 +957,32 @@ final class GameViewModel: ObservableObject {
         (1, 0), (3, 2), (3, 0), (2, 1), (2, 0), (3, 1)
     ]
 
+    private func team4Order() -> [TeamUiModel] {
+        let teams = uiState.teamUiModelList
+        let creationOrder = teamCreationOrder.compactMap { id in teams.first { $0.id == id } }
+        guard let savedIds = liveGameRepository.getTeamOrder(gameId: gameId) else { return creationOrder }
+        let savedOrder = savedIds.compactMap { id in teams.first { $0.id == id } }
+        let isValid = savedOrder.count == teams.count && Set(savedOrder.map(\.id)).count == teams.count
+        return isValid ? savedOrder : creationOrder
+    }
+
+    private func restartTeam4RoundRobinCycle(liveGame: LiveGameUiModel) {
+        guard (uiState.gameUiModel?.gameRule as? GameRuleTeam4) == .roundRobin else { return }
+        let order = team4Order().map(\.id)
+        guard order.count == 4, liveGame.leftTeamId != liveGame.rightTeamId else { return }
+        let otherTeamIds = order.filter { $0 != liveGame.leftTeamId && $0 != liveGame.rightTeamId }
+        let newOrder = [liveGame.leftTeamId, liveGame.rightTeamId] + otherTeamIds
+        guard newOrder.count == 4 else { return }
+        liveGameRepository.saveTeamOrder(gameId: gameId, teamIds: newOrder)
+        liveGameRepository.saveRoundRobinStart(gameId: gameId, gameCount: liveGame.gameCount)
+    }
+
     private func team4RoundRobinPair(gameIndex: Int) -> (left: TeamUiModel, right: TeamUiModel)? {
-        let teams = teamCreationOrder.compactMap { id in uiState.teamUiModelList.first { $0.id == id } }
+        let teams = team4Order()
         let schedule = Self.team4RoundRobinSchedule
-        let (leftIndex, rightIndex) = schedule[gameIndex % schedule.count]
+        let offset = gameIndex - liveGameRepository.getRoundRobinStart(gameId: gameId)
+        let cycleIndex = ((offset % schedule.count) + schedule.count) % schedule.count
+        let (leftIndex, rightIndex) = schedule[cycleIndex]
         guard teams.indices.contains(leftIndex), teams.indices.contains(rightIndex) else { return nil }
         return (teams[leftIndex], teams[rightIndex])
     }
@@ -1305,6 +1329,7 @@ final class GameViewModel: ObservableObject {
                 )
                 try liveGameRepository.updateLiveGame(updated)
                 uiState.liveGameUiModel = updated
+                restartTeam4RoundRobinCycle(liveGame: updated)
                 setNextPlayingTeamsUiModelList()
             } catch {
                 snackbarMessage = "Error changing team"
@@ -1338,6 +1363,7 @@ final class GameViewModel: ObservableObject {
                 )
                 try liveGameRepository.updateLiveGame(updated)
                 uiState.liveGameUiModel = updated
+                restartTeam4RoundRobinCycle(liveGame: updated)
                 setNextPlayingTeamsUiModelList()
             } catch {
                 snackbarMessage = "Error changing team"
@@ -1368,6 +1394,7 @@ final class GameViewModel: ObservableObject {
                 )
                 try liveGameRepository.updateLiveGame(swapped)
                 uiState.liveGameUiModel = swapped
+                restartTeam4RoundRobinCycle(liveGame: swapped)
                 setNextPlayingTeamsUiModelList()
             } catch {
                 snackbarMessage = "Error swapping teams"

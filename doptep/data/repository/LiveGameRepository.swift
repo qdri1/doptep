@@ -92,6 +92,38 @@ final class LiveGameRepository {
         UserDefaults.standard.removeObject(forKey: lastLeftTeamKey(gameId: gameId))
     }
 
+    func getTeamOrder(gameId: UUID) -> [UUID]? {
+        UserDefaults.standard.stringArray(forKey: teamOrderKey(gameId: gameId))?.compactMap(UUID.init(uuidString:))
+    }
+
+    func saveTeamOrder(gameId: UUID, teamIds: [UUID]) {
+        UserDefaults.standard.set(teamIds.map(\.uuidString), forKey: teamOrderKey(gameId: gameId))
+    }
+
+    func clearTeamOrder(gameId: UUID) {
+        UserDefaults.standard.removeObject(forKey: teamOrderKey(gameId: gameId))
+    }
+
+    func getRoundRobinStart(gameId: UUID) -> Int {
+        UserDefaults.standard.integer(forKey: roundRobinStartKey(gameId: gameId))
+    }
+
+    func saveRoundRobinStart(gameId: UUID, gameCount: Int) {
+        UserDefaults.standard.set(gameCount, forKey: roundRobinStartKey(gameId: gameId))
+    }
+
+    func clearRoundRobinStart(gameId: UUID) {
+        UserDefaults.standard.removeObject(forKey: roundRobinStartKey(gameId: gameId))
+    }
+
+    private func roundRobinStartKey(gameId: UUID) -> String {
+        "round_robin_start_\(gameId.uuidString)"
+    }
+
+    private func teamOrderKey(gameId: UUID) -> String {
+        "team_order_\(gameId.uuidString)"
+    }
+
     private func lastLeftTeamKey(gameId: UUID) -> String {
         "last_left_team_id_\(gameId.uuidString)"
     }
