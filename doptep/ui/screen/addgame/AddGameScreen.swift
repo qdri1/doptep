@@ -14,6 +14,7 @@ struct AddGameScreen: View {
     }
 
     @State private var showColorsSheet = false
+    @State private var showRulesSheet = false
     @FocusState private var focusedField: Field?
     @FocusState private var focusedPlayerNumberField: PlayerNumberField?
 
@@ -92,6 +93,9 @@ struct AddGameScreen: View {
         .enableSwipeBack(onSwipeBackBegan: dismissKeyboard)
         .sheet(isPresented: $showColorsSheet) {
             teamColorsSheet
+        }
+        .sheet(isPresented: $showRulesSheet) {
+            GameRulesSheet(rules: currentRules, selectedRule: viewModel.gameRuleState)
         }
         .snackbar(message: $viewModel.snackbarMessage)
         .onChange(of: viewModel.effect) { _, effect in
@@ -260,6 +264,23 @@ struct AddGameScreen: View {
                     }
                     .padding(.horizontal)
                 }
+
+                Divider()
+                    .padding(.horizontal, 16)
+                
+                Button {
+                    showRulesSheet = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "info.circle")
+                            .font(.system(size: 16, weight: .semibold))
+                        Text(NSLocalizedString("game_rules_info", comment: ""))
+                            .font(.labelLarge)
+                    }
+                    .foregroundColor(AppColor.primary)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal)
             }
             .frame(maxWidth: .infinity)
             .padding(.bottom)

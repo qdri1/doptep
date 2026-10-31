@@ -59,6 +59,26 @@
 "game_rule_4_winner_stay_5" = "Winner stays (max. 5 games)";
 "game_rule_4_winner_stay_6" = "Winner stays (max. 6 games)";
 "game_rule_4_winner_stay_unlimited" = "Winner always stays";
+"game_rules_info" = "How the rules work";
+"game_rule_example" = "Example";
+"game_rule_description_2_change_side" = "Two teams play. After each half they switch sides of the field.";
+"game_rule_example_2_change_side" = "Half 1: T1 left, T2 right\nHalf 2: T2 left, T1 right\nHalf 3: T1 left again, T2 right";
+"game_rule_description_2_stay_side" = "Two teams play. Each team stays on its own side for the whole match.";
+"game_rule_example_2_stay_side" = "Half 1: T1 left, T2 right\nHalf 2: T1 left, T2 right\nand so on until the end of the match";
+"game_rule_description_3_only_2_games" = "Each team plays exactly 2 games in a row, then rests and the waiting team comes on. The score does not affect the order. Only in the very first game the second team leaves after one game.";
+"game_rule_example_3_only_2_games" = "1. T1 – T2\n2. T1 – T3 (T2 rests)\n3. T2 – T3 (T1 rests)\n4. T2 – T1 (T3 rests)\n5. T3 – T1 (T2 rests)\n6. T3 – T2 (T1 rests)\nthen it repeats from game 1";
+"game_rule_description_3_winner_stay" = "The winner stays on the field, the loser leaves and the waiting team comes on. But a team can play at most %1$d games in a row: after %1$d games in a row it leaves even if it won, and the opponent stays. In a draw the team that has been on the field longer leaves; if both came on together, the app asks which one stays.";
+"game_rule_example_3_winner_stay" = "1. T1 – T2 → T1 won, T2 leaves\n2. T1 – T3 → T1 won, T3 leaves\n…and so on while T1 keeps winning\nT1 won %1$d games in a row → T1 leaves, the loser stays\nDraw → the team on the field longer leaves";
+"game_rule_description_3_winner_stay_unlimited" = "The winner stays as long as it keeps winning, the loser leaves and the waiting team comes on. In a draw the team that has been on the field longer leaves; if both came on together, the app asks which one stays.";
+"game_rule_example_3_winner_stay_unlimited" = "1. T1 – T2 → T1 won, T2 leaves\n2. T1 – T3 → T3 won, T1 leaves\n3. T2 – T3 → draw, T3 has been on longer, T3 leaves\n4. T2 – T1";
+"game_rule_description_4_only_2_games" = "Each team plays exactly 2 games in a row and leaves; the team that has waited the longest comes on. The score does not affect the order. Only in the very first game the second team leaves after one game.";
+"game_rule_example_4_only_2_games" = "1. T1 – T2\n2. T1 – T3\n3. T4 – T3\n4. T4 – T2\nthen it repeats from game 1";
+"game_rule_description_4_round_robin" = "Every team plays every other team twice, the second time with sides switched. One round is 12 games, then it repeats. The score does not affect the schedule. If you change the teams on the field manually, a new round starts from that pair.";
+"game_rule_example_4_round_robin" = "1. T1 – T2\n2. T3 – T4\n3. T1 – T4\n4. T2 – T3\n5. T1 – T3\n6. T2 – T4\n7. T2 – T1\n8. T4 – T3\n9. T4 – T1\n10. T3 – T2\n11. T3 – T1\n12. T4 – T2\nthen it repeats from game 1";
+"game_rule_description_4_winner_stay" = "The winner stays on the field, the loser leaves and the team that has waited the longest comes on. But a team can play at most %1$d games in a row: after %1$d games in a row it leaves even if it won, and the opponent stays. In a draw both teams leave and both waiting teams come on.";
+"game_rule_example_4_winner_stay" = "1. T1 – T2 → T1 won, T2 leaves\n2. T1 – T3 → T1 won, T3 leaves\n…and so on while T1 keeps winning\nT1 won %1$d games in a row → T1 leaves, the loser stays\nDraw → both leave, the two waiting teams come on";
+"game_rule_description_4_winner_stay_unlimited" = "The winner stays as long as it keeps winning, the loser leaves and the team that has waited the longest comes on. In a draw both teams leave and both waiting teams come on.";
+"game_rule_example_4_winner_stay_unlimited" = "1. T1 – T2 → T1 won, T2 leaves\n2. T1 – T3 → T1 won, T3 leaves\n3. T1 – T4 → T1 won, T4 leaves\n4. T1 – T2 → draw, both leave\n5. T3 – T4";
 
 // MARK: - Validation
 "game_name_empty_text" = "Game name is required";
