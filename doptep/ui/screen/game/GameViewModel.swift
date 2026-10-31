@@ -205,7 +205,9 @@ final class GameViewModel: ObservableObject {
             do {
                 guard let gameUiModel = try gameRepository.getGame(id: gameId) else { return }
 
-                let teamList = try teamRepository.getTeams(gameId: gameId)
+                let teams = try teamRepository.getTeams(gameId: gameId)
+                teamCreationOrder = teams.map(\.id)
+                let teamList = teams
                     .sorted { lhs, rhs in
                         if lhs.points != rhs.points { return lhs.points > rhs.points }
                         if lhs.goalsDifference != rhs.goalsDifference { return lhs.goalsDifference > rhs.goalsDifference }
@@ -560,6 +562,18 @@ final class GameViewModel: ObservableObject {
                     oldTeamId = liveGame.rightTeamId
                     try await updateLiveGameRightTeam(nextTeam: step.nextTeam, liveGame: liveGame)
                 }
+            }
+
+        case .roundRobin:
+            if liveGame.isLeftTeamWin {
+                try await updateLeftTeamWin(liveGame: liveGame)
+            } else if liveGame.isRightTeamWin {
+                try await updateRightTeamWin(liveGame: liveGame)
+            } else {
+                try await updateTeamsDraw(liveGame: liveGame)
+            }
+            if let pair = team4RoundRobinPair(gameIndex: liveGame.gameCount + 1) {
+                try await updateLiveGameTeams(leftTeam: pair.left, rightTeam: pair.right, liveGame: liveGame)
             }
 
         case .winnerStay3:
@@ -925,12 +939,56 @@ final class GameViewModel: ObservableObject {
                 $0.id != liveGame.leftTeamId && $0.id != liveGame.rightTeamId
             }
             uiState.restTeamUiModelList = restTeams.sorted { ($0.id == oldTeamId ? 1 : 0) < ($1.id == oldTeamId ? 1 : 0) }
-            if let rule = gameUiModel.gameRule as? GameRuleTeam4, rule == .only2Games {
+            switch gameUiModel.gameRule as? GameRuleTeam4 {
+            case .only2Games:
                 uiState.nextPlayingTeamsUiModelList = team4Only2GamesNextPlayingTeams(liveGame: liveGame)
-            } else {
+            case .roundRobin:
+                uiState.nextPlayingTeamsUiModelList = team4RoundRobinNextPlayingTeams(liveGame: liveGame)
+            default:
                 uiState.nextPlayingTeamsUiModelList = []
             }
         }
+    }
+
+    private static let team4RoundRobinSchedule: [(Int, Int)] = [
+        (0, 1), (2, 3), (0, 3), (1, 2), (0, 2), (1, 3),
+        (1, 0), (3, 2), (3, 0), (2, 1), (2, 0), (3, 1)
+    ]
+
+    private func team4RoundRobinPair(gameIndex: Int) -> (left: TeamUiModel, right: TeamUiModel)? {
+        let teams = teamCreationOrder.compactMap { id in uiState.teamUiModelList.first { $0.id == id } }
+        let schedule = Self.team4RoundRobinSchedule
+        let (leftIndex, rightIndex) = schedule[gameIndex % schedule.count]
+        guard teams.indices.contains(leftIndex), teams.indices.contains(rightIndex) else { return nil }
+        return (teams[leftIndex], teams[rightIndex])
+    }
+
+    private func team4RoundRobinNextPlayingTeams(liveGame: LiveGameUiModel) -> [NextPlayingTeamsUiModel] {
+        (1...2).compactMap { offset in
+            team4RoundRobinPair(gameIndex: liveGame.gameCount + offset).map {
+                NextPlayingTeamsUiModel(leftTeam: $0.left, rightTeam: $0.right)
+            }
+        }
+    }
+
+    private func updateLiveGameTeams(leftTeam: TeamUiModel, rightTeam: TeamUiModel, liveGame: LiveGameUiModel) async throws {
+        let updated = LiveGameUiModel(
+            id: liveGame.id,
+            gameId: liveGame.gameId,
+            leftTeamId: leftTeam.id,
+            leftTeamName: leftTeam.name,
+            leftTeamColor: leftTeam.color,
+            leftTeamGoals: 0,
+            leftTeamWinCount: 0,
+            rightTeamId: rightTeam.id,
+            rightTeamName: rightTeam.name,
+            rightTeamColor: rightTeam.color,
+            rightTeamGoals: 0,
+            rightTeamWinCount: 0,
+            gameCount: liveGame.gameCount + 1,
+            isLive: false
+        )
+        try liveGameRepository.updateLiveGame(updated)
     }
 
     private struct Team4Rotation {

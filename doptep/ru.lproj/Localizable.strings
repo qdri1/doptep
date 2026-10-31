@@ -53,6 +53,7 @@
 
 // MARK: - Game Rules (4 teams)
 "game_rule_4_only_2_games" = "Ровно 2 игры";
+"game_rule_4_round_robin" = "Каждый с каждым";
 "game_rule_4_winner_stay_3" = "Победивший остается (макс. 3 игры)";
 "game_rule_4_winner_stay_4" = "Победивший остается (макс. 4 игры)";
 "game_rule_4_winner_stay_5" = "Победивший остается (макс. 5 игры)";

@@ -53,6 +53,7 @@
 
 // MARK: - Game Rules (4 teams)
 "game_rule_4_only_2_games" = "Exactly 2 games";
+"game_rule_4_round_robin" = "Round robin";
 "game_rule_4_winner_stay_3" = "Winner stays (max. 3 games)";
 "game_rule_4_winner_stay_4" = "Winner stays (max. 4 games)";
 "game_rule_4_winner_stay_5" = "Winner stays (max. 5 games)";
