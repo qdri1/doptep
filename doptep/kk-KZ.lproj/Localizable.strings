@@ -9,6 +9,7 @@
 
 // MARK: - Home Screen
 "home_game_name" = "Атауы:";
+"home_pitch_surface" = "Алаң жабыны:";
 "home_game_format" = "Форматы:";
 "home_game_team_quantity" = "Командалар:";
 "home_game_time" = "Тайм уақыты:";
@@ -42,6 +43,9 @@
 "edit_result" = "Нәтижені өңдеу";
 
 // MARK: - Game Rules (2 teams)
+"pitch_surface" = "Алаң жабыны";
+"pitch_surface_grass" = "Газон";
+"pitch_surface_parquet" = "Паркет";
 "game_rule_2_change_side" = "Әр таймнан кейін алаң ауыстырамыз";
 "game_rule_2_stay_side" = "Алаң ауыстырмаймыз";
 

@@ -453,13 +453,21 @@ struct GameScreen: View {
     /// shadow) so the scoreboard, timer and start/finish sections all read
     /// as one visual family while staying separate, independently spaced
     /// blocks in the layout.
+    private var pitchSurface: PitchSurface {
+        viewModel.uiState.gameUiModel?.pitchSurface ?? .grass
+    }
+
+    private var pitchStyle: PitchStyle {
+        pitchSurface.style
+    }
+
     private func pitchCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         VStack(spacing: 16) {
             content()
         }
         .padding(.vertical, 20)
         .padding(.horizontal, 16)
-        .background(ScoreboardBackground())
+        .background(ScoreboardBackground(surface: pitchSurface))
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 24, style: .continuous)
@@ -472,7 +480,7 @@ struct GameScreen: View {
                     lineWidth: 1
                 )
         )
-        .shadow(color: Color(hex: "#0A2818").opacity(0.4), radius: 20, x: 0, y: 10)
+        .shadow(color: pitchStyle.deep.opacity(0.4), radius: 20, x: 0, y: 10)
         .padding(.horizontal, 16)
     }
 
@@ -573,7 +581,7 @@ struct GameScreen: View {
                     }
                 }
             }
-            .background(PitchCenterMark())
+            .background(PitchCenterMark(alpha: pitchStyle.centerMarkAlpha))
 
             if shouldShowStreak {
                 streakRow(liveGame: liveGame)
@@ -652,7 +660,7 @@ struct GameScreen: View {
 
             if liveGame.isLive {
                 LottieView(name: "soccer-ball")
-                    .frame(width: 24, height: 24)
+                    .frame(width: pitchStyle.ballSize, height: pitchStyle.ballSize)
             } else {
                 Button {
                     viewModel.send(.onTeamChangeIconClicked)
@@ -697,13 +705,13 @@ struct GameScreen: View {
 
     private func scoreboardDivider(title: String) -> some View {
         HStack(spacing: 12) {
-            Rectangle().frame(maxWidth: .infinity, maxHeight: 1).foregroundColor(.white.opacity(0.12))
+            Rectangle().frame(maxWidth: .infinity, maxHeight: 1).foregroundColor(.white.opacity(max(0.12, pitchStyle.dividerAlpha)))
             Text(title.uppercased())
                 .font(.labelSmall)
                 .foregroundColor(Color(hex: "#FFD54A").opacity(0.85))
                 .tracking(0.8)
                 .fixedSize()
-            Rectangle().frame(maxWidth: .infinity, maxHeight: 1).foregroundColor(.white.opacity(0.12))
+            Rectangle().frame(maxWidth: .infinity, maxHeight: 1).foregroundColor(.white.opacity(max(0.12, pitchStyle.dividerAlpha)))
         }
     }
 
@@ -786,7 +794,6 @@ struct GameScreen: View {
             .scaledToFit()
             .foregroundColor(color)
             .frame(width: 38, height: 38)
-            .shadow(color: Color.black.opacity(0.25), radius: 3, x: 0, y: 2)
     }
 
     private func teamScoreView(name: String, color: Color, goals: Int, winCount: Int, isWinning: Bool, isLeft: Bool) -> some View {
@@ -798,7 +805,7 @@ struct GameScreen: View {
                             .font(.system(size: 10, weight: .bold))
                             .foregroundColor(Color(hex: "#FFB020"))
                             .padding(4)
-                            .background(Circle().fill(Color(hex: "#123D22")))
+                            .background(Circle().fill(pitchStyle.mid))
                             .offset(x: 8, y: -6)
                     }
                 }
@@ -851,11 +858,10 @@ struct GameScreen: View {
             .buttonStyle(.plain)
 
             Rectangle()
-                .fill(Color.white.opacity(0.10))
+                .fill(Color.white.opacity(pitchStyle.dividerAlpha))
                 .frame(height: 1)
 
             let isLive = viewModel.uiState.liveGameUiModel?.isLive == true
-            let accentColor = isLive ? Color(hex: "#EC7063") : AppColor.primary
 
             Button {
                 viewModel.send(.onStartFinishButtonClicked)
@@ -880,7 +886,6 @@ struct GameScreen: View {
                     )
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .shadow(color: accentColor.opacity(0.4), radius: 10, x: 0, y: 4)
             }
             .buttonStyle(.plain)
         }
@@ -1465,26 +1470,112 @@ struct GameScreen: View {
 /// A short-sleeve football kit silhouette: rounded V-collar, softly curved
 /// sleeve ends, gently tapered torso — traced clockwise from the neckline.
 private struct ScoreboardBackground: View {
+    let surface: PitchSurface
+
     var body: some View {
+        let style = surface.style
         ZStack {
             LinearGradient(
-                colors: [Color(hex: "#0B2F1B"), Color(hex: "#123D22"), Color(hex: "#0A2818")],
+                colors: [style.dark, style.mid, style.deep],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
 
-            GeometryReader { geo in
-                let stripeCount = 8
-                let stripeWidth = geo.size.width / CGFloat(stripeCount)
-                HStack(spacing: 0) {
-                    ForEach(0..<stripeCount, id: \.self) { index in
-                        Rectangle()
-                            .fill(Color.white.opacity(index.isMultiple(of: 2) ? 0.025 : 0))
-                            .frame(width: stripeWidth)
+            switch surface {
+            case .grass:
+                GeometryReader { geo in
+                    let stripeCount = 8
+                    let stripeWidth = geo.size.width / CGFloat(stripeCount)
+                    HStack(spacing: 0) {
+                        ForEach(0..<stripeCount, id: \.self) { index in
+                            Rectangle()
+                                .fill(Color.white.opacity(index.isMultiple(of: 2) ? 0.025 : 0))
+                                .frame(width: stripeWidth)
+                        }
+                    }
+                }
+            case .parquet:
+                ParquetPattern()
+            }
+        }
+    }
+}
+
+private struct ParquetPattern: View {
+    private static let woodLight = Color(hex: "#FFF0D2")
+    private static let woodShadow = Color(hex: "#281400")
+    private static let woodGrain = Color(hex: "#FFEBC8")
+    private static let lampLight = Color(hex: "#FFF8E6")
+
+    var body: some View {
+        Canvas { context, size in
+            let stripHeight: CGFloat = 7
+            let rows = Int((size.height / stripHeight).rounded(.up))
+            var seams = Path()
+            var joints = Path()
+            var grain = Path()
+
+            for row in 0..<rows {
+                let top = CGFloat(row) * stripHeight
+                let tone = (Self.pseudoRandom(row * 3 + 1) - 0.5) * 0.07
+                context.fill(
+                    Path(CGRect(x: 0, y: top, width: size.width, height: stripHeight)),
+                    with: .color(tone > 0 ? Self.woodLight.opacity(tone) : Self.woodShadow.opacity(-tone))
+                )
+
+                seams.move(to: CGPoint(x: 0, y: top))
+                seams.addLine(to: CGPoint(x: size.width, y: top))
+
+                var jointX = Self.pseudoRandom(row * 7 + 3) * 300
+                while jointX < size.width {
+                    joints.move(to: CGPoint(x: jointX, y: top))
+                    joints.addLine(to: CGPoint(x: jointX, y: top + stripHeight))
+                    jointX += 260 + Self.pseudoRandom(row * 11 + Int(jointX)) * 240
+                }
+
+                for line in 0..<2 {
+                    let grainY = top + stripHeight * (0.3 + 0.4 * Self.pseudoRandom(row * 5 + line))
+                    grain.move(to: CGPoint(x: 0, y: grainY))
+                    var x: CGFloat = 40
+                    while x <= size.width + 40 {
+                        grain.addLine(to: CGPoint(x: x, y: grainY + sin(x / 90 + CGFloat(row)) * 0.8))
+                        x += 40
                     }
                 }
             }
+
+            context.stroke(seams, with: .color(.black.opacity(0.06)), lineWidth: 0.75)
+            context.stroke(joints, with: .color(.black.opacity(0.045)), lineWidth: 0.75)
+            context.stroke(grain, with: .color(Self.woodGrain.opacity(0.035)), lineWidth: 0.6)
+
+            let bounds = Path(CGRect(origin: .zero, size: size))
+            context.fill(
+                bounds,
+                with: .linearGradient(
+                    Gradient(colors: [.clear, Color.white.opacity(0.08), .clear]),
+                    startPoint: CGPoint(x: size.width * 0.2, y: 0),
+                    endPoint: CGPoint(x: size.width * 0.65, y: size.height)
+                )
+            )
+            for (centerX, centerY, radius, alpha) in [(0.25, 0.18, 0.55, 0.16), (0.78, 0.12, 0.45, 0.12)] {
+                context.fill(
+                    bounds,
+                    with: .radialGradient(
+                        Gradient(colors: [Self.lampLight.opacity(alpha), .clear]),
+                        center: CGPoint(x: size.width * centerX, y: size.height * centerY),
+                        startRadius: 0,
+                        endRadius: size.height * radius
+                    )
+                )
+            }
         }
+    }
+
+    private static func pseudoRandom(_ seed: Int) -> CGFloat {
+        var x = Int32(truncatingIfNeeded: seed)
+        x = (x << 13) ^ x
+        x = x &* (x &* x &* 15731 &+ 789221) &+ 1376312589
+        return CGFloat(x & 0x7fffffff) / 2147483647
     }
 }
 
@@ -1527,14 +1618,16 @@ private extension View {
 }
 
 private struct PitchCenterMark: View {
+    let alpha: Double
+
     var body: some View {
         ZStack {
             Circle()
-                .stroke(Color.white.opacity(0.06), lineWidth: 1.5)
+                .stroke(Color.white.opacity(alpha), lineWidth: 1.5)
                 .frame(width: 130, height: 130)
 
             Rectangle()
-                .fill(Color.white.opacity(0.06))
+                .fill(Color.white.opacity(alpha))
                 .frame(width: 1.5)
         }
     }

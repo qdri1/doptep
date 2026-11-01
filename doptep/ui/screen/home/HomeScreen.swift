@@ -93,6 +93,11 @@ private extension HomeScreen {
                     }
 
                     row(
+                        title: NSLocalizedString("home_pitch_surface", comment: ""),
+                        value: NSLocalizedString(item.pitchSurface.localizationKey, comment: "")
+                    )
+
+                    row(
                         title: NSLocalizedString("home_game_format", comment: ""),
                         value: item.gameFormat.rawValue
                     )

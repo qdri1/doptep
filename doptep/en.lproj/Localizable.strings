@@ -9,6 +9,7 @@
 
 // MARK: - Home Screen
 "home_game_name" = "Name:";
+"home_pitch_surface" = "Surface:";
 "home_game_format" = "Format:";
 "home_game_team_quantity" = "Teams:";
 "home_game_time" = "Time:";
@@ -42,6 +43,9 @@
 "edit_result" = "Edit Result";
 
 // MARK: - Game Rules (2 teams)
+"pitch_surface" = "Pitch surface";
+"pitch_surface_grass" = "Grass";
+"pitch_surface_parquet" = "Parquet";
 "game_rule_2_change_side" = "Change sides after each half";
 "game_rule_2_stay_side" = "Do not change sides";
 

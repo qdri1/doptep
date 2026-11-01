@@ -9,6 +9,7 @@
 
 // MARK: - Home Screen
 "home_game_name" = "Название:";
+"home_pitch_surface" = "Покрытие поля:";
 "home_game_format" = "Формат:";
 "home_game_team_quantity" = "Команд:";
 "home_game_time" = "Время тайма:";
@@ -42,6 +43,9 @@
 "edit_result" = "Редактировать результат";
 
 // MARK: - Game Rules (2 teams)
+"pitch_surface" = "Покрытие поля";
+"pitch_surface_grass" = "Газон";
+"pitch_surface_parquet" = "Паркет";
 "game_rule_2_change_side" = "После каждого тайма меняемся сторонами";
 "game_rule_2_stay_side" = "Не меняемся сторонами";
 

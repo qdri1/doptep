@@ -51,6 +51,7 @@ struct AddGameScreen: View {
                     gameNameField
                     timeField
 
+                    pitchSurfaceSection
                     gameFormatSection
                     if viewModel.screenStateType == .add {
                         teamQuantitySection
@@ -180,6 +181,38 @@ struct AddGameScreen: View {
             }
         }
         .padding(.horizontal)
+    }
+
+    private var pitchSurfaceSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(NSLocalizedString("pitch_surface", comment: ""))
+                .font(.bodyMedium)
+                .foregroundColor(AppColor.onSurface)
+                .padding(.horizontal)
+                .padding(.top)
+
+            HStack(spacing: 24) {
+                ForEach(PitchSurface.allCases, id: \.self) { pitchSurface in
+                    let isSelected = pitchSurface == viewModel.pitchSurfaceState
+                    HStack {
+                        RadioButton(isSelected: isSelected) {
+                            viewModel.send(.onPitchSurfaceSelected(pitchSurface: pitchSurface))
+                        }
+                        Text(NSLocalizedString(pitchSurface.localizationKey, comment: ""))
+                            .font(.bodyMedium)
+                            .foregroundColor(isSelected ? AppColor.primary : AppColor.outline)
+                            .onTapGesture {
+                                viewModel.send(.onPitchSurfaceSelected(pitchSurface: pitchSurface))
+                            }
+                    }
+                }
+            }
+            .padding(.horizontal)
+            .padding(.bottom)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColor.surface)
+        .padding(.top)
     }
 
     private var gameFormatSection: some View {

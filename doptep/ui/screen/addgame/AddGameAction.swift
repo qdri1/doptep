@@ -9,6 +9,7 @@ enum AddGameAction {
     case closeScreen
     case onGameTextValueChanged(value: String)
     case onTimeTextValueChanged(value: String)
+    case onPitchSurfaceSelected(pitchSurface: PitchSurface)
     case onGameFormatSelected(format: GameFormat)
     case onTeamQuantitySelected(teamQuantity: TeamQuantity)
     case onGameRuleSelected(rule: GameRule)

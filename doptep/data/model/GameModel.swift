@@ -18,13 +18,15 @@ final class GameModel {
     var rule: String
     var timeInMinutes: Int
     var modifiedTime: Date = Date()
+    var pitchSurface: String = "Grass"
 
     init(
         name: String,
         format: String,
         teamQuantity: Int,
         rule: String,
-        timeInMinutes: Int
+        timeInMinutes: Int,
+        pitchSurface: String = "Grass"
     ) {
         self.id = UUID()
         self.name = name
@@ -33,6 +35,7 @@ final class GameModel {
         self.rule = rule
         self.timeInMinutes = timeInMinutes
         self.modifiedTime = Date()
+        self.pitchSurface = pitchSurface
     }
 }
 
@@ -53,7 +56,8 @@ extension GameModel {
             teamQuantity: team,
             gameRule: rule,
             timeInMinutes: timeInMinutes,
-            modifiedTime: modifiedTime
+            modifiedTime: modifiedTime,
+            pitchSurface: PitchSurface.from(pitchSurface)
         )
     }
 }

@@ -28,6 +28,7 @@ final class AddGameViewModel: ObservableObject {
     @Published var screenStateType: ScreenStateType = .add
     @Published var gameNameFieldState: String = ""
     @Published var timeInMinuteFieldState: String = ""
+    @Published var pitchSurfaceState: PitchSurface = .grass
     @Published var gameFormatState: GameFormat = .format5x5
     @Published var teamQuantityState: TeamQuantity = .team3
     @Published var gameRuleState: GameRule = GameRuleTeam3.only2Games
@@ -87,6 +88,8 @@ final class AddGameViewModel: ObservableObject {
             gameNameFieldState = value
         case .onTimeTextValueChanged(let value):
             timeInMinuteFieldState = value
+        case .onPitchSurfaceSelected(let pitchSurface):
+            pitchSurfaceState = pitchSurface
         case .onGameFormatSelected(let format):
             onGameFormatSelected(format)
         case .onTeamQuantitySelected(let teamQuantity):
@@ -122,6 +125,7 @@ final class AddGameViewModel: ObservableObject {
                     self.gameNameFieldState = gameUiModel.name
                     self.timeInMinuteFieldState = "\(gameUiModel.timeInMinutes)"
                     self.gameFormatState = gameUiModel.gameFormat
+                    self.pitchSurfaceState = gameUiModel.pitchSurface
                     self.teamQuantityState = gameUiModel.teamQuantity
                     self.gameRuleState = gameUiModel.gameRule
 
@@ -251,7 +255,8 @@ final class AddGameViewModel: ObservableObject {
                 format: gameFormatState.rawValue,
                 teamQuantity: teamQuantityState.rawValue,
                 rule: ruleName,
-                timeInMinutes: Int(timeInMinuteFieldState) ?? defaultTimeInMinutes
+                timeInMinutes: Int(timeInMinuteFieldState) ?? defaultTimeInMinutes,
+                pitchSurface: pitchSurfaceState.rawValue
             )
             gameRepository.saveGame(gameModel)
             let newGameId = gameModel.id
@@ -322,7 +327,8 @@ final class AddGameViewModel: ObservableObject {
                 teamQuantity: gameUiModel.teamQuantity,
                 gameRule: gameRuleState,
                 timeInMinutes: Int(timeInMinuteFieldState) ?? defaultTimeInMinutes,
-                modifiedTime: gameUiModel.modifiedTime
+                modifiedTime: gameUiModel.modifiedTime,
+                pitchSurface: pitchSurfaceState
             )
             try gameRepository.updateGame(updatedGame)
 
@@ -590,7 +596,8 @@ extension GameUiModel {
             format: gameFormat.rawValue,
             teamQuantity: teamQuantity.rawValue,
             rule: ruleName,
-            timeInMinutes: timeInMinutes
+            timeInMinutes: timeInMinutes,
+            pitchSurface: pitchSurface.rawValue
         )
     }
 }

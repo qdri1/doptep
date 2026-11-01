@@ -15,4 +15,5 @@ struct GameUiModel: Identifiable {
     let gameRule: GameRule
     let timeInMinutes: Int
     let modifiedTime: Date
+    var pitchSurface: PitchSurface = .grass
 }

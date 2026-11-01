@@ -58,6 +58,7 @@ final class GameRepository {
         model.format = uiModel.gameFormat.rawValue
         model.rule = ruleName
         model.timeInMinutes = uiModel.timeInMinutes
+        model.pitchSurface = uiModel.pitchSurface.rawValue
     }
 
     func updateModifiedTime(id: UUID) throws {
