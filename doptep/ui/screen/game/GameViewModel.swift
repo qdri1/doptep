@@ -41,6 +41,7 @@ final class GameViewModel: ObservableObject {
     private var lifecycleObservers: [NSObjectProtocol] = []
 
     private var pendingGameDurationSeconds: Int = 0
+    private var isGameDeleted = false
     private var teamCreationOrder: [UUID] = []
     private var currentGameActions: [PendingGameAction] = []
 
@@ -255,7 +256,7 @@ final class GameViewModel: ObservableObject {
 
     private func setTimerValue() {
         if isLive {
-            let savedValue = liveGameRepository.getTimerValue()
+            let savedValue = liveGameRepository.getTimerValue(gameId: gameId)
             timerMillis = savedValue > 0 ? savedValue : timeInMinutes * 60 * 1000
         } else {
             timerMillis = timeInMinutes * 60 * 1000
@@ -326,10 +327,18 @@ final class GameViewModel: ObservableObject {
     }
 
     private func onDeleteGameConfirmationClicked() {
+        isGameDeleted = true
+        stopTimer()
         Task {
             do {
                 try gameHistoryRepository.deleteGameHistory(gameId: gameId)
+                try teamRepository.deleteTeams(gameId: gameId)
+                try teamHistoryRepository.deleteTeamsHistories(gameId: gameId)
+                try liveGameRepository.deleteLiveGame(gameId: gameId)
                 try gameRepository.deleteGame(id: gameId)
+                try gameRepository.saveContext()
+                liveGameRepository.clearGameData(gameId: gameId)
+                HiddenColumnsStorage.clear(gameId: gameId)
                 effect = .closeScreenWithResult
             } catch {
                 snackbarMessage = "Error deleting game"
@@ -1207,7 +1216,7 @@ final class GameViewModel: ObservableObject {
         stopTimer()
         timerMillis = timeInMinutes * 60 * 1000
         timerValue = formatTime(timerMillis)
-        liveGameRepository.clearTimerValue()
+        liveGameRepository.clearTimerValue(gameId: gameId)
     }
     
     private func scheduleTimerMilestoneSound() {
@@ -2065,8 +2074,8 @@ final class GameViewModel: ObservableObject {
     }
 
     func saveTimerOnExit() {
-        if isLive {
-            liveGameRepository.saveTimerValue(timerMillis)
+        if isLive && !isGameDeleted {
+            liveGameRepository.saveTimerValue(gameId: gameId, value: timerMillis)
         }
         stopTimer()
         backgroundDate = nil

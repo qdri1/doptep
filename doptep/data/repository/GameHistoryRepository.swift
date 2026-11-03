@@ -61,6 +61,13 @@ final class GameHistoryRepository {
             predicate: #Predicate { $0.gameId == gameId }
         )
         let entries = try context.fetch(descriptor)
+        let entryIds = entries.map(\.id)
+        let events = try context.fetch(
+            FetchDescriptor<GameHistoryActionEventModel>(predicate: #Predicate { entryIds.contains($0.historyEntryId) })
+        )
+        for event in events {
+            context.delete(event)
+        }
         for entry in entries {
             context.delete(entry)
         }

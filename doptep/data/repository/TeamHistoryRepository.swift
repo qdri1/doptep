@@ -96,6 +96,14 @@ final class TeamHistoryRepository {
         model.points = uiModel.points
     }
 
+    func deleteTeamsHistories(gameId: UUID) throws {
+        let teams = try context.fetch(FetchDescriptor<TeamHistoryModel>(predicate: #Predicate { $0.gameId == gameId }))
+        let teamIds = teams.map(\.originalId)
+        let players = try context.fetch(FetchDescriptor<PlayerHistoryModel>(predicate: #Predicate { teamIds.contains($0.teamId) }))
+        players.forEach { context.delete($0) }
+        teams.forEach { context.delete($0) }
+    }
+
     func getTeamHistoryEntity(teamId: UUID) throws -> TeamHistoryModel? {
         let descriptor = FetchDescriptor<TeamHistoryModel>(
             predicate: #Predicate { $0.originalId == teamId }

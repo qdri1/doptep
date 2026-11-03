@@ -82,6 +82,14 @@ final class TeamRepository {
         context.delete(model)
     }
 
+    func deleteTeams(gameId: UUID) throws {
+        let teams = try context.fetch(FetchDescriptor<TeamModel>(predicate: #Predicate { $0.gameId == gameId }))
+        let teamIds = teams.map(\.id)
+        let players = try context.fetch(FetchDescriptor<PlayerModel>(predicate: #Predicate { teamIds.contains($0.teamId) }))
+        players.forEach { context.delete($0) }
+        teams.forEach { context.delete($0) }
+    }
+
     func deleteTeam(id: UUID) throws {
         if let team = try getTeamEntity(id: id) {
             context.delete(team)

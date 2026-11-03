@@ -10,7 +10,6 @@ import Foundation
 final class LiveGameRepository {
 
     private let context: ModelContext
-    private let timerKey = "timer_value"
 
     init(context: ModelContext) {
         self.context = context
@@ -68,16 +67,20 @@ final class LiveGameRepository {
         }
     }
 
-    func saveTimerValue(_ value: Int) {
-        UserDefaults.standard.set(value, forKey: timerKey)
+    func saveTimerValue(gameId: UUID, value: Int) {
+        UserDefaults.standard.set(value, forKey: timerKey(gameId: gameId))
     }
 
-    func clearTimerValue() {
-        UserDefaults.standard.set(0, forKey: timerKey)
+    func clearTimerValue(gameId: UUID) {
+        UserDefaults.standard.removeObject(forKey: timerKey(gameId: gameId))
     }
 
-    func getTimerValue() -> Int {
-        UserDefaults.standard.integer(forKey: timerKey)
+    func getTimerValue(gameId: UUID) -> Int {
+        UserDefaults.standard.integer(forKey: timerKey(gameId: gameId))
+    }
+
+    private func timerKey(gameId: UUID) -> String {
+        "timer_value_\(gameId.uuidString)"
     }
 
     func getLastLeftTeamId(gameId: UUID) -> UUID? {
@@ -114,6 +117,13 @@ final class LiveGameRepository {
 
     func clearRoundRobinStart(gameId: UUID) {
         UserDefaults.standard.removeObject(forKey: roundRobinStartKey(gameId: gameId))
+    }
+
+    func clearGameData(gameId: UUID) {
+        clearLastLeftTeamId(gameId: gameId)
+        clearTeamOrder(gameId: gameId)
+        clearRoundRobinStart(gameId: gameId)
+        clearTimerValue(gameId: gameId)
     }
 
     private func roundRobinStartKey(gameId: UUID) -> String {

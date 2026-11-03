@@ -20,6 +20,10 @@ enum HiddenColumnsStorage {
         return Set(rawValues.compactMap { TeamOption(rawValue: $0) })
     }
 
+    static func clear(gameId: UUID) {
+        UserDefaults.standard.removeObject(forKey: key(for: gameId))
+    }
+
     static func save(_ options: Set<TeamOption>, gameId: UUID) {
         let rawValues = options.map { $0.rawValue }
         UserDefaults.standard.set(rawValues, forKey: key(for: gameId))
