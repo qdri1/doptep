@@ -11,6 +11,7 @@ enum GameResultsEffect: Hashable, Identifiable, Equatable {
     case showTeamResultBottomSheet(teamResultUiModel: TeamResultUiModel)
     case showSnackbar(message: String)
     case showBestPlayersBottomSheet(bestPlayers: [BestPlayerUiModel])
+    case showChampionsBottomSheet(champions: ChampionsUiModel)
     case showClearAllGamesResultsConfirmationBottomSheet
 
     var id: String {
@@ -20,6 +21,7 @@ enum GameResultsEffect: Hashable, Identifiable, Equatable {
         case .showTeamResultBottomSheet: return "showTeamResultBottomSheet"
         case .showSnackbar(let message): return "showSnackbar_\(message)"
         case .showBestPlayersBottomSheet: return "showBestPlayersBottomSheet"
+        case .showChampionsBottomSheet: return "showChampionsBottomSheet"
         case .showClearAllGamesResultsConfirmationBottomSheet: return "showClearAllGamesResultsConfirmationBottomSheet"
         }
     }

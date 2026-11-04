@@ -17,6 +17,8 @@ struct GameResultsScreen: View {
     @State private var snackbarMessage: String?
     @State private var showBestPlayersSheet = false
     @State private var bestPlayersForSheet: [BestPlayerUiModel] = []
+    @State private var showChampionsSheet = false
+    @State private var championsForSheet: ChampionsUiModel?
     @State private var showClearAllGamesConfirmation = false
     @State private var showRemovePlayerConfirmation = false
     @State private var playerToRemove: PlayerUiModel?
@@ -142,6 +144,12 @@ struct GameResultsScreen: View {
             BestPlayersSheet(bestPlayers: bestPlayersForSheet)
                 .presentationDetents([.large])
         }
+        .sheet(isPresented: $showChampionsSheet) {
+            if let championsForSheet {
+                ChampionsSheet(champions: championsForSheet)
+                    .presentationDetents([.large])
+            }
+        }
         .confirmationDialog(
             String(format: NSLocalizedString("remove_player_confirm_text", comment: ""), playerToRemove?.name ?? ""),
             isPresented: $showRemovePlayerConfirmation,
@@ -177,6 +185,10 @@ struct GameResultsScreen: View {
             bestPlayersForSheet = bestPlayers
             showBestPlayersSheet = true
 
+        case .showChampionsBottomSheet(let champions):
+            championsForSheet = champions
+            showChampionsSheet = true
+
         case .showClearAllGamesResultsConfirmationBottomSheet:
             showClearAllGamesConfirmation = true
         }
@@ -186,6 +198,35 @@ struct GameResultsScreen: View {
         let uiLimited = viewModel.uiState.uiLimited
         return VStack(alignment: .leading, spacing: 8) {
             let isLocked = uiLimited
+            Button {
+                if isLocked {
+                    viewModel.action(.onActivateClicked)
+                } else {
+                    viewModel.action(.onChampionsAllGamesClicked)
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "trophy.fill")
+                        .frame(width: 24, height: 24)
+                        .font(.titleLarge)
+                    Text(NSLocalizedString("function_champions_all_games", comment: ""))
+                        .font(.labelMedium)
+                    Spacer()
+                    if isLocked {
+                        Image(systemName: "lock.fill")
+                            .font(.caption2)
+                            .foregroundColor(AppColor.outline)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(AppColor.surface)
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(isLocked ? AppColor.outline : AppColor.onSurface)
+
             Button {
                 if isLocked {
                     viewModel.action(.onActivateClicked)

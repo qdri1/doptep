@@ -48,6 +48,9 @@ final class GameResultsViewModel: ObservableObject {
         case .onSaveTeamResultClicked(let teamResultUiModel, let teamResultValue):
             onSaveTeamResultClicked(teamResultUiModel: teamResultUiModel, value: teamResultValue)
 
+        case .onChampionsAllGamesClicked:
+            onChampionsAllGamesClicked()
+
         case .onBestPlayersAllGamesClicked:
             onBestPlayersAllGamesClicked()
 
@@ -286,6 +289,15 @@ final class GameResultsViewModel: ObservableObject {
         }
 
         setEffect(.showBestPlayersBottomSheet(bestPlayers: bestPlayers))
+    }
+
+    private func onChampionsAllGamesClicked() {
+        guard let championTeam = uiState.teamUiModelList.first, championTeam.games > 0 else {
+            setEffect(.showSnackbar(message: NSLocalizedString("champions_empty", comment: "")))
+            return
+        }
+        let players = uiState.playerUiModelList.filter { $0.teamId == championTeam.id }
+        setEffect(.showChampionsBottomSheet(champions: ChampionsUiModel.make(team: championTeam, players: players)))
     }
 
     private func onClearAllGamesResultsConfirmationClicked() {

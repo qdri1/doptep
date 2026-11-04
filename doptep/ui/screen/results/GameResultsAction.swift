@@ -11,6 +11,7 @@ enum GameResultsAction {
     case onSavePlayerResultClicked(playerResultUiModel: PlayerResultUiModel, playerResultValue: Int)
     case onTeamResultClicked(teamResultUiModel: TeamResultUiModel)
     case onSaveTeamResultClicked(teamResultUiModel: TeamResultUiModel, teamResultValue: Int)
+    case onChampionsAllGamesClicked
     case onBestPlayersAllGamesClicked
     case onClearAllGamesResultsClicked
     case onClearAllGamesResultsConfirmationClicked
