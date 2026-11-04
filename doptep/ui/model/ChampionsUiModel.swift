@@ -39,6 +39,10 @@ extension ChampionsUiModel {
             .count
     }
 
+    private static func actionsCount(_ player: PlayerUiModel) -> Int {
+        player.goals + player.assists + player.saves + player.tackles + player.dribbles + player.passes + player.shots
+    }
+
     private static func isEmpty(_ player: PlayerUiModel) -> Bool {
         contributionCount(player) == 0 && player.yellowCards == 0 && player.redCards == 0
     }
@@ -100,10 +104,29 @@ extension ChampionsUiModel {
             usedTitles.insert(candidate.title)
         }
 
+        let leftovers = players.indices.filter { titles[$0] == nil }
+
+        let activeLeftovers = leftovers
+            .filter { !isEmpty(players[$0]) }
+            .sorted { lhs, rhs in
+                let lhsTotal = actionsCount(players[lhs])
+                let rhsTotal = actionsCount(players[rhs])
+                if lhsTotal != rhsTotal { return lhsTotal > rhsTotal }
+                return lhs < rhs
+            }
+        for (position, index) in activeLeftovers.enumerated() {
+            titles[index] = ChampionTitle.activeFallbacks[position % ChampionTitle.activeFallbacks.count]
+        }
+
+        let emptyLeftovers = leftovers.filter { isEmpty(players[$0]) }
+        for (position, index) in emptyLeftovers.enumerated() {
+            titles[index] = ChampionTitle.emptyFallbacks[position % ChampionTitle.emptyFallbacks.count]
+        }
+
         let result = players.enumerated().map { index, player in
             ChampionPlayerUiModel(
                 playerUiModel: player,
-                title: titles[index] ?? (isEmpty(player) ? .ghost : .teamPlayer)
+                title: titles[index] ?? .teamPlayer
             )
         }
 
