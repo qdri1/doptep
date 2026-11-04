@@ -91,8 +91,8 @@ final class GameResultsViewModel: ObservableObject {
                 if lhs.goals != rhs.goals { return lhs.goals > rhs.goals }
                 if lhs.assists != rhs.assists { return lhs.assists > rhs.assists }
                 if lhs.saves != rhs.saves { return lhs.saves > rhs.saves }
-                let lhsOther = lhs.dribbles + lhs.shots + lhs.passes
-                let rhsOther = rhs.dribbles + rhs.shots + rhs.passes
+                let lhsOther = lhs.tackles + lhs.dribbles + lhs.shots + lhs.passes
+                let rhsOther = rhs.tackles + rhs.dribbles + rhs.shots + rhs.passes
                 if lhsOther != rhsOther { return lhsOther > rhsOther }
                 if lhs.redCards != rhs.redCards { return lhs.redCards < rhs.redCards }
                 if lhs.yellowCards != rhs.yellowCards { return lhs.yellowCards < rhs.yellowCards }
