@@ -1796,6 +1796,8 @@ final class GameViewModel: ObservableObject {
         switch function {
         case .bestPlayers:
             onBestPlayersClicked()
+        case .champions:
+            onChampionsClicked()
         case .history:
             onHistoryClicked()
         case .edit:
@@ -1848,6 +1850,15 @@ final class GameViewModel: ObservableObject {
         }
 
         effect = .showBestPlayersBottomSheet(bestPlayers: bestPlayers)
+    }
+
+    private func onChampionsClicked() {
+        guard let championTeam = uiState.teamUiModelList.first, championTeam.games > 0 else {
+            snackbarMessage = NSLocalizedString("champions_empty", comment: "")
+            return
+        }
+        let players = uiState.playerUiModelList.filter { $0.teamId == championTeam.id }
+        effect = .showChampionsBottomSheet(champions: ChampionsUiModel.make(team: championTeam, players: players))
     }
 
     private func onEditGameClicked() {

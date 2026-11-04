@@ -18,7 +18,7 @@ final class TeamRepository {
     func getTeams(gameId: UUID) throws -> [TeamUiModel] {
         let descriptor = FetchDescriptor<TeamModel>(
             predicate: #Predicate { $0.gameId == gameId },
-            sortBy: [SortDescriptor(\.sortIndex)]
+            sortBy: [SortDescriptor(\.sortIndex), SortDescriptor(\.name)]
         )
         let models = try context.fetch(descriptor)
         return models.map { model in

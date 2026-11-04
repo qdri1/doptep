@@ -612,16 +612,17 @@ struct SnackbarModifier: ViewModifier {
                     .cornerRadius(8)
                     .padding()
                     .transition(.move(edge: .bottom).combined(with: .opacity))
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation {
-                                self.message = nil
-                            }
-                        }
-                    }
             }
         }
         .animation(.easeInOut, value: message)
+        .task(id: message) {
+            guard message != nil else { return }
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            withAnimation {
+                message = nil
+            }
+        }
     }
 }
 

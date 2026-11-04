@@ -52,6 +52,8 @@ struct GameScreen: View {
     @State private var currentTeamResult: TeamResultUiModel?
     @State private var currentLiveGameResult: LiveGameResultUiModel?
     @State private var currentBestPlayers: [BestPlayerUiModel] = []
+    @State private var showChampionsSheet = false
+    @State private var currentChampions: ChampionsUiModel?
     @State private var showGameHistorySheet = false
     @State private var currentGameHistory: [GameHistoryEntryUiModel] = []
     @State private var showCustomizeColumnsSheet = false
@@ -163,6 +165,12 @@ struct GameScreen: View {
             .sheet(isPresented: $showBestPlayersSheet) {
                 BestPlayersSheet(bestPlayers: currentBestPlayers)
                     .presentationDetents([.large])
+            }
+            .sheet(isPresented: $showChampionsSheet) {
+                if let currentChampions {
+                    ChampionsSheet(champions: currentChampions)
+                        .presentationDetents([.large])
+                }
             }
             .sheet(isPresented: $showGameHistorySheet) {
                 GameHistorySheet(gameHistory: currentGameHistory)
@@ -936,7 +944,7 @@ struct GameScreen: View {
         let uiLimited = viewModel.uiState.uiLimited
         return VStack(alignment: .leading, spacing: 8) {
             ForEach(GameFunction.allCases, id: \.self) { function in
-                let isLocked = (function == .bestPlayers || function == .history) && uiLimited
+                let isLocked = (function == .bestPlayers || function == .champions || function == .history) && uiLimited
                 Button {
                     if isLocked {
                         viewModel.send(.onActivateClicked)
@@ -1410,6 +1418,9 @@ struct GameScreen: View {
         case .showBestPlayersBottomSheet(let bestPlayers):
             currentBestPlayers = bestPlayers
             showBestPlayersSheet = true
+        case .showChampionsBottomSheet(let champions):
+            currentChampions = champions
+            showChampionsSheet = true
         case .showGameHistorySheet(let history):
             currentGameHistory = history
             showGameHistorySheet = true

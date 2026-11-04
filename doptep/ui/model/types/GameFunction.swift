@@ -7,6 +7,7 @@ import Foundation
 
 enum GameFunction: String, CaseIterable {
     case bestPlayers
+    case champions
     case history
     case edit
     case clearResults
@@ -18,6 +19,7 @@ enum GameFunction: String, CaseIterable {
     var localizationKey: String {
         switch self {
         case .bestPlayers: return "function_best_players"
+        case .champions: return "function_champions"
         case .history: return "function_history"
         case .edit: return "function_edit"
         case .clearResults: return "function_clear_result"
@@ -31,6 +33,7 @@ enum GameFunction: String, CaseIterable {
     var systemImage: String {
         switch self {
         case .bestPlayers: return "hand.thumbsup.fill"
+        case .champions: return "trophy.fill"
         case .history: return "clock.arrow.circlepath"
         case .edit: return "pencil"
         case .clearResults: return "arrow.clockwise"
