@@ -81,16 +81,18 @@ private struct ChampionTeamHeroCard: View {
                 Spacer(minLength: 40)
             }
 
-            HStack(spacing: 6) {
-                ForEach(stats, id: \.self) { statText in
-                    Text(statText)
-                        .font(.labelSmall)
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Capsule().fill(Color.white.opacity(0.16)))
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(stats, id: \.self) { statText in
+                        Text(statText)
+                            .font(.labelSmall)
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                            .fixedSize()
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Capsule().fill(Color.white.opacity(0.16)))
+                    }
                 }
             }
         }
@@ -180,7 +182,7 @@ private struct ChampionPlayerRow: View {
                     .font(.labelSmall)
                     .foregroundColor(AppColor.outline)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.7)
 
                 HStack(spacing: 6) {
                     PlayerTeamBadge(teamColor: player.teamColor, number: player.number, size: 18)
@@ -189,7 +191,7 @@ private struct ChampionPlayerRow: View {
                         .font(.bodyMedium)
                         .foregroundColor(AppColor.onSurface)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.8)
+                        .minimumScaleFactor(0.7)
                         .layoutPriority(1)
 
                     Spacer(minLength: 4)
