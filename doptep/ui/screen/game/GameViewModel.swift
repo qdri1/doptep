@@ -271,24 +271,39 @@ final class GameViewModel: ObservableObject {
         return language == "kk-KZ" || language == "kk"
     }
 
+    private var isEnglishLanguage: Bool {
+        let language = UserDefaults.standard.string(forKey: "app_language") ?? "kk-KZ"
+        return language.hasPrefix("en")
+    }
+
     private var minutaSoundName: String {
-        isKazakhLanguage ? "oiynnyn_aiaktaluyna_1_minut_kaldy" : "minuta"
+        if isKazakhLanguage { return "oiynnyn_aiaktaluyna_1_minut_kaldy" }
+        if isEnglishLanguage { return "one_minute_remaining" }
+        return "minuta"
     }
 
     private var doAutaSoundName: String {
-        isKazakhLanguage ? "autka_dein_oinaimyz" : "do_auta"
+        if isKazakhLanguage { return "autka_dein_oinaimyz" }
+        if isEnglishLanguage { return "play_continues_until_ball_goes_out" }
+        return "do_auta"
     }
 
     private var finishMatchSoundName: String {
-        isKazakhLanguage ? "oiyn_aiaktaldy" : "finish"
+        if isKazakhLanguage { return "oiyn_aiaktaldy" }
+        if isEnglishLanguage { return "full_time" }
+        return "finish"
     }
 
     private var assistSoundName: String {
-        isKazakhLanguage ? "kandai_galamat_pas_jane_gol" : "toni_kross_pass"
+        if isKazakhLanguage { return "kandai_galamat_pas_jane_gol" }
+        if isEnglishLanguage { return GameSounds.girlsApplause.fileName }
+        return "toni_kross_pass"
     }
 
     private var saveSoundName: String {
-        isKazakhLanguage ? "goal_save" : "kakoi_save"
+        if isKazakhLanguage { return "goal_save" }
+        if isEnglishLanguage { return "what_a_save" }
+        return "kakoi_save"
     }
 
     private var dribbleSoundName: String {
@@ -296,9 +311,14 @@ final class GameViewModel: ObservableObject {
     }
 
     private func playGoalSound() {
-        let sounds = isKazakhLanguage
-            ? ["oooi_kandai_gol", "suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
-            : ["suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
+        let sounds: [String]
+        if isKazakhLanguage {
+            sounds = ["oooi_kandai_gol", "suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
+        } else if isEnglishLanguage {
+            sounds = ["suiii_full", "gol_gol_gol", "sharip_gol_gol"]
+        } else {
+            sounds = ["suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
+        }
         if let sound = sounds.randomElement() {
             audioManager.playSound(sound)
         }
