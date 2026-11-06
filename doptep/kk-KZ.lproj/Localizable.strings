@@ -214,7 +214,7 @@
 "champions" = "Чемпиондар";
 "champions_first_place" = "Бірінші орын";
 "champions_points" = "ҰП: %d";
-"champions_record" = "Ж: %d  Т: %d  Ұ: %d";
+"champions_record" = "Ж: %d ⬩ Т: %d ⬩ Ұ: %d";
 "champions_goals" = "Голдар: %d-%d";
 "champions_empty" = "Әзірге ойналған матч жоқ";
 "champion_title_matchKing" = "Матч королі";

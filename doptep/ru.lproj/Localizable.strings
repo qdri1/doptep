@@ -214,7 +214,7 @@
 "champions" = "Чемпионы";
 "champions_first_place" = "Первое место";
 "champions_points" = "ОЧ: %d";
-"champions_record" = "В: %d  Н: %d  П: %d";
+"champions_record" = "В: %d ⬩ Н: %d ⬩ П: %d";
 "champions_goals" = "Голы: %d-%d";
 "champions_empty" = "Пока нет сыгранных матчей";
 "champion_title_matchKing" = "Король матча";

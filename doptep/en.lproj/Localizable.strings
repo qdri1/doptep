@@ -214,7 +214,7 @@
 "champions" = "Champions";
 "champions_first_place" = "First place";
 "champions_points" = "PT: %d";
-"champions_record" = "W: %d  D: %d  L: %d";
+"champions_record" = "W: %d ⬩ D: %d ⬩ L: %d";
 "champions_goals" = "Goals: %d-%d";
 "champions_empty" = "No matches played yet";
 "champion_title_matchKing" = "Match King";

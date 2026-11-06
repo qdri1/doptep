@@ -9,29 +9,31 @@ struct ChampionsSheet: View {
     let champions: ChampionsUiModel
 
     var body: some View {
-        ScrollView {
-            content
-        }
-        .background(AppColor.background)
-    }
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 8) {
+                    ChampionTeamHeroCard(team: champions.teamUiModel)
 
-    private var content: some View {
-        VStack(spacing: 8) {
-            Text(NSLocalizedString("champions", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onSurface)
-                .frame(maxWidth: .infinity)
-                .padding(.top, 16)
-                .padding(.bottom, 4)
+                    ForEach(champions.players) { champion in
+                        ChampionPlayerRow(champion: champion)
+                    }
 
-            ChampionTeamHeroCard(team: champions.teamUiModel)
-
-            ForEach(champions.players) { champion in
-                ChampionPlayerRow(champion: champion)
+                    Spacer()
+                        .frame(height: 16)
+                }
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+            }
+            .background(AppColor.background)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("champions", comment: ""))
+                        .font(.bodyMedium)
+                        .foregroundColor(AppColor.onSurface)
+                }
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.bottom, 12)
     }
 }
 
@@ -45,58 +47,63 @@ private struct ChampionTeamHeroCard: View {
     private var stats: [String] {
         [
             String(format: NSLocalizedString("champions_points", comment: ""), team.points),
-            String(format: NSLocalizedString("champions_record", comment: ""), team.wins, team.draws, team.loses),
-            String(format: NSLocalizedString("champions_goals", comment: ""), team.goals, team.conceded)
+            String(format: NSLocalizedString("champions_goals", comment: ""), team.goals, team.conceded),
+            String(format: NSLocalizedString("champions_record", comment: ""), team.wins, team.draws, team.loses)
         ]
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 6) {
-                Image(systemName: "trophy.fill")
-                    .font(.system(size: 12, weight: .bold))
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 8) {
+                ZStack {
+                    Circle()
+                        .fill(Color.white.opacity(0.18))
+                        .frame(width: 28, height: 28)
+
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(Color(hex: "#FFD166"))
+                }
+
                 Text(NSLocalizedString("champions_first_place", comment: ""))
-                    .font(.labelSmall)
+                    .font(.labelLarge)
+                    .foregroundColor(Color(hex: "#FFD166"))
                     .textCase(.uppercase)
                     .tracking(0.4)
+
                 Spacer()
             }
-            .foregroundColor(Color(hex: "#FFD166"))
+            .padding(.horizontal, 16)
 
             HStack(spacing: 10) {
-                RoundedRectangle(cornerRadius: 5)
-                    .fill(team.color.color)
-                    .frame(width: 20, height: 20)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.white.opacity(0.6), lineWidth: 1)
-                    )
+                PlayerTeamBadge(teamColor: team.color, number: nil, size: 24)
 
                 Text(teamName)
                     .font(.titleLarge)
                     .foregroundColor(.white)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
 
-                Spacer(minLength: 40)
+                Spacer()
             }
+            .padding(.horizontal, 16)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     ForEach(stats, id: \.self) { statText in
                         Text(statText)
                             .font(.labelSmall)
                             .foregroundColor(.white)
                             .lineLimit(1)
                             .fixedSize()
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
                             .background(Capsule().fill(Color.white.opacity(0.16)))
                     }
                 }
+                .padding(.horizontal, 16)
             }
         }
-        .padding(14)
+        .padding(.vertical, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             ZStack {
@@ -110,28 +117,31 @@ private struct ChampionTeamHeroCard: View {
                     colors: [Color(hex: "#FFE38A").opacity(0.55), Color.clear],
                     center: .topTrailing,
                     startRadius: 4,
-                    endRadius: 180
+                    endRadius: 170
                 )
             }
         )
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .stroke(
                     LinearGradient(
-                        colors: [Color.white.opacity(0.4), Color.white.opacity(0.04)],
+                        colors: [Color.white.opacity(0.35), Color.white.opacity(0.04)],
                         startPoint: .top,
                         endPoint: .bottom
                     ),
                     lineWidth: 1
                 )
         )
+        .shadow(color: Color(hex: "#E0A800").opacity(0.4), radius: 14, x: 0, y: 6)
         .overlay(alignment: .topTrailing) {
-            Text("#1")
-                .font(.system(size: 28, weight: .heavy, design: .rounded))
-                .foregroundColor(Color.white.opacity(0.9))
-                .padding(.top, 10)
-                .padding(.trailing, 16)
+            HeroBadge(
+                text: "TOP 1",
+                gradientColors: [Color(hex: "#A86F00"), Color(hex: "#F2B705")],
+                shadowColor: Color(hex: "#E0A800").opacity(0.5)
+            )
+            .padding(.top, 32)
+            .padding(.trailing, 20)
         }
     }
 }

@@ -15,79 +15,44 @@ import RevenueCatUI
 struct BestPlayersSheet: View {
     let bestPlayers: [BestPlayerUiModel]
 
+    private var heroPlayers: [BestPlayerUiModel] {
+        bestPlayers.filter { $0.option == .bestPlayer }
+    }
+
+    private var otherPlayers: [BestPlayerUiModel] {
+        bestPlayers.filter { $0.option != .bestPlayer }
+    }
+
     var body: some View {
         NavigationView {
-            List {
-                ForEach(bestPlayers, id: \.option) { bestPlayer in
-                    if bestPlayer.option == .bestPlayer {
-                        BestPlayerHeroCard(bestPlayer: bestPlayer)
-                            .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                    } else {
-                        VStack(alignment: .leading) {
-                            Text(NSLocalizedString(bestPlayer.option.localizationKey, comment: ""))
-                                .font(.labelSmall)
-                                .foregroundColor(AppColor.outline)
+            ScrollView {
+                VStack(spacing: 8) {
+                    if !bestPlayers.isEmpty {
+                        VStack(spacing: 0) {
+                            ForEach(heroPlayers, id: \.option) { bestPlayer in
+                                BestPlayerHeroCard(bestPlayer: bestPlayer)
+                                    .padding(12)
+                            }
 
-                            HStack {
-                                PlayerTeamBadge(teamColor: bestPlayer.playerUiModel.teamColor, number: bestPlayer.playerUiModel.number)
-
-                                Text(bestPlayer.playerUiModel.name)
-                                    .font(.bodySmall)
-                                    .foregroundColor(AppColor.onSurface)
-
-                                Spacer()
-
-                                switch bestPlayer.option {
-                                case .bestPlayer:
-                                    EmptyView()
-                                case .goals:
-                                    Text("\(bestPlayer.playerUiModel.goals) \(NSLocalizedString("text_goal", comment: ""))")
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
-                                case .assists:
-                                    Text("\(bestPlayer.playerUiModel.assists) \(NSLocalizedString("text_assist", comment: ""))")
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
-                                case .saves:
-                                    Text("\(bestPlayer.playerUiModel.saves) \(NSLocalizedString("text_save", comment: ""))")
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
-                                case .tackles:
-                                    Text("\(bestPlayer.playerUiModel.tackles) \(NSLocalizedString("text_tackle", comment: ""))")
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
-                                case .dribbles:
-                                    Text("\(bestPlayer.playerUiModel.dribbles) \(NSLocalizedString("text_dribble", comment: ""))")
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
-                                case .passes:
-                                    Text("\(bestPlayer.playerUiModel.passes) \(NSLocalizedString("text_pass", comment: ""))")
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
-                                case .shots:
-                                    Text("\(bestPlayer.playerUiModel.shots) \(NSLocalizedString("text_shot", comment: ""))")
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
-                                case .aggressivePlayer:
-                                    let result = [
-                                        stat(bestPlayer.playerUiModel.yellowCards, "text_yellow_card"),
-                                        stat(bestPlayer.playerUiModel.redCards, "text_red_card")
-                                    ]
-                                    .compactMap { $0 }
-                                    .joined(separator: ", ")
-
-                                    Text(result)
-                                        .font(.bodySmall)
-                                        .foregroundColor(AppColor.onSurface)
+                            ForEach(Array(otherPlayers.enumerated()), id: \.element.option) { index, bestPlayer in
+                                if index > 0 {
+                                    Divider()
+                                        .overlay(AppColor.background)
+                                        .padding(.horizontal, 16)
                                 }
+                                bestPlayerRow(bestPlayer)
                             }
                         }
+                        .background(AppColor.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     }
+
+                    Spacer()
+                        .frame(height: 16)
                 }
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
             }
-            .scrollContentBackground(.hidden)
             .background(AppColor.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -97,6 +62,61 @@ struct BestPlayersSheet: View {
                         .foregroundColor(AppColor.onSurface)
                 }
             }
+        }
+    }
+
+    private func bestPlayerRow(_ bestPlayer: BestPlayerUiModel) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(NSLocalizedString(bestPlayer.option.localizationKey, comment: ""))
+                .font(.labelSmall)
+                .foregroundColor(AppColor.outline)
+
+            HStack {
+                PlayerTeamBadge(teamColor: bestPlayer.playerUiModel.teamColor, number: bestPlayer.playerUiModel.number)
+
+                Text(bestPlayer.playerUiModel.name)
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.onSurface)
+                    .lineLimit(1)
+
+                Spacer()
+
+                Text(statText(bestPlayer))
+                    .font(.bodySmall)
+                    .foregroundColor(AppColor.onSurface)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func statText(_ bestPlayer: BestPlayerUiModel) -> String {
+        let player = bestPlayer.playerUiModel
+        switch bestPlayer.option {
+        case .bestPlayer:
+            return ""
+        case .goals:
+            return "\(player.goals) \(NSLocalizedString("text_goal", comment: ""))"
+        case .assists:
+            return "\(player.assists) \(NSLocalizedString("text_assist", comment: ""))"
+        case .saves:
+            return "\(player.saves) \(NSLocalizedString("text_save", comment: ""))"
+        case .tackles:
+            return "\(player.tackles) \(NSLocalizedString("text_tackle", comment: ""))"
+        case .dribbles:
+            return "\(player.dribbles) \(NSLocalizedString("text_dribble", comment: ""))"
+        case .passes:
+            return "\(player.passes) \(NSLocalizedString("text_pass", comment: ""))"
+        case .shots:
+            return "\(player.shots) \(NSLocalizedString("text_shot", comment: ""))"
+        case .aggressivePlayer:
+            return [
+                stat(player.yellowCards, "text_yellow_card"),
+                stat(player.redCards, "text_red_card")
+            ]
+            .compactMap { $0 }
+            .joined(separator: ", ")
         }
     }
 
@@ -216,11 +236,25 @@ private struct BestPlayerHeroCard: View {
     }
 
     private var mvpBadge: some View {
+        HeroBadge(text: "MVP")
+    }
+
+    private func stat(_ value: Int, _ key: String) -> String? {
+        value > 0 ? "\(value) \(NSLocalizedString(key, comment: ""))" : nil
+    }
+}
+
+struct HeroBadge: View {
+    let text: String
+    var gradientColors: [Color] = [Color(hex: "#FF3D00"), Color(hex: "#FF9F1C")]
+    var shadowColor: Color = Color(hex: "#FF3D00").opacity(0.5)
+
+    var body: some View {
         HStack(spacing: 5) {
             Image(systemName: "flame.fill")
                 .font(.system(size: 16, weight: .bold))
 
-            Text("MVP")
+            Text(text)
                 .font(.system(size: 18, weight: .heavy, design: .rounded))
                 .tracking(0.5)
         }
@@ -231,7 +265,7 @@ private struct BestPlayerHeroCard: View {
             Capsule()
                 .fill(
                     LinearGradient(
-                        colors: [Color(hex: "#FF3D00"), Color(hex: "#FF9F1C")],
+                        colors: gradientColors,
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -241,12 +275,8 @@ private struct BestPlayerHeroCard: View {
             Capsule()
                 .stroke(Color.white.opacity(0.5), lineWidth: 0.75)
         )
-        .shadow(color: Color(hex: "#FF3D00").opacity(0.5), radius: 6, x: 0, y: 2)
+        .shadow(color: shadowColor, radius: 6, x: 0, y: 2)
         .rotationEffect(.degrees(-4))
-    }
-
-    private func stat(_ value: Int, _ key: String) -> String? {
-        value > 0 ? "\(value) \(NSLocalizedString(key, comment: ""))" : nil
     }
 }
 
