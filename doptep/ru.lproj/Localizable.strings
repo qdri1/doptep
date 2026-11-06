@@ -217,6 +217,8 @@
 "champions_record" = "В: %d ⬩ Н: %d ⬩ П: %d";
 "champions_goals" = "Голы: %d-%d";
 "champions_empty" = "Пока нет сыгранных матчей";
+"champions_draw" = "Пока ничья — чемпиона нет";
+"champions_score" = "Счёт: %d-%d";
 "champion_title_matchKing" = "Король матча";
 "champion_title_matchKing_description" = "Самый ценный игрок команды";
 "champion_title_sniper" = "Снайпер";

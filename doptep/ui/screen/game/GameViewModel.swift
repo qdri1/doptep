@@ -1873,12 +1873,32 @@ final class GameViewModel: ObservableObject {
     }
 
     private func onChampionsClicked() {
+        if uiState.gameUiModel?.teamQuantity == .team2 {
+            onTeam2ChampionsClicked()
+            return
+        }
         guard let championTeam = uiState.teamUiModelList.first, championTeam.games > 0 else {
             snackbarMessage = NSLocalizedString("champions_empty", comment: "")
             return
         }
         let players = uiState.playerUiModelList.filter { $0.teamId == championTeam.id }
         effect = .showChampionsBottomSheet(champions: ChampionsUiModel.make(team: championTeam, players: players))
+    }
+
+    private func onTeam2ChampionsClicked() {
+        guard let liveGame = uiState.liveGameUiModel else { return }
+        guard liveGame.leftTeamGoals != liveGame.rightTeamGoals else {
+            snackbarMessage = NSLocalizedString("champions_draw", comment: "")
+            return
+        }
+        let isLeftLeading = liveGame.leftTeamGoals > liveGame.rightTeamGoals
+        let championTeamId = isLeftLeading ? liveGame.leftTeamId : liveGame.rightTeamId
+        guard let championTeam = uiState.teamUiModelList.first(where: { $0.id == championTeamId }) else { return }
+        let score = isLeftLeading
+            ? ChampionsScore(goals: liveGame.leftTeamGoals, conceded: liveGame.rightTeamGoals)
+            : ChampionsScore(goals: liveGame.rightTeamGoals, conceded: liveGame.leftTeamGoals)
+        let players = uiState.playerUiModelList.filter { $0.teamId == championTeam.id }
+        effect = .showChampionsBottomSheet(champions: ChampionsUiModel.make(team: championTeam, players: players, score: score))
     }
 
     private func onEditGameClicked() {

@@ -12,15 +12,21 @@ struct ChampionPlayerUiModel: Equatable, Identifiable {
     var id: UUID { playerUiModel.id }
 }
 
+struct ChampionsScore: Equatable {
+    let goals: Int
+    let conceded: Int
+}
+
 struct ChampionsUiModel: Equatable {
     let teamUiModel: TeamUiModel
     let players: [ChampionPlayerUiModel]
+    var score: ChampionsScore? = nil
 }
 
 extension ChampionsUiModel {
 
-    static func make(team: TeamUiModel, players: [PlayerUiModel]) -> ChampionsUiModel {
-        ChampionsUiModel(teamUiModel: team, players: assignTitles(players: players))
+    static func make(team: TeamUiModel, players: [PlayerUiModel], score: ChampionsScore? = nil) -> ChampionsUiModel {
+        ChampionsUiModel(teamUiModel: team, players: assignTitles(players: players), score: score)
     }
 
     private struct Candidate {

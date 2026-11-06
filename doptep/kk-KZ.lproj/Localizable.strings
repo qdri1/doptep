@@ -217,6 +217,8 @@
 "champions_record" = "Ж: %d ⬩ Т: %d ⬩ Ұ: %d";
 "champions_goals" = "Голдар: %d-%d";
 "champions_empty" = "Әзірге ойналған матч жоқ";
+"champions_draw" = "Әзірге тең — чемпион жоқ";
+"champions_score" = "Есеп: %d-%d";
 "champion_title_matchKing" = "Матч королі";
 "champion_title_matchKing_description" = "Команданың ең құнды ойыншысы";
 "champion_title_sniper" = "Мерген";

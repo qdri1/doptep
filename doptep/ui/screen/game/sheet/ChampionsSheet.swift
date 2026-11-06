@@ -12,7 +12,7 @@ struct ChampionsSheet: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 8) {
-                    ChampionTeamHeroCard(team: champions.teamUiModel)
+                    ChampionTeamHeroCard(team: champions.teamUiModel, score: champions.score)
 
                     ForEach(champions.players) { champion in
                         ChampionPlayerRow(champion: champion)
@@ -39,13 +39,17 @@ struct ChampionsSheet: View {
 
 private struct ChampionTeamHeroCard: View {
     let team: TeamUiModel
+    let score: ChampionsScore?
 
     private var teamName: String {
         team.name.isEmpty ? NSLocalizedString(team.color.localizationKey, comment: "") : team.name
     }
 
     private var stats: [String] {
-        [
+        if let score {
+            return [String(format: NSLocalizedString("champions_score", comment: ""), score.goals, score.conceded)]
+        }
+        return [
             String(format: NSLocalizedString("champions_points", comment: ""), team.points),
             String(format: NSLocalizedString("champions_goals", comment: ""), team.goals, team.conceded),
             String(format: NSLocalizedString("champions_record", comment: ""), team.wins, team.draws, team.loses)

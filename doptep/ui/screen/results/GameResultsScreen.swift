@@ -198,6 +198,7 @@ struct GameResultsScreen: View {
         let uiLimited = viewModel.uiState.uiLimited
         return VStack(alignment: .leading, spacing: 8) {
             let isLocked = uiLimited
+            if viewModel.uiState.teamUiModelList.count > 2 {
             Button {
                 if isLocked {
                     viewModel.action(.onActivateClicked)
@@ -226,6 +227,7 @@ struct GameResultsScreen: View {
             }
             .buttonStyle(.plain)
             .foregroundColor(isLocked ? AppColor.outline : AppColor.onSurface)
+            }
 
             Button {
                 if isLocked {

@@ -217,6 +217,8 @@
 "champions_record" = "W: %d ⬩ D: %d ⬩ L: %d";
 "champions_goals" = "Goals: %d-%d";
 "champions_empty" = "No matches played yet";
+"champions_draw" = "It's a draw — no champion yet";
+"champions_score" = "Score: %d-%d";
 "champion_title_matchKing" = "Match King";
 "champion_title_matchKing_description" = "The team's most valuable player";
 "champion_title_sniper" = "Sniper";
