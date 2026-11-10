@@ -312,7 +312,7 @@ struct AddGameScreen: View {
                         Text(NSLocalizedString("game_rules_info", comment: ""))
                             .font(.labelLarge)
                     }
-                    .foregroundColor(AppColor.primary)
+                    .foregroundColor(Color(hex: "#FFA500"))
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal)

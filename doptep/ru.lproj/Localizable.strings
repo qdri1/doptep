@@ -63,7 +63,7 @@
 "game_rule_4_winner_stay_5" = "Победивший остается (макс. 5 игры)";
 "game_rule_4_winner_stay_6" = "Победивший остается (макс. 6 игры)";
 "game_rule_4_winner_stay_unlimited" = "Победивший всегда остается";
-"game_rules_info" = "Как работают правила";
+"game_rules_info" = "Как работают правила?";
 "game_rule_example" = "Пример";
 "game_rule_description_2_change_side" = "Играют две команды. После каждого тайма они меняются сторонами поля.";
 "game_rule_example_2_change_side" = "Тайм 1: К1 слева, К2 справа\nТайм 2: К2 слева, К1 справа\nТайм 3: снова К1 слева, К2 справа";
