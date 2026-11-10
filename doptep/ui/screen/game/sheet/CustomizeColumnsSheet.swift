@@ -48,6 +48,7 @@ struct CustomizeColumnsSheet: View {
                             }
                         }
                         .listRowBackground(AppColor.surface)
+                        .listRowSeparatorTint(AppColor.background)
                     }
                 }
                 .listStyle(.insetGrouped)
