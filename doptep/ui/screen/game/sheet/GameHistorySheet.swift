@@ -175,6 +175,8 @@ struct GameHistorySheet: View {
                         content: AnyView(historyContent)
                     )
                     Divider()
+                        .frame(height: 1)
+                        .overlay(AppColor.background)
                     scrollControls
                 }
             }
@@ -286,7 +288,8 @@ struct GameHistorySheet: View {
             ForEach(Array(gameHistory.enumerated()), id: \.offset) { _, entry in
                 GameHistoryEntryItemView(entry: entry)
                 Divider()
-                    .background(AppColor.surfaceVariant)
+                    .frame(height: 1)
+                    .overlay(AppColor.background)
             }
         }
     }
@@ -366,7 +369,8 @@ private struct GameHistoryPDFContent: View {
             ForEach(Array(gameHistory.enumerated()), id: \.offset) { _, entry in
                 GameHistoryEntryItemView(entry: entry)
                 Divider()
-                    .background(AppColor.surfaceVariant)
+                    .frame(height: 1)
+                    .overlay(AppColor.background)
             }
         }
         .frame(width: 600)

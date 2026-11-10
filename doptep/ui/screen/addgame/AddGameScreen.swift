@@ -299,6 +299,8 @@ struct AddGameScreen: View {
                 }
 
                 Divider()
+                    .frame(height: 1)
+                    .overlay(AppColor.background)
                     .padding(.horizontal, 16)
                 
                 Button {

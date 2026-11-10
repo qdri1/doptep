@@ -89,6 +89,8 @@ private extension HomeScreen {
                             .foregroundColor(AppColor.onSurface)
 
                         Divider()
+                            .frame(height: 1)
+                            .overlay(AppColor.background)
                             .padding(.vertical, 4)
                     }
 

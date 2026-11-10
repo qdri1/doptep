@@ -37,6 +37,7 @@ struct BestPlayersSheet: View {
                             ForEach(Array(otherPlayers.enumerated()), id: \.element.option) { index, bestPlayer in
                                 if index > 0 {
                                     Divider()
+                                        .frame(height: 1)
                                         .overlay(AppColor.background)
                                         .padding(.horizontal, 16)
                                 }

@@ -294,6 +294,8 @@ struct LanguageSelectionSheet: View {
             .padding(16)
 
             Divider()
+                .frame(height: 1)
+                .overlay(AppColor.background)
 
             languageRow(title: "Қазақша", language: "kk-KZ")
             languageRow(title: "Русский", language: "ru")

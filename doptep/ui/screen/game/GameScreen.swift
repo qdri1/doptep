@@ -314,6 +314,8 @@ struct GameScreen: View {
                             .padding(.vertical, 20)
 
                         Divider()
+                            .frame(height: 1)
+                            .overlay(AppColor.background)
 
                         Button {
                             showStayTeamSheet = false
@@ -336,6 +338,8 @@ struct GameScreen: View {
                         }
 
                         Divider()
+                            .frame(height: 1)
+                            .overlay(AppColor.background)
 
                         Button {
                             showStayTeamSheet = false

@@ -45,6 +45,8 @@ struct GameInfoSheet: View {
                     }
 
                     Divider()
+                        .frame(height: 1)
+                        .overlay(AppColor.background)
 
                     // Teams Block Info
                     VStack(alignment: .leading, spacing: 8) {
@@ -58,6 +60,8 @@ struct GameInfoSheet: View {
                     }
 
                     Divider()
+                        .frame(height: 1)
+                        .overlay(AppColor.background)
 
                     // Players Block Info
                     VStack(alignment: .leading, spacing: 8) {
@@ -73,6 +77,8 @@ struct GameInfoSheet: View {
                     }
                     
                     Divider()
+                        .frame(height: 1)
+                        .overlay(AppColor.background)
                     
                     HStack(spacing: 12) {
                         Text(NSLocalizedString("live_game_info_streak_title", comment: ""))

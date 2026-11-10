@@ -51,8 +51,8 @@ private struct ChampionTeamHeroCard: View {
         }
         return [
             String(format: NSLocalizedString("champions_points", comment: ""), team.points),
+            String(format: NSLocalizedString("champions_record", comment: ""), team.wins, team.draws, team.loses),
             String(format: NSLocalizedString("champions_goals", comment: ""), team.goals, team.conceded),
-            String(format: NSLocalizedString("champions_record", comment: ""), team.wins, team.draws, team.loses)
         ]
     }
 
