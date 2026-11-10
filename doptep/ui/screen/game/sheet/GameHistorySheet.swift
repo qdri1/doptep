@@ -393,9 +393,13 @@ private struct GameHistoryEntryItemView: View {
                     .foregroundColor(AppColor.outline)
                 Spacer()
                 if let duration = entry.durationFormatted {
-                    Text("⏱ \(duration)")
-                        .font(.labelSmall)
-                        .foregroundColor(AppColor.outline)
+                    HStack(alignment: .center, spacing: 4) {
+                        Image(systemName: "clock")
+                            .font(.system(size: 12, weight: .medium))
+                        Text(duration)
+                            .font(.labelSmall)
+                    }
+                    .foregroundColor(AppColor.outline)
                 }
             }
 
