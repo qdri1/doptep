@@ -290,6 +290,7 @@ struct GameHistorySheet: View {
                 Divider()
                     .frame(height: 1)
                     .overlay(AppColor.background)
+                    .padding(.horizontal, 16)
             }
         }
     }
