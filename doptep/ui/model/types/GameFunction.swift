@@ -6,8 +6,8 @@
 import Foundation
 
 enum GameFunction: String, CaseIterable {
-    case champions
     case bestPlayers
+    case champions
     case history
     case edit
     case clearResults

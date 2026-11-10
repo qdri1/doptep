@@ -198,6 +198,35 @@ struct GameResultsScreen: View {
         let uiLimited = viewModel.uiState.uiLimited
         return VStack(alignment: .leading, spacing: 8) {
             let isLocked = uiLimited
+            Button {
+                if isLocked {
+                    viewModel.action(.onActivateClicked)
+                } else {
+                    viewModel.action(.onBestPlayersAllGamesClicked)
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "hand.thumbsup.fill")
+                        .frame(width: 24, height: 24)
+                        .font(.titleLarge)
+                    Text(NSLocalizedString("function_best_players_all_games", comment: ""))
+                        .font(.labelMedium)
+                    Spacer()
+                    if isLocked {
+                        Image(systemName: "lock.fill")
+                            .font(.caption2)
+                            .foregroundColor(AppColor.outline)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(AppColor.surface)
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(isLocked ? AppColor.outline : AppColor.onSurface)
+
             if viewModel.uiState.teamUiModelList.count > 2 {
             Button {
                 if isLocked {
@@ -228,35 +257,6 @@ struct GameResultsScreen: View {
             .buttonStyle(.plain)
             .foregroundColor(isLocked ? AppColor.outline : AppColor.onSurface)
             }
-
-            Button {
-                if isLocked {
-                    viewModel.action(.onActivateClicked)
-                } else {
-                    viewModel.action(.onBestPlayersAllGamesClicked)
-                }
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "hand.thumbsup.fill")
-                        .frame(width: 24, height: 24)
-                        .font(.titleLarge)
-                    Text(NSLocalizedString("function_best_players_all_games", comment: ""))
-                        .font(.labelMedium)
-                    Spacer()
-                    if isLocked {
-                        Image(systemName: "lock.fill")
-                            .font(.caption2)
-                            .foregroundColor(AppColor.outline)
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .frame(maxWidth: .infinity)
-                .background(AppColor.surface)
-                .cornerRadius(8)
-            }
-            .buttonStyle(.plain)
-            .foregroundColor(isLocked ? AppColor.outline : AppColor.onSurface)
 
             Button {
                 viewModel.action(.onClearAllGamesResultsClicked)
