@@ -302,6 +302,8 @@
 
 // MARK: - Settings
 "settings_item_language" = "Тіл";
+"settings_item_notifications" = "Хабарландырулар";
+"settings_notifications_desc" = "Қосымша фонда тұрғанда таймер дыбыстары";
 "settings_item_share" = "Бөлісу";
 "settings_item_star" = "Бағалау";
 "settings_item_telegram" = "Telegram тобы";

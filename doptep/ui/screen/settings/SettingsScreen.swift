@@ -6,6 +6,7 @@
 import SwiftUI
 import RevenueCat
 import RevenueCatUI
+import UserNotifications
 
 private let appStoreUrl = "https://apps.apple.com/app/id6758735315"
 
@@ -32,6 +33,8 @@ struct SettingsScreen: View {
                         viewModel.action(.onSettingsItemClicked(item: item))
                     }
                 }
+
+                NotificationSettingsRow()
 
                 if !viewModel.telegramUrl.isEmpty {
                     SettingsCustomRow(
@@ -199,6 +202,72 @@ struct SettingsItemRow: View {
             .padding(16)
             .background(AppColor.surface)
             .cornerRadius(16)
+        }
+    }
+}
+
+// MARK: - Notification Settings Row
+
+struct NotificationSettingsRow: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var status: UNAuthorizationStatus = .notDetermined
+
+    private var isEnabled: Bool {
+        status == .authorized || status == .provisional || status == .ephemeral
+    }
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "bell")
+                .font(.bodySmall)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(NSLocalizedString("settings_item_notifications", comment: ""))
+                    .font(.bodySmall)
+
+                Text(NSLocalizedString("settings_notifications_desc", comment: ""))
+                    .font(.labelSmall)
+                    .foregroundColor(AppColor.outline)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: Binding(
+                get: { isEnabled },
+                set: { _ in onToggleClicked() }
+            ))
+            .labelsHidden()
+            .tint(AppColor.primary)
+        }
+        .foregroundColor(AppColor.onSurface)
+        .padding(16)
+        .background(AppColor.surface)
+        .cornerRadius(16)
+        .onAppear {
+            refreshStatus()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                refreshStatus()
+            }
+        }
+    }
+
+    private func refreshStatus() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                status = settings.authorizationStatus
+            }
+        }
+    }
+
+    private func onToggleClicked() {
+        if status == .notDetermined {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert]) { _, _ in
+                refreshStatus()
+            }
+        } else if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
+            UIApplication.shared.open(url)
         }
     }
 }

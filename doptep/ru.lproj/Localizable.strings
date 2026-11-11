@@ -302,6 +302,8 @@
 
 // MARK: - Settings
 "settings_item_language" = "Язык";
+"settings_item_notifications" = "Уведомления";
+"settings_notifications_desc" = "Звуки таймера, когда приложение на фоне";
 "settings_item_share" = "Поделиться";
 "settings_item_star" = "Оценить";
 "settings_item_telegram" = "Telegram группа";

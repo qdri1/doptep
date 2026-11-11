@@ -302,6 +302,8 @@
 
 // MARK: - Settings
 "settings_item_language" = "Language";
+"settings_item_notifications" = "Notifications";
+"settings_notifications_desc" = "Timer sounds when the app is in the background";
 "settings_item_share" = "Share";
 "settings_item_star" = "Rate";
 "settings_item_telegram" = "Telegram group";
