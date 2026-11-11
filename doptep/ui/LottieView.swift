@@ -16,6 +16,7 @@ struct LottieView: UIViewRepresentable {
     var loopMode: LottieLoopMode = .loop
     var animationSpeed: CGFloat = 1
     var contentMode: UIView.ContentMode = .scaleAspectFit
+    var onCompleted: (() -> Void)? = nil
 
     func makeUIView(context: Context) -> UIView {
         let container = UIView()
@@ -36,12 +37,17 @@ struct LottieView: UIViewRepresentable {
             animationView.centerYAnchor.constraint(equalTo: container.centerYAnchor)
         ])
 
-        animationView.play()
+        animationView.play { finished in
+            if finished {
+                onCompleted?()
+            }
+        }
         return container
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
         guard let animationView = uiView.subviews.first as? LottieAnimationView else { return }
+        if case .playOnce = loopMode { return }
         if !animationView.isAnimationPlaying {
             animationView.play()
         }
