@@ -333,7 +333,8 @@ struct GameScreen: View {
                                     .font(.bodySmall)
                                     .foregroundColor(AppColor.onSurface)
                             }
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 16)
                             .padding(.vertical, 16)
                         }
 
@@ -357,7 +358,8 @@ struct GameScreen: View {
                                     .font(.bodySmall)
                                     .foregroundColor(AppColor.onSurface)
                             }
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 16)
                             .padding(.vertical, 16)
                         }
                     }
