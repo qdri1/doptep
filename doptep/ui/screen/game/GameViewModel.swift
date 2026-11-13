@@ -488,6 +488,7 @@ final class GameViewModel: ObservableObject {
                 try await updatePlayersBlock()
                 try await updateLiveGameBlock()
                 try gameRepository.saveContext()
+                showLimitPaywallIfNeeded()
             } catch {
                 snackbarMessage = "Error finishing game"
             }
@@ -944,6 +945,14 @@ final class GameViewModel: ObservableObject {
             uiLimited = false
         }
         uiState.uiLimited = uiLimited
+    }
+
+    private static var limitPaywallShownThisSession = false
+
+    private func showLimitPaywallIfNeeded() {
+        guard uiState.uiLimited, !Self.limitPaywallShownThisSession else { return }
+        Self.limitPaywallShownThisSession = true
+        effect = .openActivationScreen
     }
 
     private func setNextPlayingTeamsUiModelList() {
