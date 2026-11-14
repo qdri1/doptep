@@ -418,3 +418,9 @@
 "sound_setting_action_voice_description" = "Голос называет имя игрока при голе, пасе, сейве и других действиях";
 "sound_setting_action_sounds" = "Звуки после действий";
 "sound_setting_action_sounds_description" = "Звуки трибун после гола, паса и других действий";
+
+// MARK: - Notification rationale
+"notification_rationale_title" = "Уведомления таймера";
+"notification_rationale_message" = "Уведомления нужны, чтобы звуки таймера («Осталась одна минута», «Играем до аута») звучали, даже когда приложение свёрнуто или экран заблокирован.";
+"notification_rationale_allow" = "Разрешить";
+"notification_rationale_later" = "Не сейчас";

@@ -418,3 +418,9 @@
 "sound_setting_action_voice_description" = "Гол, пас, сейв және басқа әрекеттерде ойыншының атын айту";
 "sound_setting_action_sounds" = "Әрекеттен кейінгі дыбыстар";
 "sound_setting_action_sounds_description" = "Гол, пас және басқа әрекеттерден кейінгі жанкүйерлер дыбыстары";
+
+// MARK: - Notification rationale
+"notification_rationale_title" = "Таймер хабарландырулары";
+"notification_rationale_message" = "Хабарландырулар қосымша фонда тұрғанда немесе экран өшіп тұрған кезде де таймер дыбыстары («Бір минут қалды», «Аутқа дейін ойнаймыз») естілуі үшін қажет.";
+"notification_rationale_allow" = "Рұқсат беру";
+"notification_rationale_later" = "Қазір емес";

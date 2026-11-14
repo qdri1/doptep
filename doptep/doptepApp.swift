@@ -74,11 +74,6 @@ struct doptepApp: App {
                         .zIndex(1)
                 }
             }
-            .onChange(of: showLanguagePicker) { _, isShown in
-                if !isShown {
-                    AudioManager.shared.requestNotificationPermission()
-                }
-            }
         }
         .modelContainer(container)
     }
@@ -94,8 +89,6 @@ struct doptepApp: App {
             showLanguagePicker = true
             return
         }
-
-        AudioManager.shared.requestNotificationPermission()
 
         let currentBuild = Int(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1") ?? 1
         showUpdateDialog = RemoteConfigManager.shared.isAppUpdateRequired

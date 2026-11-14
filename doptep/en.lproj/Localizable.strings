@@ -418,3 +418,9 @@
 "sound_setting_action_voice_description" = "Announces the player name on goals, passes, saves and other actions";
 "sound_setting_action_sounds" = "Sounds after actions";
 "sound_setting_action_sounds_description" = "Crowd sounds after goals, passes and other actions";
+
+// MARK: - Notification rationale
+"notification_rationale_title" = "Timer notifications";
+"notification_rationale_message" = "We'll use notifications to play the timer sounds (“1 minute left”, “Play until the ball is out”) even when the app is in the background or the screen is locked.";
+"notification_rationale_allow" = "Allow";
+"notification_rationale_later" = "Not now";
