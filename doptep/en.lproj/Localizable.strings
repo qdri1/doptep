@@ -424,3 +424,35 @@
 "notification_rationale_message" = "We'll use notifications to play the timer sounds (“1 minute left”, “Play until the ball is out”) even when the app is in the background or the screen is locked.";
 "notification_rationale_allow" = "Allow";
 "notification_rationale_later" = "Not now";
+
+// MARK: - Paywall
+"paywall_title" = "Dop Tep Premium";
+"paywall_subtitle" = "Player stats, goal voice-overs, best players and champions — no limits";
+"paywall_badge_best" = "Best value";
+"paywall_badge_one_time" = "No subscription";
+"paywall_badge_save" = "Save %d%%";
+"paywall_per_month" = "≈ %@ per month";
+"paywall_period_month" = "per month";
+"paywall_period_year" = "per year";
+"paywall_period_forever" = "forever";
+"paywall_period_day" = "for 24 hours";
+"paywall_note_subscription" = "Renews automatically unless cancelled at least 24 hours before the end of the period. Cancel anytime in your Apple ID settings";
+"paywall_note_one_time" = "One-time payment via the App Store, no recurring charges";
+"paywall_terms" = "Terms";
+"paywall_legal_text" = "The subscription renews automatically unless cancelled at least 24 hours before the end of the current period. Payment will be charged to your Apple ID at confirmation of purchase. You can manage your subscription in your Apple ID settings.";
+"paywall_privacy" = "Privacy";
+"activation_plan_4" = "One Day Access";
+"paywall_feature_results" = "Player results";
+"paywall_feature_results_desc" = "All players results are available.";
+"paywall_feature_best_players" = "Best players";
+"paywall_feature_best_players_desc" = "We will determine a list of the best players for you.";
+"paywall_feature_champions" = "Champions and titles";
+"paywall_feature_champions_desc" = "The winning team and a title for every player.";
+"paywall_feature_history" = "History of games";
+"paywall_feature_history_desc" = "Scores, winners, match duration, and all key events.";
+"paywall_feature_voice" = "Name voice-over and celebration sounds";
+"paywall_feature_voice_desc" = "Voice-over goal, assist, save, dribble, shot, pass.";
+"paywall_feature_phrases" = "Voice-over for the phrases";
+"paywall_feature_phrases_desc" = "“One minute remaining” and “Play until the ball is out” phrases.";
+"paywall_feature_sounds" = "List of football sounds";
+"paywall_feature_sounds_desc" = "Interesting historical football sounds.";

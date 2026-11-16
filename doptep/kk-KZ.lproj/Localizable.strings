@@ -424,3 +424,35 @@
 "notification_rationale_message" = "Хабарландырулар қосымша фонда тұрғанда немесе экран өшіп тұрған кезде де таймер дыбыстары («Бір минут қалды», «Аутқа дейін ойнаймыз») естілуі үшін қажет.";
 "notification_rationale_allow" = "Рұқсат беру";
 "notification_rationale_later" = "Қазір емес";
+
+// MARK: - Paywall
+"paywall_title" = "Dop Tep Premium";
+"paywall_subtitle" = "Ойыншылар статистикасы, голдарды дыбыстау, үздік ойыншылар мен чемпиондар — бәрі шектеусіз";
+"paywall_badge_best" = "Ең тиімді";
+"paywall_badge_one_time" = "Жазылымсыз";
+"paywall_badge_save" = "Үнемдеу %d%%";
+"paywall_per_month" = "Айына ≈ %@";
+"paywall_period_month" = "айына";
+"paywall_period_year" = "жылына";
+"paywall_period_forever" = "мәңгілік";
+"paywall_period_day" = "24 сағатқа";
+"paywall_note_subscription" = "Кезең аяқталуына кемінде 24 сағат қалғанда тоқтатылмаса, автоматты түрде ұзартылады. Apple ID баптауларында кез келген уақытта тоқтатуға болады";
+"paywall_note_one_time" = "App Store арқылы бір реттік төлем, автоматты төлемдерсіз";
+"paywall_terms" = "Шарттар";
+"paywall_legal_text" = "Жазылым ағымдағы кезең аяқталуына кемінде 24 сағат қалғанда тоқтатылмаса, автоматты түрде ұзартылады. Төлем сатып алуды растаған кезде Apple ID есептік жазбаңыздан алынады. Жазылымды Apple ID баптауларында басқаруға болады.";
+"paywall_privacy" = "Құпиялылық";
+"activation_plan_4" = "1 күн";
+"paywall_feature_results" = "Ойыншылардың нәтижелері";
+"paywall_feature_results_desc" = "Барлық ойыншылардың нәтижелері қолжетімді.";
+"paywall_feature_best_players" = "Үздік ойыншылар";
+"paywall_feature_best_players_desc" = "Сіздер үшін ең үздік ойыншылардың тізімін анықтап береміз.";
+"paywall_feature_champions" = "Чемпиондар мен атақтар";
+"paywall_feature_champions_desc" = "Жеңімпаз команда және әр ойыншыға берілетін атақ.";
+"paywall_feature_history" = "Ойындар тарихы";
+"paywall_feature_history_desc" = "Есеп, жеңімпаз, ойын уақыты және барлық маңызды сәттер.";
+"paywall_feature_voice" = "Аттың дыбысталуы және мерекелік дыбыстар";
+"paywall_feature_voice_desc" = "Дыбыстық сүйемелдеу: гол, ассист, сейв, дриблинг, соққы, пас.";
+"paywall_feature_phrases" = "Фразаларды дыбыстау";
+"paywall_feature_phrases_desc" = "«Бір минут қалды» және «Аутқа дейін ойнаймыз» фразалары.";
+"paywall_feature_sounds" = "Футбол дыбыстарының тізімі";
+"paywall_feature_sounds_desc" = "Қызықты тарихи футбол дыбыстары.";

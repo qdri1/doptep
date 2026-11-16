@@ -5,7 +5,6 @@
 
 import SwiftUI
 import RevenueCat
-import RevenueCatUI
 import UserNotifications
 
 struct GameScreen: View {
@@ -42,11 +41,9 @@ struct GameScreen: View {
     @State private var showActivationScreen = false
     @State private var showPaywall = false
     @State private var pendingActivationAfterPaywall = false
-    @State private var showNoEntitlementAlert = false
     @State private var gameResultsGameId: UUID?
     @State private var showLeftTeamChangeDropdown = false
     @State private var showRightTeamChangeDropdown = false
-    @State private var restoreFailureMessage: String?
 
     @State private var currentPlayerResult: PlayerResultUiModel?
     @State private var showTeamResultSheet = false
@@ -280,35 +277,6 @@ struct GameScreen: View {
                     .presentationDetents([.medium])
                 }
             }
-            .sheet(isPresented: $showPaywall, onDismiss: {
-                if pendingActivationAfterPaywall {
-                    pendingActivationAfterPaywall = false
-                    showActivationScreen = true
-                }
-            }) {
-                RevenueCatUI.PaywallView()
-                    .onPurchaseCompleted { customerInfo in
-                        let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                        if success {
-                            pendingActivationAfterPaywall = true
-                            showPaywall = false
-                        } else {
-                            showNoEntitlementAlert = true
-                        }
-                    }
-                    .onRestoreCompleted { customerInfo in
-                        let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                        if success {
-                            pendingActivationAfterPaywall = true
-                            showPaywall = false
-                        } else {
-                            showNoEntitlementAlert = true
-                        }
-                    }
-                    .onRestoreFailure { error in
-                        restoreFailureMessage = error.localizedDescription
-                    }
-            }
             .sheet(isPresented: $showStayTeamSheet) {
                 if let liveGame = viewModel.uiState.liveGameUiModel {
                     VStack(spacing: 0) {
@@ -391,6 +359,19 @@ struct GameScreen: View {
             .navigationDestination(isPresented: $showSoundSettingsScreen) {
                 SoundSettingsScreen()
             }
+            .navigationDestination(isPresented: $showPaywall) {
+                PaywallScreen {
+                    pendingActivationAfterPaywall = true
+                    showPaywall = false
+                }
+            }
+            .onChange(of: showPaywall) { _, isShown in
+                // After a purchase the paywall is popped first, then the activation screen is shown.
+                if !isShown && pendingActivationAfterPaywall {
+                    pendingActivationAfterPaywall = false
+                    showActivationScreen = true
+                }
+            }
     }
 
     // MARK: - alert
@@ -407,15 +388,6 @@ struct GameScreen: View {
                 }
             } message: {
                 Text(NSLocalizedString("notification_rationale_message", comment: ""))
-            }
-            .alert(NSLocalizedString("no_active_entitlement", comment: ""), isPresented: $showNoEntitlementAlert) {
-                Button("OK", role: .cancel) {}
-            }
-            .alert(restoreFailureMessage ?? "", isPresented: Binding(
-                get: { restoreFailureMessage != nil },
-                set: { if !$0 { restoreFailureMessage = nil } }
-            )) {
-                Button("OK", role: .cancel) {}
             }
     }
 

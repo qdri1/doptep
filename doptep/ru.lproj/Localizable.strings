@@ -424,3 +424,35 @@
 "notification_rationale_message" = "Уведомления нужны, чтобы звуки таймера («Осталась одна минута», «Играем до аута») звучали, даже когда приложение свёрнуто или экран заблокирован.";
 "notification_rationale_allow" = "Разрешить";
 "notification_rationale_later" = "Не сейчас";
+
+// MARK: - Paywall
+"paywall_title" = "Dop Tep Premium";
+"paywall_subtitle" = "Статистика игроков, озвучка голов, лучшие игроки и чемпионы — без ограничений";
+"paywall_badge_best" = "Лучший выбор";
+"paywall_badge_one_time" = "Без подписки";
+"paywall_badge_save" = "Экономия %d%%";
+"paywall_per_month" = "≈ %@ в месяц";
+"paywall_period_month" = "в месяц";
+"paywall_period_year" = "в год";
+"paywall_period_forever" = "навсегда";
+"paywall_period_day" = "на 24 часа";
+"paywall_note_subscription" = "Продлевается автоматически, если не отменить минимум за 24 часа до конца периода. Отменить можно в любой момент в настройках Apple ID";
+"paywall_note_one_time" = "Разовая оплата через App Store, без автосписаний";
+"paywall_terms" = "Условия";
+"paywall_legal_text" = "Подписка автоматически продлевается, если не отменена минимум за 24 часа до окончания текущего периода. Оплата будет списана с вашего Apple ID при подтверждении покупки. Управлять подпиской можно в настройках Apple ID.";
+"paywall_privacy" = "Конфиденциальность";
+"activation_plan_4" = "1 день";
+"paywall_feature_results" = "Результаты игроков";
+"paywall_feature_results_desc" = "Доступны результаты всех игроков.";
+"paywall_feature_best_players" = "Лучшие игроки";
+"paywall_feature_best_players_desc" = "Мы определим для вас список лучших игроков.";
+"paywall_feature_champions" = "Чемпионы и звания";
+"paywall_feature_champions_desc" = "Команда-победитель и звание для каждого игрока.";
+"paywall_feature_history" = "История игр";
+"paywall_feature_history_desc" = "Счёт, победитель, время игры и все ключевые события.";
+"paywall_feature_voice" = "Озвучка имени и звуки празднования";
+"paywall_feature_voice_desc" = "Голосовое сопровождение: гол, ассист, сейв, дриблинг, удар, пас.";
+"paywall_feature_phrases" = "Озвучка фраз";
+"paywall_feature_phrases_desc" = "Фразы «Осталась одна минута» и «Играем до аута».";
+"paywall_feature_sounds" = "Список футбольных звуков";
+"paywall_feature_sounds_desc" = "Интересные исторические футбольные звуки.";

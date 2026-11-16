@@ -5,7 +5,6 @@
 
 import SwiftUI
 import RevenueCat
-import RevenueCatUI
 import UserNotifications
 
 private let appStoreUrl = "https://apps.apple.com/app/id6758735315"
@@ -18,8 +17,6 @@ struct SettingsScreen: View {
     @State private var navigateToActivation = false
     @State private var showPaywall = false
     @State private var pendingNavigationAfterPaywall = false
-    @State private var showNoEntitlementAlert = false
-    @State private var restoreFailureMessage: String?
     @State private var showActivationCodeDialog = false
     @State private var showActivationSuccessAlert = false
     @State private var showActivationErrorAlert = false
@@ -86,34 +83,19 @@ struct SettingsScreen: View {
             ActivationScreen()
                 .toolbar(.hidden, for: .tabBar)
         }
-        .sheet(isPresented: $showPaywall, onDismiss: {
-            if pendingNavigationAfterPaywall {
+        .navigationDestination(isPresented: $showPaywall) {
+            PaywallScreen {
+                pendingNavigationAfterPaywall = true
+                showPaywall = false
+            }
+            .toolbar(.hidden, for: .tabBar)
+        }
+        .onChange(of: showPaywall) { _, isShown in
+            // After a purchase the paywall is popped first, then the activation screen is pushed.
+            if !isShown && pendingNavigationAfterPaywall {
                 pendingNavigationAfterPaywall = false
                 navigateToActivation = true
             }
-        }) {
-            RevenueCatUI.PaywallView()
-                .onPurchaseCompleted { customerInfo in
-                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                    if success {
-                        pendingNavigationAfterPaywall = true
-                        showPaywall = false
-                    } else {
-                        showNoEntitlementAlert = true
-                    }
-                }
-                .onRestoreCompleted { customerInfo in
-                    let success = RevenueCatManager.shared.updateBillingType(from: customerInfo)
-                    if success {
-                        pendingNavigationAfterPaywall = true
-                        showPaywall = false
-                    } else {
-                        showNoEntitlementAlert = true
-                    }
-                }
-                .onRestoreFailure { error in
-                    restoreFailureMessage = error.localizedDescription
-                }
         }
         .sheet(isPresented: $showActivationCodeDialog) {
             ActivationCodeSheet { code in
@@ -126,15 +108,6 @@ struct SettingsScreen: View {
             Button("OK", role: .cancel) {}
         }
         .alert(NSLocalizedString("activation_code_error", comment: ""), isPresented: $showActivationErrorAlert) {
-            Button("OK", role: .cancel) {}
-        }
-        .alert(NSLocalizedString("no_active_entitlement", comment: ""), isPresented: $showNoEntitlementAlert) {
-            Button("OK", role: .cancel) {}
-        }
-        .alert(restoreFailureMessage ?? "", isPresented: Binding(
-            get: { restoreFailureMessage != nil },
-            set: { if !$0 { restoreFailureMessage = nil } }
-        )) {
             Button("OK", role: .cancel) {}
         }
     }
