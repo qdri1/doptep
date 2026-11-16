@@ -15,6 +15,9 @@
 "home_game_time" = "Тайм уақыты:";
 "home_game_rule" = "Ереже:";
 "game_empty" = "Сізде әлі ойындар жоқ";
+"game_empty_subtitle" = "Алғашқы ойынды қосыңыз — командалар мен ойыншыларды қосыңыз, ал Dop Tep есепті, таймерді және статистиканы жүргізеді.";
+"home_teams_count" = "%d команда";
+"home_updated" = "Жаңартылды: %@";
 "add_game" = "Ойын қосу";
 "update_game" = "Ойынды өңдеу";
 "time_in_minutes" = "%d минут";

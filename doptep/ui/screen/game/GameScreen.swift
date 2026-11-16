@@ -1486,7 +1486,8 @@ struct GameScreen: View {
 
 /// A short-sleeve football kit silhouette: rounded V-collar, softly curved
 /// sleeve ends, gently tapered torso — traced clockwise from the neckline.
-private struct ScoreboardBackground: View {
+/// Also used by the game cards on HomeScreen.
+struct ScoreboardBackground: View {
     let surface: PitchSurface
 
     var body: some View {

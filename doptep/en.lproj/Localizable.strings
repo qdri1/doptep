@@ -15,6 +15,9 @@
 "home_game_time" = "Time:";
 "home_game_rule" = "Rule:";
 "game_empty" = "You do not have any games yet";
+"game_empty_subtitle" = "Create your first game — add teams and players, and Dop Tep will keep the score, timer and stats.";
+"home_teams_count" = "%d teams";
+"home_updated" = "Updated %@";
 "add_game" = "Add game";
 "update_game" = "Edit game";
 "time_in_minutes" = "%d minutes";

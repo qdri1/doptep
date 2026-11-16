@@ -15,6 +15,9 @@
 "home_game_time" = "Время тайма:";
 "home_game_rule" = "Правила:";
 "game_empty" = "У вас пока нет игр";
+"game_empty_subtitle" = "Создайте первую игру — добавьте команды и игроков, и Dop Tep будет вести счёт, таймер и статистику.";
+"home_teams_count" = "%d команды";
+"home_updated" = "Обновлено %@";
 "add_game" = "Добавить игру";
 "update_game" = "Редактировать игру";
 "time_in_minutes" = "%d минут";
