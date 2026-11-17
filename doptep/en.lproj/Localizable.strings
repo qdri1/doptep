@@ -320,7 +320,7 @@
 "activation_orange_text" = "You are using a limited version. Some features are unavailable. Upgrade to the full version.";
 "activation_green_text" = "Limit after 5 games played";
 "activation_green_text_team2" = "Limit after 1 half played";
-"activation_button" = "Activate";
+"activation_button" = "Upgrade";
 "activation_title" = "Activation";
 "activation_text_title" = "What's included?";
 "activation_text_1" = "Name voice-over and celebration sounds (goal, assist, etc.)";
@@ -332,8 +332,8 @@
 "activation_text_button" = "Show prices";
 "activation_plan_title" = "Choose your plan";
 "activation_plan_1" = "Monthly";
-"activation_plan_2" = "Yearly";
-"activation_plan_3" = "Unlimited";
+"activation_plan_2" = "Annual";
+"activation_plan_3" = "Lifetime";
 "activation_plan_button" = "Buy";
 "activation_plan_desc_subscribe" = "Subscription";
 "activation_plan_desc_lifetime" = "One-time purchase";

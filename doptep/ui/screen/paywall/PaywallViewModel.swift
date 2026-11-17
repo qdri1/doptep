@@ -53,7 +53,9 @@ final class PaywallViewModel: ObservableObject {
               monthly > 0 else { return nil }
         let monthlyPerYear = monthly * 12
         guard monthlyPerYear > yearly else { return nil }
-        let percent = NSDecimalNumber(decimal: (monthlyPerYear - yearly) / monthlyPerYear * 100).intValue
+        
+        let ratio = NSDecimalNumber(decimal: (monthlyPerYear - yearly) / monthlyPerYear).doubleValue
+        let percent = Int(ratio * 100)
         return percent > 0 ? percent : nil
     }
 

@@ -331,9 +331,9 @@
 "activation_text_6" = "Лучшие игроки";
 "activation_text_button" = "Показать цены";
 "activation_plan_title" = "Выберите ваш план";
-"activation_plan_1" = "Месяц";
-"activation_plan_2" = "Год";
-"activation_plan_3" = "Безлимит";
+"activation_plan_1" = "Ежемесячный";
+"activation_plan_2" = "Ежегодный";
+"activation_plan_3" = "Пожизненный";
 "activation_plan_button" = "Купить";
 "activation_plan_desc_subscribe" = "Подписка";
 "activation_plan_desc_lifetime" = "Одноразовая покупка";
