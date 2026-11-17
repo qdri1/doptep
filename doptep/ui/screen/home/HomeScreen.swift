@@ -197,16 +197,7 @@ private struct GameCard: View {
                     .font(.custom("Montserrat-Medium", size: 12))
                     .foregroundColor(.white.opacity(0.7))
             }
-
-            Spacer(minLength: 8)
-
-            Text(game.gameFormat.rawValue)
-                .font(.custom("Montserrat-Bold", size: 20))
-                .foregroundColor(.white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -216,7 +207,11 @@ private struct GameCard: View {
     private var details: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Chips wrap to the next line when they don't fit (e.g. "100 минут").
-            ChipsFlowLayout(spacing: 8) {
+            HStack(spacing: 8) {
+                InfoChip(
+                    icon: "sportscourt.fill",
+                    text: game.gameFormat.rawValue
+                )
                 InfoChip(
                     icon: "person.3.fill",
                     text: String(format: NSLocalizedString("home_teams_count", comment: ""), game.teamQuantity.rawValue)
@@ -225,17 +220,12 @@ private struct GameCard: View {
                     icon: "stopwatch",
                     text: String(format: NSLocalizedString("time_in_minutes", comment: ""), game.timeInMinutes)
                 )
-                InfoChip(
-                    icon: "sportscourt.fill",
-                    text: NSLocalizedString(game.pitchSurface.localizationKey, comment: "")
-                )
             }
 
-            HStack(alignment: .top, spacing: 8) {
+            HStack(alignment: .center, spacing: 8) {
                 Image(systemName: "list.bullet.rectangle")
                     .font(.labelSmall)
                     .foregroundColor(AppColor.primary)
-                    .padding(.top, 1)
                 Text(NSLocalizedString(game.gameRule.localizationKey, comment: ""))
                     .font(.labelSmall)
                     .foregroundColor(AppColor.onSurfaceVariant)
