@@ -311,6 +311,7 @@
 "settings_item_star" = "Rate";
 "settings_item_telegram" = "Telegram group";
 "settings_item_activation" = "Manage subscription";
+"settings_item_activate_full" = "Upgrade to the full version";
 "settings_version" = "Version";
 "choose_language" = "Choose language";
 "telegram_not_installed" = "Telegram is not installed!";

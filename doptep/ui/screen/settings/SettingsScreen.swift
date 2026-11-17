@@ -11,6 +11,7 @@ private let appStoreUrl = "https://apps.apple.com/app/id6758735315"
 
 struct SettingsScreen: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @ObservedObject private var billingManager = BillingManager.shared
 
     @State private var showLanguageSelection = false
     @State private var showShareSheet = false
@@ -26,7 +27,7 @@ struct SettingsScreen: View {
         ScrollView {
             VStack(spacing: 12) {
                 ForEach(SettingsItemType.allCases, id: \.self) { item in
-                    SettingsItemRow(item: item) {
+                    SettingsItemRow(item: item, title: title(for: item)) {
                         viewModel.action(.onSettingsItemClicked(item: item))
                     }
                 }
@@ -112,6 +113,13 @@ struct SettingsScreen: View {
         }
     }
 
+    private func title(for item: SettingsItemType) -> String {
+        if item == .activation && !billingManager.billingType.isPremium {
+            return NSLocalizedString("settings_item_activate_full", comment: "")
+        }
+        return item.displayName
+    }
+
     private func handleEffect(_ effect: SettingsEffect) {
         switch effect {
         case .showSelectLanguage:
@@ -154,6 +162,7 @@ struct SettingsScreen: View {
 
 struct SettingsItemRow: View {
     let item: SettingsItemType
+    var title: String? = nil
     let action: () -> Void
 
     var body: some View {
@@ -162,8 +171,10 @@ struct SettingsItemRow: View {
                 Image(systemName: item.iconName)
                     .font(.bodySmall)
 
-                Text(item.displayName)
+                Text(title ?? item.displayName)
                     .font(.bodySmall)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
                 Spacer()
 

@@ -311,6 +311,7 @@
 "settings_item_star" = "Бағалау";
 "settings_item_telegram" = "Telegram тобы";
 "settings_item_activation" = "Жазылымды басқару";
+"settings_item_activate_full" = "Толық нұсқаны алу";
 "settings_version" = "Нұсқа";
 "choose_language" = "Тілді таңдаңыз";
 "telegram_not_installed" = "Сізде Telegram орнатылмаған!";

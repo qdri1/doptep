@@ -311,6 +311,7 @@
 "settings_item_star" = "Оценить";
 "settings_item_telegram" = "Telegram группа";
 "settings_item_activation" = "Управление подпиской";
+"settings_item_activate_full" = "Активировать полную версию";
 "settings_version" = "Версия";
 "choose_language" = "Выберите язык";
 "telegram_not_installed" = "У Вас не установлен Telegram!";
