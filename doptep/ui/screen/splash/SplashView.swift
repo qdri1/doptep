@@ -19,7 +19,8 @@ struct SplashView: View {
     private static let slogans = [
         "Oyındarıñ qızıqtı da, mändi ötsin",
         "Futbolımız dami bersin",
-        "Futbol — bärimizdi biriktiretin oyın"
+        "Futbol — bärimizdi biriktiretin oyın",
+        "Dop Tep – esep, taımer jáne statıstıkany siz úshin júrgizedi"
     ]
 
     private static let sceneAspectRatio: CGFloat = 1056.0 / 628.0
