@@ -175,8 +175,7 @@ struct OnboardingScreen: View {
 
     private var welcomeStep: some View {
         // Same 24pt gap between the logo, the title and the description.
-        VStack(spacing: 24) {
-            Spacer()
+        CenteredStepScroll {
             Image("app_logo")
                 .resizable()
                 .frame(width: 112, height: 112)
@@ -190,10 +189,8 @@ struct OnboardingScreen: View {
                 .font(.bodySmall)
                 .foregroundColor(AppColor.onSurfaceVariant)
                 .fixedSize(horizontal: false, vertical: true)
-            Spacer()
         }
         .multilineTextAlignment(.center)
-        .padding(.horizontal, 24)
     }
 
     private var rotationStep: some View {
@@ -251,14 +248,13 @@ struct OnboardingScreen: View {
             TeamsLeaderboardPreview()
             LeaderboardPreview()
             FeatureBullet(icon: "tablecells", textKey: "onboarding_stats_bullet_teams")
-            FeatureBullet(icon: "trophy.fill", textKey: "onboarding_stats_bullet_best", isPro: true)
-            FeatureBullet(icon: "crown.fill", textKey: "onboarding_stats_bullet_champions", isPro: true)
+            FeatureBullet(icon: "crown.fill", textKey: "onboarding_stats_bullet_best", isPro: true)
+            FeatureBullet(icon: "trophy.fill", textKey: "onboarding_stats_bullet_champions", isPro: true)
         }
     }
 
     private var notificationsStep: some View {
-        VStack(spacing: 24) {
-            Spacer()
+        CenteredStepScroll {
             Image(systemName: "bell.badge.fill")
                 .font(.system(size: 44, weight: .semibold))
                 .foregroundColor(AppColor.primary)
@@ -282,9 +278,7 @@ struct OnboardingScreen: View {
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            Spacer()
         }
-        .padding(.horizontal, 24)
     }
 
     private var isCenteredStep: Bool {
@@ -319,6 +313,25 @@ private struct StepScroll<Content: View>: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
+        }
+    }
+}
+
+/// Content centred vertically on the screen; scrolls when it doesn't fit
+/// (small screens, large Dynamic Type, long Kazakh texts).
+private struct CenteredStepScroll<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        GeometryReader { proxy in
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 24) {
+                    content
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity, minHeight: proxy.size.height)
+            }
         }
     }
 }
@@ -529,7 +542,7 @@ private struct TeamsLeaderboardPreview: View {
                 HStack(spacing: 0) {
                     HStack(spacing: 6) {
                         if index == 0 {
-                            Image(systemName: "crown.fill")
+                            Image(systemName: "trophy.fill")
                                 .foregroundColor(.orange)
                         }
                         Text(String(format: NSLocalizedString("team_number", comment: ""), "\(row.number)"))
@@ -593,7 +606,7 @@ private struct LeaderboardPreview: View {
                 HStack {
                     HStack(spacing: 6) {
                         if index == 0 {
-                            Image(systemName: "trophy.fill")
+                            Image(systemName: "crown.fill")
                                 .foregroundColor(.orange)
                         }
                         Text(NSLocalizedString(row.nameKey, comment: ""))
