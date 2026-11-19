@@ -424,7 +424,7 @@
 "sound_setting_action_sounds_description" = "Звуки трибун после гола, паса и других действий";
 
 // MARK: - Notification rationale
-"notification_rationale_title" = "Уведомления таймера";
+"notification_rationale_title" = "Разрешение на уведомления таймера";
 "notification_rationale_message" = "Уведомления нужны, чтобы звуки таймера («Осталась одна минута», «Играем до аута») звучали, даже когда приложение свёрнуто или экран заблокирован.";
 "notification_rationale_allow" = "Разрешить";
 "notification_rationale_later" = "Не сейчас";
@@ -460,3 +460,28 @@
 "paywall_feature_phrases_desc" = "Фразы «Осталась одна минута» и «Играем до аута».";
 "paywall_feature_sounds" = "Список футбольных звуков";
 "paywall_feature_sounds_desc" = "Интересные исторические футбольные звуки.";
+// MARK: - Onboarding
+"onboarding_start_button" = "Начать";
+"onboarding_continue_button" = "Продолжить";
+"onboarding_welcome_title" = "Ваш футбол — как настоящий матч";
+"onboarding_welcome_subtitle" = "Dop Tep — помощник для футбола с друзьями. Вы собираете команды, а приложение ведёт счёт и таймер, само определяет, кто играет следующим, считает статистику команд и игроков и озвучивает голы.";
+"onboarding_rotation_title" = "Приложение само определяет, кто играет следующим";
+"onboarding_rotation_subtitle" = "Выберите правила — Dop Tep сам ведёт очередь команд, счёт и серии побед.";
+"onboarding_rotation_bullet_rules" = "Победитель остаётся, ровно 2 игры или каждый с каждым — выберите свои правила для 3 и 4 команд";
+"onboarding_rotation_bullet_timer" = "Таймер работает, даже когда телефон в кармане";
+"onboarding_rotation_bullet_voice" = "Голосовое уведомление «Осталась одна минута» и «Играем до аута»";
+"onboarding_sounds_title" = "Как на стадионе";
+"onboarding_sounds_subtitle" = "Dop Tep озвучивает автора гола по имени и включает звуки празднования. Нажмите и послушайте.";
+"onboarding_sounds_demo_button" = "Послушать озвучку гола";
+"onboarding_stats_title" = "Кто лучший — решают цифры";
+"onboarding_stats_subtitle" = "Вы введёте счёт, а таблицы команд и игроков заполняются сами.";
+"onboarding_stats_bullet_teams" = "Таблица команд: очки, победы, ничьи и разница забитых/пропущенных мячей";
+"onboarding_stats_bullet_best" = "Лучшие игроки — бомбардир, ассистент, лучший сейв и отбор определяет само приложение";
+"onboarding_notifications_hint" = "Уведомления можно включить или выключить в любой момент в Настройках.";
+"onboarding_stats_bullet_champions" = "Чемпионы — команда-победитель и звание для каждого игрока по итогам игры";
+"onboarding_sample_player_1" = "Алихан";
+"onboarding_sample_player_2" = "Данияр";
+"onboarding_sample_player_3" = "Ерлан";
+"onboarding_sample_team_1" = "К-1";
+"onboarding_sample_team_2" = "К-2";
+"onboarding_sample_next_teams" = "К-1 – К-3";

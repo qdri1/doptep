@@ -16,9 +16,12 @@ struct doptepApp: App {
 
     let container: ModelContainer
     @StateObject private var languageManager = LanguageManager()
-    @State private var showLanguagePicker = false
     @State private var showUpdateDialog = false
     @State private var showSplash = true
+    @State private var showOnboarding = false
+    /// Onboarding (it starts with the language choice) is shown only on a fresh install.
+    @State private var needsOnboarding = !OnboardingStorage.shared.isCompleted
+        && (UserDefaults.standard.string(forKey: "app_language") == nil || OnboardingStorage.shared.isStarted)
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -49,11 +52,6 @@ struct doptepApp: App {
                         RevenueCatManager.shared.updateLocale(language)
                         AudioManager.shared.setLanguage(language)
                     }
-                    .sheet(isPresented: $showLanguagePicker) {
-                        LanguageSelectionSheet(showCheckmark: false)
-                            .environmentObject(languageManager)
-                            .presentationDetents([.medium])
-                    }
                     .alert(NSLocalizedString("update_required_title", comment: ""), isPresented: $showUpdateDialog) {
                         Button(NSLocalizedString("update_button_update", comment: "")) {
                             if let url = URL(string: "https://apps.apple.com/app/id6758735315") {
@@ -68,6 +66,14 @@ struct doptepApp: App {
                         }
                     }
 
+                if showOnboarding {
+                    OnboardingScreen(onFinished: finishOnboarding)
+                        .environmentObject(languageManager)
+                        .preferredColorScheme(.light)
+                        .transition(.opacity)
+                        .zIndex(2)
+                }
+
                 if showSplash {
                     SplashView(onFinished: finishSplash)
                         .transition(.opacity)
@@ -78,18 +84,31 @@ struct doptepApp: App {
         .modelContainer(container)
     }
 
+    private func finishOnboarding() {
+        needsOnboarding = false
+        withAnimation(.easeOut(duration: 0.3)) {
+            showOnboarding = false
+        }
+        checkForUpdate()
+    }
+
     private func finishSplash() {
         guard showSplash else { return }
         withAnimation(.easeOut(duration: 0.3)) {
             showSplash = false
         }
 
-        let needsLanguage = UserDefaults.standard.string(forKey: "app_language") == nil
-        if needsLanguage {
-            showLanguagePicker = true
+        if needsOnboarding {
+            withAnimation(.easeOut(duration: 0.3)) {
+                showOnboarding = true
+            }
             return
         }
 
+        checkForUpdate()
+    }
+
+    private func checkForUpdate() {
         let currentBuild = Int(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1") ?? 1
         showUpdateDialog = RemoteConfigManager.shared.isAppUpdateRequired
             && RemoteConfigManager.shared.appVersionCode > currentBuild

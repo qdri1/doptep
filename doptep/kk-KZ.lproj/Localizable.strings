@@ -424,7 +424,7 @@
 "sound_setting_action_sounds_description" = "Гол, пас және басқа әрекеттерден кейінгі жанкүйерлер дыбыстары";
 
 // MARK: - Notification rationale
-"notification_rationale_title" = "Таймер хабарландырулары";
+"notification_rationale_title" = "Таймер хабарландыруларына рұқсат беру";
 "notification_rationale_message" = "Хабарландырулар қосымша фонда тұрғанда немесе экран өшіп тұрған кезде де таймер дыбыстары («Бір минут қалды», «Аутқа дейін ойнаймыз») естілуі үшін қажет.";
 "notification_rationale_allow" = "Рұқсат беру";
 "notification_rationale_later" = "Қазір емес";
@@ -460,3 +460,28 @@
 "paywall_feature_phrases_desc" = "«Бір минут қалды» және «Аутқа дейін ойнаймыз» фразалары.";
 "paywall_feature_sounds" = "Футбол дыбыстарының тізімі";
 "paywall_feature_sounds_desc" = "Қызықты тарихи футбол дыбыстары.";
+// MARK: - Onboarding
+"onboarding_start_button" = "Бастау";
+"onboarding_continue_button" = "Жалғастыру";
+"onboarding_welcome_title" = "Сіздің футболыңыз — нағыз матч сияқты";
+"onboarding_welcome_subtitle" = "Dop Tep — достарыңызбен футбол ойнауға арналған көмекші. Сіз командаларды жинайсыз, ал қосымша есеп пен таймерді жүргізеді, келесі кім ойнайтынын өзі анықтайды, командалар мен ойыншылар статистикасын есептейді және голдарды дауыстап хабарлайды.";
+"onboarding_rotation_title" = "Келесі кім ойнайтынын қосымша өзі анықтайды";
+"onboarding_rotation_subtitle" = "Ережені таңдаңыз — Dop Tep командалар кезегін, есепті және жеңістер сериясын өзі жүргізеді.";
+"onboarding_rotation_bullet_rules" = "Жеңген қалады, дәл 2 ойын немесе әркім әркіммен — 3 және 4 командаға өз ережеңізді таңдаңыз";
+"onboarding_rotation_bullet_timer" = "Телефон қалтада тұрса да таймер жұмыс істейді";
+"onboarding_rotation_bullet_voice" = "Дауыстық хабарлама: «Бір минут қалды» және «Аутқа дейін ойнаймыз»";
+"onboarding_sounds_title" = "Стадиондағыдай";
+"onboarding_sounds_subtitle" = "Dop Tep гол авторын атымен атап, мерекелік дыбыстарды қосады. Басып, тыңдап көріңіз.";
+"onboarding_sounds_demo_button" = "Гол хабарламасын тыңдау";
+"onboarding_stats_title" = "Кім үздік — сандар шешеді";
+"onboarding_stats_subtitle" = "Сіз есепті енгізесіз, ал командалар мен ойыншылар кестесі өзі толады.";
+"onboarding_stats_bullet_teams" = "Командалар кестесі: ұпай, жеңіс, тең ойын және соғылған/жіберілген гол айырмасы";
+"onboarding_stats_bullet_best" = "Үздік ойыншылар — бомбардирді, ассистентті, үздік сейв пен отборды қосымшаның өзі анықтайды";
+"onboarding_notifications_hint" = "Хабарландыруларды кез келген уақытта Баптауларда қосуға немесе өшіруге болады.";
+"onboarding_stats_bullet_champions" = "Чемпиондар — жеңімпаз команда және ойын қорытындысы бойынша әр ойыншыға атақ беріледі";
+"onboarding_sample_player_1" = "Алихан";
+"onboarding_sample_player_2" = "Данияр";
+"onboarding_sample_player_3" = "Ерлан";
+"onboarding_sample_team_1" = "К-1";
+"onboarding_sample_team_2" = "К-2";
+"onboarding_sample_next_teams" = "К-1 – К-3";

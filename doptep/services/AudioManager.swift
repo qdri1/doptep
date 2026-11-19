@@ -102,14 +102,6 @@ final class AudioManager: NSObject, AVSpeechSynthesizerDelegate {
         stopSpeaking()
     }
 
-    func getNotificationAuthorizationStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            DispatchQueue.main.async {
-                completion(settings.authorizationStatus)
-            }
-        }
-    }
-
     func requestNotificationPermission(completion: ((Bool) -> Void)? = nil) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert]) { granted, _ in
             DispatchQueue.main.async {

@@ -5,7 +5,6 @@
 
 import SwiftUI
 import RevenueCat
-import UserNotifications
 
 struct GameScreen: View {
     private enum TeamActionSide { case left, right }
@@ -56,8 +55,6 @@ struct GameScreen: View {
     @State private var currentGameHistory: [GameHistoryEntryUiModel] = []
     @State private var showCustomizeColumnsSheet = false
     @State private var hiddenStatOptions: Set<TeamOption> = []
-    @State private var showNotificationRationale = false
-    @AppStorage("notification_rationale_shown") private var notificationRationaleShown = false
 
     var body: some View {
         withConfirmationDialogs(
@@ -102,7 +99,6 @@ struct GameScreen: View {
         .snackbar(message: $viewModel.snackbarMessage)
         .onAppear {
             hiddenStatOptions = HiddenColumnsStorage.load(gameId: viewModel.gameId)
-            checkNotificationPermission()
         }
         .onDisappear {
             viewModel.saveTimerOnExit()
@@ -378,30 +374,6 @@ struct GameScreen: View {
 
     private func withAlerts<Content: View>(_ content: Content) -> some View {
         content
-            .alert(NSLocalizedString("notification_rationale_title", comment: ""), isPresented: $showNotificationRationale) {
-                Button(NSLocalizedString("notification_rationale_allow", comment: "")) {
-                    notificationRationaleShown = true
-                    AudioManager.shared.requestNotificationPermission()
-                }
-                Button(NSLocalizedString("notification_rationale_later", comment: ""), role: .cancel) {
-                    notificationRationaleShown = true
-                }
-            } message: {
-                Text(NSLocalizedString("notification_rationale_message", comment: ""))
-            }
-    }
-
-    // MARK: - Notification permission
-
-    private func checkNotificationPermission() {
-        guard !notificationRationaleShown else { return }
-        AudioManager.shared.getNotificationAuthorizationStatus { status in
-            if status == .notDetermined {
-                showNotificationRationale = true
-            } else {
-                notificationRationaleShown = true
-            }
-        }
     }
 
     // MARK: - confirmationDialog

@@ -313,11 +313,11 @@ final class GameViewModel: ObservableObject {
     private func playGoalSound() {
         let sounds: [String]
         if isKazakhLanguage {
-            sounds = ["oooi_kandai_gol", "suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
+            sounds = ["oooi_kandai_gol", "suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol", "sound_goal_fans"]
         } else if isEnglishLanguage {
-            sounds = ["suiii_full", "gol_gol_gol", "sharip_gol_gol"]
+            sounds = ["suiii_full", "gol_gol_gol", "sound_goal_fans"]
         } else {
-            sounds = ["suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol"]
+            sounds = ["suiii_full", "gol_gol_gol", "satpayev_gol", "sharip_gol_gol", "sound_goal_fans"]
         }
         if let sound = sounds.randomElement() {
             audioManager.playSound(sound)
