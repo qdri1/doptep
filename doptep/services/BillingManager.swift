@@ -45,8 +45,11 @@ final class BillingManager: ObservableObject {
         userDefaults.object(forKey: onedayExpirationKey) as? Date
     }
 
-    func setOnedayExpirationDate() {
-        let expiration = Date().addingTimeInterval(24 * 60 * 60)
+    static let onedayDuration: TimeInterval = 24 * 60 * 60
+
+    /// Access lasts 24 hours from the moment of purchase (not from when the app processed it).
+    func setOnedayExpirationDate(purchaseDate: Date) {
+        let expiration = purchaseDate.addingTimeInterval(Self.onedayDuration)
         userDefaults.set(expiration, forKey: onedayExpirationKey)
     }
 

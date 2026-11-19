@@ -41,20 +41,32 @@ final class RevenueCatManager: NSObject {
             return true
         }
 
-        // Consumables don't create persistent entitlements. Detect a fresh oneday purchase
-        // by checking for a nonSubscription transaction within the last 5 minutes.
-        let fiveMinutesAgo = Date().addingTimeInterval(-5 * 60)
-        let hasFreshOnedayPurchase = customerInfo.nonSubscriptions.contains {
-            $0.productIdentifier == ActivationPlan.oneday.productId && $0.purchaseDate > fiveMinutesAgo
+        // Secret activation code = lifetime access. Checked before "1 day" so a one-day purchase can't
+        // replace it (and then expire to the free version), and so an ended subscription of such a user
+        // falls back to lifetime instead of staying "subscribe".
+        if BillingManager.shared.isSecretActivated() {
+            BillingManager.shared.setBillingType(.lifetime)
+            return true
         }
 
-        if hasFreshOnedayPurchase {
-            BillingManager.shared.setOnedayExpirationDate()
+        // "1 day" is a consumable, so it has no entitlement: access is granted while the latest
+        // one-day transaction is younger than 24 hours, counted from the purchase itself.
+        // (Previously only purchases from the last 5 minutes were accepted, so a payment that reached
+        // the app later — deferred / bank-confirmed payment, app closed right after paying — was
+        // charged without granting access.)
+        let latestOnedayPurchase = customerInfo.nonSubscriptions
+            .filter { $0.productIdentifier == ActivationPlan.oneday.productId }
+            .map(\.purchaseDate)
+            .max()
+
+        if let purchaseDate = latestOnedayPurchase,
+           purchaseDate.addingTimeInterval(BillingManager.onedayDuration) > Date() {
+            BillingManager.shared.setOnedayExpirationDate(purchaseDate: purchaseDate)
             BillingManager.shared.setBillingType(.oneday)
             return true
         }
 
-        if !BillingManager.shared.isSecretActivated() && !BillingManager.shared.hasValidOnedayAccess() {
+        if !BillingManager.shared.hasValidOnedayAccess() {
             BillingManager.shared.setBillingType(.limited)
         }
         return false
