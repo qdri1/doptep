@@ -1069,6 +1069,7 @@ struct GameScreen: View {
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
                         .lineLimit(1)
+                        .tableRowHeight()
 
                     ForEach(viewModel.uiState.teamUiModelList, id: \.id) { team in
                         HStack(spacing: 6) {
@@ -1095,6 +1096,7 @@ struct GameScreen: View {
                                     .minimumScaleFactor(0.7)
                             }
                         }
+                        .tableRowHeight()
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -1154,11 +1156,13 @@ struct GameScreen: View {
             Text(header)
                 .font(.labelSmall)
                 .foregroundColor(AppColor.outline)
+                .tableRowHeight()
 
             ForEach(Array(values.enumerated()), id: \.offset) { _, item in
                 Text(item.0)
                     .font(item.1 ?? .labelSmall)
                     .foregroundColor(AppColor.onSurface)
+                    .tableRowHeight()
             }
         }
     }
@@ -1173,6 +1177,7 @@ struct GameScreen: View {
             Text(header)
                 .font(.labelSmall)
                 .foregroundColor(AppColor.outline)
+                .tableRowHeight()
 
             let font = if option == .goal {
                 Font.labelLarge
@@ -1184,6 +1189,7 @@ struct GameScreen: View {
                 Text("\(player[keyPath: valuePath])")
                     .font(font)
                     .foregroundColor(AppColor.onSurface)
+                    .tableRowHeight()
                     .onTapGesture {
                         viewModel.send(
                             .onPlayerResultClicked(
@@ -1216,6 +1222,7 @@ struct GameScreen: View {
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
                         .lineLimit(1)
+                        .tableRowHeight()
 
                     ForEach(viewModel.uiState.playerUiModelList, id: \.id) { player in
                         HStack(spacing: 6) {
@@ -1236,6 +1243,7 @@ struct GameScreen: View {
                                     .minimumScaleFactor(0.7)
                             }
                         }
+                        .tableRowHeight()
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

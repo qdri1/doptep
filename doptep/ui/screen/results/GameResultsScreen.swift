@@ -304,6 +304,7 @@ struct TeamsResultsBlock: View {
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
                         .lineLimit(1)
+                        .tableRowHeight()
 
                     ForEach(teamUiModelList, id: \.id) { team in
                         HStack(spacing: 6) {
@@ -330,6 +331,7 @@ struct TeamsResultsBlock: View {
                                     .minimumScaleFactor(0.7)
                             }
                         }
+                        .tableRowHeight()
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -412,6 +414,7 @@ struct PlayersResultsBlock: View {
                         .font(.labelSmall)
                         .foregroundColor(AppColor.outline)
                         .lineLimit(1)
+                        .tableRowHeight()
 
                     ForEach(playerUiModelList, id: \.id) { player in
                         HStack(spacing: 6) {
@@ -442,6 +445,7 @@ struct PlayersResultsBlock: View {
                                 }
                             }
                         }
+                        .tableRowHeight()
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -570,11 +574,13 @@ private func resultsStatColumn(header: String, values: [(String, Font?)]) -> som
         Text(header)
             .font(.labelSmall)
             .foregroundColor(AppColor.outline)
+            .tableRowHeight()
 
         ForEach(Array(values.enumerated()), id: \.offset) { _, item in
             Text(item.0)
                 .font(item.1 ?? .labelSmall)
                 .foregroundColor(AppColor.onSurface)
+                .tableRowHeight()
         }
     }
 }
@@ -591,6 +597,7 @@ private func resultsPlayerStatColumn(
         Text(header)
             .font(.labelSmall)
             .foregroundColor(AppColor.outline)
+            .tableRowHeight()
 
         let font = if option == .goal {
             Font.labelLarge
@@ -602,6 +609,7 @@ private func resultsPlayerStatColumn(
             Text("\(player[keyPath: valuePath])")
                 .font(font)
                 .foregroundColor(AppColor.onSurface)
+                .tableRowHeight()
                 .onTapGesture {
                     onPlayerResultClicked(PlayerResultUiModel(
                         playerUiModel: player,
@@ -625,6 +633,7 @@ struct TeamResultColumn: View {
             Text(header)
                 .font(.labelSmall)
                 .foregroundColor(AppColor.outline)
+                .tableRowHeight()
 
             ForEach(teams, id: \.id) { team in
                 TeamResultValueText(
@@ -632,6 +641,7 @@ struct TeamResultColumn: View {
                     font: option == .points ? .labelLarge : .labelSmall,
                     onClick: { onTeamResultClicked(TeamResultUiModel(teamUiModel: team, option: option)) }
                 )
+                .tableRowHeight()
             }
         }
     }
@@ -647,6 +657,7 @@ struct TeamGoalsResultColumn: View {
             Text(header)
                 .font(.labelSmall)
                 .foregroundColor(AppColor.outline)
+                .tableRowHeight()
 
             ForEach(teams, id: \.id) { team in
                 HStack(spacing: 0) {
@@ -664,6 +675,7 @@ struct TeamGoalsResultColumn: View {
                         onClick: { onTeamResultClicked(TeamResultUiModel(teamUiModel: team, option: .conceded)) }
                     )
                 }
+                .tableRowHeight()
             }
         }
     }
