@@ -19,7 +19,12 @@ final class RevenueCatManager: NSObject {
     private override init() {}
 
     func configure() {
+        // Verbose SDK logs only in debug builds.
+        #if DEBUG
         Purchases.logLevel = .debug
+        #else
+        Purchases.logLevel = .warn
+        #endif
         Purchases.configure(withAPIKey: apiKey)
         Purchases.shared.delegate = self
         let language = UserDefaults.standard.string(forKey: "app_language") ?? "ru"

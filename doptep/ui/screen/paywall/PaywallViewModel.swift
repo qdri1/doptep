@@ -122,7 +122,14 @@ final class PaywallViewModel: ObservableObject {
                 alertMessage = NSLocalizedString("no_active_entitlement", comment: "")
             }
         } catch {
-            guard (error as NSError).code != ErrorCode.purchaseCancelledError.rawValue else { return }
+            let code = (error as NSError).code
+            guard code != ErrorCode.purchaseCancelledError.rawValue else { return }
+            if code == ErrorCode.paymentPendingError.rawValue {
+                // Ask to Buy / extra bank confirmation: the payment completes later and RevenueCat
+                // notifies the app (RevenueCatManager delegate), which then grants the access.
+                alertMessage = NSLocalizedString("purchase_pending", comment: "")
+                return
+            }
             alertMessage = error.localizedDescription
         }
     }

@@ -348,6 +348,7 @@
 "restore_purchases" = "Restore Purchases";
 "purchase_success" = "Purchase successful!";
 "purchase_failed" = "Purchase failed. Please try again.";
+"purchase_pending" = "Your payment is awaiting approval. Access will unlock automatically once it goes through.";
 "restore_success" = "Purchases restored successfully!";
 "no_active_entitlement" = "No active subscription found.";
 
