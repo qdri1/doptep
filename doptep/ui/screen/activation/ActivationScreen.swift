@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct ActivationScreen: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = ActivationViewModel()
+    @State private var showManageSubscriptions = false
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
@@ -37,6 +39,7 @@ struct ActivationScreen: View {
         .background(PaywallColor.greenDark.ignoresSafeArea())
         .navigationBarHidden(true)
         .enableSwipeBack()
+        .manageSubscriptionsSheet(isPresented: $showManageSubscriptions)
         .onChange(of: viewModel.effect) { _, effect in
             guard let effect = effect else { return }
             handleEffect(effect)
@@ -50,9 +53,7 @@ struct ActivationScreen: View {
             dismiss()
 
         case .openAppStoreSubscriptions:
-            if let url = URL(string: "https://apps.apple.com/account/subscriptions") {
-                UIApplication.shared.open(url)
-            }
+            showManageSubscriptions = true
         }
     }
 }
