@@ -343,6 +343,12 @@
 "activation_plan_activated_text" = "Сізде толық нұсқа";
 "activation_plan_activated_button" = "Жазылымды басқару";
 "activation_lifetime_description" = "Өмір бойы қолжетімділік";
+"activation_plan_subscription" = "Жазылым";
+"activation_plan_subscription_monthly" = "Айлық жазылым";
+"activation_plan_subscription_yearly" = "Жылдық жазылым";
+"activation_lifetime_subtitle" = "Бір рет төленді — барлық мүмкіндіктер мәңгі қолжетімді.";
+"activation_subscribe_title" = "Жазылым белсенді";
+"activation_subscribe_subtitle" = "Автоматты түрде ұзартылады. Жазылымнан кез келген уақытта бас тартуға болады.";
 "activation_oneday_time_remaining" = "Қалған уақыт";
 "activation_oneday_hours_abbr" = "сағ";
 "activation_oneday_minutes_abbr" = "мин";

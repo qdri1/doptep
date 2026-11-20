@@ -343,6 +343,12 @@
 "activation_plan_activated_text" = "You have the full version";
 "activation_plan_activated_button" = "Manage subscription";
 "activation_lifetime_description" = "Lifetime access";
+"activation_plan_subscription" = "Subscription";
+"activation_plan_subscription_monthly" = "Monthly subscription";
+"activation_plan_subscription_yearly" = "Annual subscription";
+"activation_lifetime_subtitle" = "Paid once — all features are yours forever.";
+"activation_subscribe_title" = "Subscription is active";
+"activation_subscribe_subtitle" = "Renews automatically. You can cancel anytime.";
 "activation_oneday_time_remaining" = "Time remaining";
 "activation_oneday_hours_abbr" = "h";
 "activation_oneday_minutes_abbr" = "min";

@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import RevenueCat
 
 @MainActor
 final class ActivationViewModel: ObservableObject {
@@ -38,6 +39,25 @@ final class ActivationViewModel: ObservableObject {
             billingType: billingType,
             onedayExpirationDate: billingType == .oneday ? billingManager.onedayExpirationDate : nil
         )
+        if billingType == .subscribe {
+            fetchSubscriptionPlan()
+        }
+    }
+
+    private func fetchSubscriptionPlan() {
+        Task { [weak self] in
+            guard let customerInfo = try? await Purchases.shared.customerInfo() else { return }
+            let active = customerInfo.activeSubscriptions
+            let plan: ActivationPlan?
+            if active.contains(ActivationPlan.yearly.productId) {
+                plan = .yearly
+            } else if active.contains(ActivationPlan.monthly.productId) {
+                plan = .monthly
+            } else {
+                plan = nil
+            }
+            self?.uiState.subscriptionPlan = plan
+        }
     }
 
     private func onBackClicked() {

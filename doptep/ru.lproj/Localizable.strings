@@ -343,6 +343,12 @@
 "activation_plan_activated_text" = "У вас полная версия";
 "activation_plan_activated_button" = "Управление подпиской";
 "activation_lifetime_description" = "Пожизненный доступ";
+"activation_plan_subscription" = "Подписка";
+"activation_plan_subscription_monthly" = "Ежемесячная подписка";
+"activation_plan_subscription_yearly" = "Ежегодная подписка";
+"activation_lifetime_subtitle" = "Оплачено один раз — все функции доступны навсегда.";
+"activation_subscribe_title" = "Подписка активна";
+"activation_subscribe_subtitle" = "Продлевается автоматически. Отменить подписку можно в любой момент.";
 "activation_oneday_time_remaining" = "Оставшееся время";
 "activation_oneday_hours_abbr" = "ч";
 "activation_oneday_minutes_abbr" = "мин";

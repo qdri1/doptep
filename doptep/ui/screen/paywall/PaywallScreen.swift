@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-private enum PaywallColor {
+enum PaywallColor {
     static let green = Color(hex: "#1E7F2F")
     static let greenDark = Color(hex: "#0B3D16")
     static let gold = Color(hex: "#FFC83D")
@@ -372,7 +372,7 @@ private struct PaywallRadio: View {
 
 // MARK: - Features
 
-private struct PaywallFeaturesCard: View {
+struct PaywallFeaturesCard: View {
     private let features: [(title: String, desc: String)] = [
         ("paywall_feature_results", "paywall_feature_results_desc"),
         ("paywall_feature_best_players", "paywall_feature_best_players_desc"),
