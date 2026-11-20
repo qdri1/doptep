@@ -491,13 +491,19 @@ struct AddGameScreen: View {
         Button {
             viewModel.send(.onAddPlayerClicked(tabIndex: viewModel.selectedTeamTabIndex))
         } label: {
-            Text(NSLocalizedString("add_player", comment: ""))
-                .font(.bodyMedium)
-                .foregroundColor(AppColor.onPrimary)
-                .padding()
-                .background(AppColor.primary)
-                .cornerRadius(12)
+            HStack(spacing: 8) {
+                Image(systemName: "plus")
+                    .font(.system(size: 16, weight: .bold))
+                Text(NSLocalizedString("add_player", comment: ""))
+                    .font(.bodyLarge)
+            }
+            .foregroundColor(AppColor.onPrimary)
+            .padding(.horizontal, 28)
+            .padding(.vertical, 16)
+            .background(AppColor.primary)
+            .clipShape(Capsule())
         }
+        .buttonStyle(PressableCardStyle())
         .padding(.top, 4)
         .padding(.bottom, 16)
     }
