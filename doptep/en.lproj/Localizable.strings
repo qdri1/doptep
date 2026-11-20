@@ -25,6 +25,8 @@
 // MARK: - Add/Edit Game
 "game_name" = "Game name";
 "game_time" = "Match time (minutes)";
+"game_time_hint" = "Length of a single match. For example, if you booked the pitch for 2 hours and each of your matches lasts 7 minutes, enter 7.";
+"close" = "Close";
 "game_format" = "Game format";
 "game_rules" = "Game rules";
 "team_quantity" = "Number of teams";

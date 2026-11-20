@@ -15,6 +15,7 @@ struct AddGameScreen: View {
 
     @State private var showColorsSheet = false
     @State private var showRulesSheet = false
+    @State private var showTimeInfo = false
     @FocusState private var focusedField: Field?
     @FocusState private var focusedPlayerNumberField: PlayerNumberField?
 
@@ -163,24 +164,42 @@ struct AddGameScreen: View {
     }
 
     private var timeField: some View {
-        TextField("", text: Binding(
-            get: { viewModel.timeInMinuteFieldState },
-            set: { viewModel.send(.onTimeTextValueChanged(value: $0)) }
-        ), prompt: Text(NSLocalizedString("game_time", comment: "")).foregroundColor(AppColor.outline))
-        .keyboardType(.numberPad)
-        .textFieldStyle(RoundedTextFieldStyle())
-        .focused($focusedField, equals: .gameTime)
-        .submitLabel(.done)
-        .overlay(alignment: .trailing) {
-            if !viewModel.timeInMinuteFieldState.isEmpty {
-                Button { viewModel.send(.onTimeTextValueChanged(value: "")) } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(AppColor.onSurfaceVariant)
+        HStack(spacing: 4) {
+            TextField("", text: Binding(
+                get: { viewModel.timeInMinuteFieldState },
+                set: { viewModel.send(.onTimeTextValueChanged(value: $0)) }
+            ), prompt: Text(NSLocalizedString("game_time", comment: "")).foregroundColor(AppColor.outline))
+            .keyboardType(.numberPad)
+            .textFieldStyle(RoundedTextFieldStyle())
+            .focused($focusedField, equals: .gameTime)
+            .submitLabel(.done)
+            .overlay(alignment: .trailing) {
+                if !viewModel.timeInMinuteFieldState.isEmpty {
+                    Button { viewModel.send(.onTimeTextValueChanged(value: "")) } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(AppColor.onSurfaceVariant)
+                    }
+                    .padding(.trailing, 16)
                 }
-                .padding(.trailing, 16)
             }
+
+            Button {
+                dismissKeyboard()
+                showTimeInfo = true
+            } label: {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 22))
+                    .foregroundColor(AppColor.onSurface)
+                    .frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
         }
         .padding(.horizontal)
+        .alert(NSLocalizedString("game_time", comment: ""), isPresented: $showTimeInfo) {
+            Button(NSLocalizedString("close", comment: ""), role: .cancel) {}
+        } message: {
+            Text(NSLocalizedString("game_time_hint", comment: ""))
+        }
     }
 
     private var pitchSurfaceSection: some View {
@@ -312,7 +331,7 @@ struct AddGameScreen: View {
                         Text(NSLocalizedString("game_rules_info", comment: ""))
                             .font(.labelLarge)
                     }
-                    .foregroundColor(Color(hex: "#FFA500"))
+                    .foregroundColor(AppColor.onSurface)
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal)
