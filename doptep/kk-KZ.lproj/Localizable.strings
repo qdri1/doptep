@@ -333,8 +333,8 @@
 "activation_text_6" = "Үздік ойыншылар";
 "activation_text_button" = "Бағаларды көрсету";
 "activation_plan_title" = "Тарифті таңдаңыз";
-"activation_plan_1" = "Ай сайын";
-"activation_plan_2" = "Жыл сайын";
+"activation_plan_1" = "Айлық";
+"activation_plan_2" = "Жылдық";
 "activation_plan_3" = "Өмір бойы";
 "activation_plan_button" = "Сатып алу";
 "activation_plan_desc_subscribe" = "Жазылым";
@@ -352,7 +352,7 @@
 "activation_oneday_time_remaining" = "Қалған уақыт";
 "activation_oneday_hours_abbr" = "сағ";
 "activation_oneday_minutes_abbr" = "мин";
-"activation_oneday_not_subscription" = "Бұл бір реттік сатып алу, жазылым емес. Қолжетімділік қосымша төлемдерсіз автоматты түрде аяқталады.";
+"activation_oneday_not_subscription" = "Қолжетімділік қосымша төлемдерсіз автоматты түрде аяқталады.";
 "restore_purchases" = "Сатып алуларды қалпына келтіру";
 "purchase_success" = "Сатып алу сәтті өтті!";
 "purchase_failed" = "Сатып алу сәтсіз аяқталды. Қайталап көріңіз.";
