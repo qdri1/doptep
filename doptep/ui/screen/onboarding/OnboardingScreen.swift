@@ -439,7 +439,7 @@ private struct FeatureBullet: View {
 
 private struct ProBadge: View {
     var body: some View {
-        Text("PRO")
+        Text("PREMIUM")
             .font(.custom("Montserrat-Bold", size: 11))
             .foregroundColor(AppColor.onPrimary)
             .padding(.horizontal, 8)

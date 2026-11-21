@@ -475,7 +475,7 @@
 "onboarding_welcome_title" = "Your football, like a real match";
 "onboarding_welcome_subtitle" = "Dop Tep is your assistant for football with friends. You pick the teams — the app keeps the score and timer, decides who plays next, tracks team and player stats and announces the goals.";
 "onboarding_rotation_title" = "The app decides who plays next";
-"onboarding_rotation_subtitle" = "Pick the rules — Dop Tep keeps the team queue, the score and win streaks.";
+"onboarding_rotation_subtitle" = "You choose the rules and enter the score, and Dop Tep keeps the team queue.";
 "onboarding_rotation_bullet_rules" = "Winner stays, exactly 2 games or round robin — choose your own rules for 3 and 4 teams";
 "onboarding_rotation_bullet_timer" = "The timer keeps running even with the phone in your pocket";
 "onboarding_rotation_bullet_voice" = "Voice alerts “One minute remaining” and “Play until the ball is out”";
@@ -484,8 +484,8 @@
 "onboarding_sounds_demo_button" = "Listen to a goal announcement";
 "onboarding_stats_title" = "Numbers decide who's the best";
 "onboarding_stats_subtitle" = "You enter the score — the team and player tables fill in by themselves.";
-"onboarding_stats_bullet_teams" = "Team table: points, wins, draws and goals scored/conceded difference";
-"onboarding_stats_bullet_best" = "Best players — the app itself picks the top scorer, top assist, best save and best tackle";
+"onboarding_stats_bullet_teams" = "Team table: points, wins, draws and losses";
+"onboarding_stats_bullet_best" = "Best players — the app itself picks the top scorer, top assist and best save";
 "onboarding_notifications_hint" = "You can turn notifications on or off anytime in Settings.";
 "onboarding_stats_bullet_champions" = "Champions — the winning team and a title for every player after the game";
 "onboarding_sample_player_1" = "Alikhan";
