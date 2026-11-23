@@ -26,9 +26,9 @@ struct PaywallScreen: View {
     @Environment(\.openURL) private var openURL
     @StateObject private var viewModel: PaywallViewModel
 
-    init(showOneDay: Bool = true, onPurchased: @escaping () -> Void) {
+    init(showOneDay: Bool = true, source: String, onPurchased: @escaping () -> Void) {
         self.onPurchased = onPurchased
-        _viewModel = StateObject(wrappedValue: PaywallViewModel(showOneDay: showOneDay))
+        _viewModel = StateObject(wrappedValue: PaywallViewModel(showOneDay: showOneDay, source: source))
     }
 
     var body: some View {

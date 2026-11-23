@@ -27,6 +27,7 @@ final class RevenueCatManager: NSObject {
         #endif
         Purchases.configure(withAPIKey: apiKey)
         Purchases.shared.delegate = self
+        Analytics.shared.setUserId(Purchases.shared.appUserID)
         let language = UserDefaults.standard.string(forKey: "app_language") ?? "ru"
         Purchases.shared.overridePreferredUILocale(language)
     }

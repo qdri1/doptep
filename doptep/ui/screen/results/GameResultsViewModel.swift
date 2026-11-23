@@ -28,6 +28,7 @@ final class GameResultsViewModel: ObservableObject {
         self.playerHistoryRepository = PlayerHistoryRepository(context: modelContext)
         self.playerRepository = PlayerRepository(context: modelContext)
 
+        Analytics.shared.track(AnalyticsEvent.resultsViewed)
         fetchGameHistory()
     }
 
@@ -49,12 +50,15 @@ final class GameResultsViewModel: ObservableObject {
             onSaveTeamResultClicked(teamResultUiModel: teamResultUiModel, value: teamResultValue)
 
         case .onChampionsAllGamesClicked:
+            trackFunctionOpened("champions")
             onChampionsAllGamesClicked()
 
         case .onBestPlayersAllGamesClicked:
+            trackFunctionOpened("best_players")
             onBestPlayersAllGamesClicked()
 
         case .onClearAllGamesResultsClicked:
+            trackFunctionOpened("clear_results")
             setEffect(.showClearAllGamesResultsConfirmationBottomSheet)
 
         case .onClearAllGamesResultsConfirmationClicked:
@@ -66,6 +70,14 @@ final class GameResultsViewModel: ObservableObject {
         case .onActivateClicked:
             break
         }
+    }
+
+    private func trackFunctionOpened(_ function: String) {
+        Analytics.shared.track(AnalyticsEvent.functionOpened, [
+            AnalyticsParam.function: function,
+            AnalyticsParam.locked: uiState.uiLimited,
+            AnalyticsParam.source: AnalyticsSource.results,
+        ])
     }
 
     func clearEffect() {

@@ -356,7 +356,7 @@ struct GameScreen: View {
                 SoundSettingsScreen()
             }
             .navigationDestination(isPresented: $showPaywall) {
-                PaywallScreen {
+                PaywallScreen(source: viewModel.uiState.uiLimited ? AnalyticsSource.limit : AnalyticsSource.game) {
                     pendingActivationAfterPaywall = true
                     showPaywall = false
                 }

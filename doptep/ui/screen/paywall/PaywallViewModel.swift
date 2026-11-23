@@ -22,9 +22,13 @@ final class PaywallViewModel: ObservableObject {
     @Published var effect: PaywallEffect?
 
     let showOneDay: Bool
+    /// Where the paywall was opened from (AnalyticsSource), only for analytics.
+    private let source: String
+    private var isPaywallViewTracked = false
 
-    init(showOneDay: Bool = true) {
+    init(showOneDay: Bool = true, source: String) {
         self.showOneDay = showOneDay
+        self.source = source
     }
 
     // MARK: - Prices
@@ -62,11 +66,18 @@ final class PaywallViewModel: ObservableObject {
     // MARK: - Actions
 
     func onAppear() {
+        if !isPaywallViewTracked {
+            isPaywallViewTracked = true
+            Analytics.shared.track(AnalyticsEvent.paywallViewed, [AnalyticsParam.source: source])
+        }
         guard products.isEmpty, !isLoadingProducts else { return }
         Task { await loadProducts() }
     }
 
     func onPlanSelected(_ plan: ActivationPlan) {
+        if plan != selectedPlan {
+            Analytics.shared.track(AnalyticsEvent.planSelected, [AnalyticsParam.plan: plan.analyticsValue])
+        }
         selectedPlan = plan
     }
 
@@ -76,6 +87,7 @@ final class PaywallViewModel: ObservableObject {
 
     func onBuyClicked() {
         guard !isPurchasing else { return }
+        Analytics.shared.track(AnalyticsEvent.purchaseStarted, [AnalyticsParam.plan: selectedPlan.analyticsValue])
         Task { await purchaseSelectedPlan() }
     }
 
@@ -107,6 +119,7 @@ final class PaywallViewModel: ObservableObject {
         }
         guard let product = products[selectedPlan] else {
             alertMessage = NSLocalizedString("purchase_failed", comment: "")
+            trackPurchaseResult(AnalyticsEvent.purchaseFailed, reason: "product_not_found")
             return
         }
 
@@ -115,23 +128,40 @@ final class PaywallViewModel: ObservableObject {
 
         do {
             let result = try await Purchases.shared.purchase(product: product)
-            guard !result.userCancelled else { return }
+            guard !result.userCancelled else {
+                trackPurchaseResult(AnalyticsEvent.purchaseCancelled)
+                return
+            }
             if RevenueCatManager.shared.updateBillingType(from: result.customerInfo) {
+                trackPurchaseResult(AnalyticsEvent.purchaseCompleted)
                 effect = .purchased
             } else {
                 alertMessage = NSLocalizedString("no_active_entitlement", comment: "")
+                trackPurchaseResult(AnalyticsEvent.purchaseFailed, reason: "no_entitlement")
             }
         } catch {
             let code = (error as NSError).code
-            guard code != ErrorCode.purchaseCancelledError.rawValue else { return }
+            guard code != ErrorCode.purchaseCancelledError.rawValue else {
+                trackPurchaseResult(AnalyticsEvent.purchaseCancelled)
+                return
+            }
             if code == ErrorCode.paymentPendingError.rawValue {
                 // Ask to Buy / extra bank confirmation: the payment completes later and RevenueCat
                 // notifies the app (RevenueCatManager delegate), which then grants the access.
                 alertMessage = NSLocalizedString("purchase_pending", comment: "")
+                trackPurchaseResult(AnalyticsEvent.purchasePending)
                 return
             }
             alertMessage = error.localizedDescription
+            trackPurchaseResult(AnalyticsEvent.purchaseFailed, reason: "billing_error")
         }
+    }
+
+    private func trackPurchaseResult(_ event: String, reason: String? = nil) {
+        Analytics.shared.track(event, [
+            AnalyticsParam.plan: selectedPlan.analyticsValue,
+            AnalyticsParam.reason: reason,
+        ])
     }
 
     private func restorePurchases() async {
@@ -141,11 +171,14 @@ final class PaywallViewModel: ObservableObject {
         do {
             let customerInfo = try await Purchases.shared.restorePurchases()
             if RevenueCatManager.shared.updateBillingType(from: customerInfo) {
+                Analytics.shared.track(AnalyticsEvent.restorePurchasesTapped, [AnalyticsParam.result: "restored"])
                 effect = .purchased
             } else {
+                Analytics.shared.track(AnalyticsEvent.restorePurchasesTapped, [AnalyticsParam.result: "nothing"])
                 alertMessage = NSLocalizedString("no_active_entitlement", comment: "")
             }
         } catch {
+            Analytics.shared.track(AnalyticsEvent.restorePurchasesTapped, [AnalyticsParam.result: "error"])
             alertMessage = error.localizedDescription
         }
     }

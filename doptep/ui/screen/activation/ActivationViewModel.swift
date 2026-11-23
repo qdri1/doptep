@@ -25,6 +25,7 @@ final class ActivationViewModel: ObservableObject {
             onBackClicked()
             
         case .manageSubscriptionsButtonClicked:
+            Analytics.shared.track(AnalyticsEvent.manageSubscriptionTapped)
             setEffect(.openAppStoreSubscriptions)
         }
     }

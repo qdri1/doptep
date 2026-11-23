@@ -11,6 +11,7 @@
 		AAAA00052F03B97D00CC9D10 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = AAAA00032F03B97D00CC9D10 /* RevenueCatUI */; };
 		BBBB00032F03B97D00CC9D10 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = BBBB00022F03B97D00CC9D10 /* FirebaseRemoteConfig */; };
 		CCCC00022F03B97D00CC9D10 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CCCC00012F03B97D00CC9D10 /* FirebaseCrashlytics */; };
+		FC3E461730B41BB5006B1A20 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FC3E461630B41BB5006B1A20 /* AmplitudeSwift */; };
 		FCC8F3223073ADD7002C6F04 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = FCC8F3213073ADD7002C6F04 /* Lottie */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC3E461730B41BB5006B1A20 /* AmplitudeSwift in Frameworks */,
 				FCC8F3223073ADD7002C6F04 /* Lottie in Frameworks */,
 				AAAA00042F03B97D00CC9D10 /* RevenueCat in Frameworks */,
 				AAAA00052F03B97D00CC9D10 /* RevenueCatUI in Frameworks */,
@@ -131,6 +133,7 @@
 				BBBB00022F03B97D00CC9D10 /* FirebaseRemoteConfig */,
 				CCCC00012F03B97D00CC9D10 /* FirebaseCrashlytics */,
 				FCC8F3213073ADD7002C6F04 /* Lottie */,
+				FC3E461630B41BB5006B1A20 /* AmplitudeSwift */,
 			);
 			productName = doptep;
 			productReference = FC39998A2F03B97D00CC9D10 /* doptep.app */;
@@ -220,6 +223,7 @@
 				AAAA00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				BBBB00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				FCC8F3203073ADD7002C6F04 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				FC3E461530B41BB5006B1A20 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FC39998B2F03B97D00CC9D10 /* Products */;
@@ -672,6 +676,14 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		FC3E461530B41BB5006B1A20 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amplitude/Amplitude-Swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.4;
+			};
+		};
 		FCC8F3203073ADD7002C6F04 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -702,6 +714,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BBBB00012F03B97D00CC9D10 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
+		};
+		FC3E461630B41BB5006B1A20 /* AmplitudeSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC3E461530B41BB5006B1A20 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
+			productName = AmplitudeSwift;
 		};
 		FCC8F3213073ADD7002C6F04 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;

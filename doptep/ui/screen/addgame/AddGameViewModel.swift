@@ -309,6 +309,14 @@ final class AddGameViewModel: ObservableObject {
 
             try gameRepository.saveContext()
 
+            Analytics.shared.track(AnalyticsEvent.gameCreated, [
+                AnalyticsParam.teamQuantity: teamQuantityState.rawValue,
+                AnalyticsParam.gameFormat: gameFormatState.rawValue,
+                AnalyticsParam.matchMinutes: gameModel.timeInMinutes,
+                AnalyticsParam.rule: analyticsValue(gameRuleState),
+                AnalyticsParam.pitchSurface: analyticsValue(pitchSurfaceState),
+            ])
+
             effect = .openGameScreen(gameId: newGameId)
         } catch {
             snackbarMessage = "Error creating game"

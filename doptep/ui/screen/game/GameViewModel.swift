@@ -87,6 +87,9 @@ final class GameViewModel: ObservableObject {
         setupLifecycleObservers()
     }
 
+    private var isGameOpenedTracked = false
+    private var isLimitReachedTracked = false
+
     deinit {
         lifecycleObservers.forEach { NotificationCenter.default.removeObserver($0) }
     }
@@ -155,6 +158,7 @@ final class GameViewModel: ObservableObject {
         case .onTeamChangeIconClicked:
             onTeamChangeIconClicked()
         case .onDopClicked:
+            Analytics.shared.track(AnalyticsEvent.soundPlayed, [AnalyticsParam.sound: analyticsValue(GameSounds.dopTep)])
             playDopTepSound()
         case .onLeftTeamChangeClicked(let teamId):
             onLeftTeamChangeClicked(teamId)
@@ -171,6 +175,7 @@ final class GameViewModel: ObservableObject {
         case .onRightTeamStayClicked:
             onRightTeamStayClicked()
         case .onSoundClicked(let sound):
+            Analytics.shared.track(AnalyticsEvent.soundPlayed, [AnalyticsParam.sound: analyticsValue(sound)])
             if sound == .dopTep {
                 playDopTepSound()
             } else {
@@ -248,6 +253,13 @@ final class GameViewModel: ObservableObject {
 
                 updateBillingState()
                 setTimerValue()
+                if !isGameOpenedTracked {
+                    isGameOpenedTracked = true
+                    Analytics.shared.track(AnalyticsEvent.gameOpened, [
+                        AnalyticsParam.teamQuantity: gameUiModel.teamQuantity.rawValue,
+                        AnalyticsParam.matchesPlayed: liveGameUiModel?.gameCount,
+                    ])
+                }
             } catch {
                 snackbarMessage = "Error loading game"
             }
@@ -446,6 +458,11 @@ final class GameViewModel: ObservableObject {
     }
 
     private func startGame(_ liveGame: LiveGameUiModel) {
+        Analytics.shared.track(AnalyticsEvent.matchStarted, [
+            AnalyticsParam.matchNumber: liveGame.gameCount + 1,
+            AnalyticsParam.teamQuantity: uiState.gameUiModel?.teamQuantity.rawValue,
+            AnalyticsParam.limited: uiState.uiLimited,
+        ])
         if SoundSettingsStorage.isEnabled(.startMatch) {
             audioManager.playSound("start_match")
         }
@@ -469,6 +486,15 @@ final class GameViewModel: ObservableObject {
             audioManager.playSound(finishMatchSoundName)
         }
         pendingGameDurationSeconds = currentElapsedSeconds()
+        if let liveGame = uiState.liveGameUiModel {
+            let hasWinner = liveGame.leftTeamGoals != liveGame.rightTeamGoals
+            Analytics.shared.track(AnalyticsEvent.matchFinished, [
+                AnalyticsParam.matchNumber: liveGame.gameCount + 1,
+                AnalyticsParam.result: hasWinner ? "win" : "draw",
+                AnalyticsParam.durationSec: pendingGameDurationSeconds,
+                AnalyticsParam.limited: uiState.uiLimited,
+            ])
+        }
         resetTimer()
 
         guard let gameUiModel = uiState.gameUiModel,
@@ -944,6 +970,13 @@ final class GameViewModel: ObservableObject {
             uiLimited = false
         }
         uiState.uiLimited = uiLimited
+        if uiLimited && !isLimitReachedTracked {
+            isLimitReachedTracked = true
+            Analytics.shared.track(AnalyticsEvent.limitReached, [
+                AnalyticsParam.teamQuantity: teamQuantity?.rawValue,
+                AnalyticsParam.matchesPlayed: gameCount,
+            ])
+        }
     }
 
     private func setNextPlayingTeamsUiModelList() {
@@ -1432,6 +1465,7 @@ final class GameViewModel: ObservableObject {
     }
 
     private func onOptionPlayersSelected(teamId: UUID, playerUiModel: PlayerUiModel, option: TeamOption) {
+        Analytics.shared.track(AnalyticsEvent.gameActionRecorded, [AnalyticsParam.type: analyticsValue(option)])
         Task {
             do {
                 var updatedPlayer = playerUiModel
@@ -1648,6 +1682,7 @@ final class GameViewModel: ObservableObject {
     }
 
     private func onOptionPlayersAutoGoalSelected(teamId: UUID) {
+        Analytics.shared.track(AnalyticsEvent.gameActionRecorded, [AnalyticsParam.type: "own_goal"])
         guard let liveGame = uiState.liveGameUiModel else { return }
 
         Task {
@@ -1813,6 +1848,11 @@ final class GameViewModel: ObservableObject {
     }
 
     private func onFunctionClicked(_ function: GameFunction) {
+        Analytics.shared.track(AnalyticsEvent.functionOpened, [
+            AnalyticsParam.function: analyticsValue(function),
+            AnalyticsParam.locked: uiState.uiLimited,
+            AnalyticsParam.source: AnalyticsSource.game,
+        ])
         switch function {
         case .bestPlayers:
             onBestPlayersClicked()

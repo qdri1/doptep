@@ -85,7 +85,7 @@ struct SettingsScreen: View {
                 .toolbar(.hidden, for: .tabBar)
         }
         .navigationDestination(isPresented: $showPaywall) {
-            PaywallScreen {
+            PaywallScreen(source: AnalyticsSource.settings) {
                 pendingNavigationAfterPaywall = true
                 showPaywall = false
             }
@@ -362,6 +362,7 @@ struct LanguageSelectionSheet: View {
     private func languageRow(title: String, language: String) -> some View {
         Button {
             languageManager.setLanguage(language)
+            Analytics.shared.trackLanguageSelected(language, source: AnalyticsSource.settings)
             dismiss()
         } label: {
             HStack {

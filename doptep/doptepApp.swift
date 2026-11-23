@@ -36,7 +36,12 @@ struct doptepApp: App {
             GameHistoryActionEventModel.self
         )
         FirebaseApp.configure()
+        Analytics.shared.configure()
         RevenueCatManager.shared.configure()
+        Analytics.shared.setOnboardingCompleted(OnboardingStorage.shared.isCompleted)
+        if let language = UserDefaults.standard.string(forKey: "app_language") {
+            Analytics.shared.setLanguage(analyticsLanguageCode(language))
+        }
         RemoteConfigManager.shared.configureAndActivate()
     }
 

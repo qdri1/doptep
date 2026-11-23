@@ -23,6 +23,18 @@ final class OnboardingViewModel: ObservableObject {
     init(storage: OnboardingStorage = .shared, audioManager: AudioManager = .shared) {
         self.storage = storage
         self.audioManager = audioManager
+        // "Started" is saved when the language is picked, so reopening the onboarding doesn't count it twice.
+        if !storage.isStarted {
+            Analytics.shared.track(AnalyticsEvent.onboardingStarted)
+            trackStepViewed(step)
+        }
+    }
+
+    private func trackStepViewed(_ step: OnboardingStep) {
+        Analytics.shared.track(AnalyticsEvent.onboardingStepViewed, [
+            AnalyticsParam.step: analyticsValue(step),
+            AnalyticsParam.index: step.rawValue,
+        ])
     }
 
     var progress: Double {
@@ -46,15 +58,18 @@ final class OnboardingViewModel: ObservableObject {
             selectedLanguage = language
             audioManager.setLanguage(language)
             storage.setStarted()
+            Analytics.shared.trackLanguageSelected(language, source: AnalyticsSource.onboarding)
         case .onVoiceDemoClicked:
             playVoiceDemo()
         case .onAllowNotificationsClicked:
             guard !isFinished else { return }
             // The system dialog is shown on top; onboarding ends once the user answers it.
-            audioManager.requestNotificationPermission { [weak self] _ in
+            audioManager.requestNotificationPermission { [weak self] granted in
+                Analytics.shared.track(AnalyticsEvent.notificationPermissionResult, [AnalyticsParam.granted: granted])
                 self?.finish()
             }
         case .onSkipNotificationsClicked:
+            Analytics.shared.track(AnalyticsEvent.notificationPermissionResult, [AnalyticsParam.granted: false])
             finish()
         }
     }
@@ -64,6 +79,8 @@ final class OnboardingViewModel: ObservableObject {
         isFinished = true
         stopAudio()
         storage.setCompleted()
+        Analytics.shared.track(AnalyticsEvent.onboardingCompleted)
+        Analytics.shared.setOnboardingCompleted(true)
         effect = .finish
     }
 
@@ -71,6 +88,7 @@ final class OnboardingViewModel: ObservableObject {
         guard canContinue,
               let next = OnboardingStep(rawValue: step.rawValue + 1) else { return }
         move(to: next, forward: true)
+        trackStepViewed(next)
     }
 
     private func goBack() {

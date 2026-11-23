@@ -29,6 +29,7 @@ final class BillingManager: ObservableObject {
     func setBillingType(_ type: BillingType) {
         billingType = type
         userDefaults.set(type.rawValue, forKey: "billingType")
+        Analytics.shared.setBillingType(type)
     }
 
     func isSecretActivated() -> Bool {
