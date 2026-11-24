@@ -38,7 +38,7 @@ struct LanguageRequestTexts {
         hint: "Например, Узбекский · e.g. Uzbek",
         send: "Отправить · Send",
         cancel: "Отмена · Cancel",
-        thanks: "Спасибо! · Thank you!"
+        thanks: "Отправлено · Sent"
     )
 }
 
