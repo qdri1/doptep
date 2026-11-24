@@ -83,6 +83,7 @@ enum AnalyticsEvent {
     static let onboardingStepViewed = "onboarding_step_viewed"
     static let onboardingCompleted = "onboarding_completed"
     static let languageSelected = "language_selected"
+    static let languageRequested = "language_requested"
     static let notificationPermissionResult = "notification_permission_result"
 
     // Games

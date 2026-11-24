@@ -494,3 +494,11 @@
 "onboarding_sample_team_1" = "T-1";
 "onboarding_sample_team_2" = "T-2";
 "onboarding_sample_next_teams" = "T-1 – T-3";
+
+"language_request_question" = "Missing your language?";
+"language_request_button" = "Request it";
+"language_request_dialog_title" = "Which language should we add?";
+"language_request_hint" = "For example, Uzbek";
+"language_request_send" = "Send";
+"language_request_cancel" = "Cancel";
+"language_request_thanks" = "Thank you! We will consider your request.";

@@ -164,6 +164,9 @@ struct OnboardingScreen: View {
                     viewModel.send(.onLanguageSelected(language.code))
                 }
             }
+
+            LanguageRequestBlock(texts: .onboarding, source: AnalyticsSource.onboarding)
+                .padding(.top, 8)
         }
     }
 

@@ -354,6 +354,10 @@ struct LanguageSelectionSheet: View {
             languageRow(title: "Русский", language: "ru")
             languageRow(title: "English", language: "en")
 
+            LanguageRequestBlock(texts: .localized, source: AnalyticsSource.settings)
+                .padding(.top, 12)
+                .padding(.horizontal, 16)
+
             Spacer()
         }
         .background(AppColor.surface)

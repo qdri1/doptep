@@ -494,3 +494,11 @@
 "onboarding_sample_team_1" = "К-1";
 "onboarding_sample_team_2" = "К-2";
 "onboarding_sample_next_teams" = "К-1 – К-3";
+
+"language_request_question" = "Сіздің тіліңіз жоқ па?";
+"language_request_button" = "Қосуды сұрау";
+"language_request_dialog_title" = "Қай тілді қосайық?";
+"language_request_hint" = "Мысалы, өзбек тілі";
+"language_request_send" = "Жіберу";
+"language_request_cancel" = "Бас тарту";
+"language_request_thanks" = "Рақмет! Сұрауыңызды ескереміз.";

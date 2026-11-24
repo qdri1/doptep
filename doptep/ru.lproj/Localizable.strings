@@ -494,3 +494,11 @@
 "onboarding_sample_team_1" = "К-1";
 "onboarding_sample_team_2" = "К-2";
 "onboarding_sample_next_teams" = "К-1 – К-3";
+
+"language_request_question" = "Нет вашего языка?";
+"language_request_button" = "Попросить добавить";
+"language_request_dialog_title" = "Какой язык добавить?";
+"language_request_hint" = "Например, узбекский";
+"language_request_send" = "Отправить";
+"language_request_cancel" = "Отмена";
+"language_request_thanks" = "Спасибо! Мы учтём ваш запрос.";
