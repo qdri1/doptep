@@ -64,6 +64,10 @@ final class Analytics {
         track(AnalyticsEvent.languageSelected, [AnalyticsParam.language: code, AnalyticsParam.source: source])
     }
 
+    func setSecretActivated(_ activated: Bool) {
+        setUserProperty(AnalyticsUserProperty.secretActivated, activated)
+    }
+
     func setOnboardingCompleted(_ completed: Bool) {
         setUserProperty(AnalyticsUserProperty.onboardingCompleted, completed)
     }
@@ -107,6 +111,10 @@ enum AnalyticsEvent {
     static let purchasePending = "purchase_pending"
     static let restorePurchasesTapped = "restore_purchases_tapped"
     static let manageSubscriptionTapped = "manage_subscription_tapped"
+
+    // Secret activation code (7 taps on the version in Settings). The code itself is never sent.
+    static let activationCodeDialogOpened = "activation_code_dialog_opened"
+    static let activationCodeSubmitted = "activation_code_submitted"
 }
 
 enum AnalyticsParam {
@@ -150,6 +158,7 @@ private enum AnalyticsUserProperty {
     static let billingType = "billing_type"
     static let language = "language"
     static let onboardingCompleted = "onboarding_completed"
+    static let secretActivated = "secret_activated"
 }
 
 extension BillingType {

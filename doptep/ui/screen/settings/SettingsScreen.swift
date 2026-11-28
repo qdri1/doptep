@@ -62,6 +62,7 @@ struct SettingsScreen: View {
                         if versionTapCount >= 7 {
                             versionTapCount = 0
                             showActivationCodeDialog = true
+                            Analytics.shared.track(AnalyticsEvent.activationCodeDialogOpened)
                         }
                     }
             }

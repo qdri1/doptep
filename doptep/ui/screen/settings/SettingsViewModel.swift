@@ -45,14 +45,22 @@ final class SettingsViewModel: ObservableObject {
             if billingManager.getCurrentBillingType() == .lifetime && billingManager.isSecretActivated() {
                 billingManager.setBillingType(.limited)
                 billingManager.setSecretActivated(false)
+                trackActivationCode(result: "deactivated", secretActivated: false)
             } else {
                 billingManager.setBillingType(.lifetime)
                 billingManager.setSecretActivated(true)
+                trackActivationCode(result: "activated", secretActivated: true)
             }
             setEffect(.activationSuccess)
         } else {
+            Analytics.shared.track(AnalyticsEvent.activationCodeSubmitted, [AnalyticsParam.result: "wrong_code"])
             setEffect(.activationError)
         }
+    }
+
+    private func trackActivationCode(result: String, secretActivated: Bool) {
+        Analytics.shared.track(AnalyticsEvent.activationCodeSubmitted, [AnalyticsParam.result: result])
+        Analytics.shared.setSecretActivated(secretActivated)
     }
 
     private func onSettingsItemClicked(_ item: SettingsItemType) {

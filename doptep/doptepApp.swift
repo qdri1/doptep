@@ -39,6 +39,8 @@ struct doptepApp: App {
         Analytics.shared.configure()
         RevenueCatManager.shared.configure()
         Analytics.shared.setOnboardingCompleted(OnboardingStorage.shared.isCompleted)
+        // Also marks users who entered the secret code before analytics existed.
+        Analytics.shared.setSecretActivated(BillingManager.shared.isSecretActivated())
         if let language = UserDefaults.standard.string(forKey: "app_language") {
             Analytics.shared.setLanguage(analyticsLanguageCode(language))
         }
