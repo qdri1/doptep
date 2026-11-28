@@ -132,6 +132,9 @@ enum AnalyticsParam {
     static let limited = "limited"
     static let plan = "plan"
     static let reason = "reason"
+    /// purchase_failed / restore_purchases_tapped: RevenueCat error code and message, to find the cause.
+    static let errorCode = "error_code"
+    static let errorMessage = "error_message"
 }
 
 /// Values of the `source` param of `paywall_viewed`, `function_opened`, `language_selected`.

@@ -153,15 +153,28 @@ final class PaywallViewModel: ObservableObject {
                 return
             }
             alertMessage = error.localizedDescription
-            trackPurchaseResult(AnalyticsEvent.purchaseFailed, reason: "billing_error")
+            trackPurchaseResult(AnalyticsEvent.purchaseFailed, reason: "billing_error", error: error)
         }
     }
 
-    private func trackPurchaseResult(_ event: String, reason: String? = nil) {
-        Analytics.shared.track(event, [
+    private func trackPurchaseResult(_ event: String, reason: String? = nil, error: Error? = nil) {
+        var params: [String: Any?] = [
             AnalyticsParam.plan: selectedPlan.analyticsValue,
             AnalyticsParam.reason: reason,
-        ])
+        ]
+        params.merge(Self.errorParams(error)) { _, new in new }
+        Analytics.shared.track(event, params)
+    }
+
+    /// RevenueCat error code (e.g. storeProblemError) and its message, to find why a purchase failed.
+    private static func errorParams(_ error: Error?) -> [String: Any?] {
+        guard let error else { return [:] }
+        let code = (error as NSError).code
+        let codeName = ErrorCode(rawValue: code).map { String(describing: $0) } ?? "\(code)"
+        return [
+            AnalyticsParam.errorCode: codeName,
+            AnalyticsParam.errorMessage: String(error.localizedDescription.prefix(200)),
+        ]
     }
 
     private func restorePurchases() async {
@@ -178,7 +191,9 @@ final class PaywallViewModel: ObservableObject {
                 alertMessage = NSLocalizedString("no_active_entitlement", comment: "")
             }
         } catch {
-            Analytics.shared.track(AnalyticsEvent.restorePurchasesTapped, [AnalyticsParam.result: "error"])
+            var params: [String: Any?] = [AnalyticsParam.result: "error"]
+            params.merge(Self.errorParams(error)) { _, new in new }
+            Analytics.shared.track(AnalyticsEvent.restorePurchasesTapped, params)
             alertMessage = error.localizedDescription
         }
     }

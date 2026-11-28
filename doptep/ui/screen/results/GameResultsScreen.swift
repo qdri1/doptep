@@ -8,7 +8,14 @@ import SwiftData
 
 struct GameResultsScreen: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var viewModel: GameResultsViewModel
+    /// @StateObject + autoclosure: the view model is created once per screen. With @ObservedObject a new one
+    /// (with a new history fetch and a new results_viewed event) was created on every redraw of the game screen,
+    /// e.g. on every timer tick.
+    @StateObject private var viewModel: GameResultsViewModel
+
+    init(viewModel: @autoclosure @escaping () -> GameResultsViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel())
+    }
 
     @State private var showPlayerResultSheet = false
     @State private var playerResultUiModel: PlayerResultUiModel?
